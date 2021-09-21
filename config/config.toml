@@ -4,14 +4,62 @@ name = "Fruit"
 products = [
     { name = "Apple", cost = 1, sprite_path = "apple.png" },
     { name = "Banana", cost = 3, sprite_path = "banana.png" },
-    { name = "Pineapple", cost = 5, sprite_path = "pineapple.png" },
+    { name = "Pineapple", cost = 8, sprite_path = "pineapple.png" },
+    { name = "Cherries", cost = 19, sprite_path = "cherries.png" },
+    { name = "Strawberry", cost = 43, sprite_path = "strawberry.png" },
+    { name = "Watermelon", cost = 94, sprite_path = "watermelon.png" },
+    { name = "Grape", cost = 201, sprite_path = "grape.png" },
+    { name = "Lemon", cost = 423, sprite_path = "lemon.png" },
+    { name = "Tangerine", cost = 880, sprite_path = "tangerine.png" },
+    { name = "Pear", cost = 1815, sprite_path = "pear.png" },
+    { name = "Peach", cost = 3719, sprite_path = "peach.png" },
+    { name = "Mango", cost = 7582, sprite_path = "mango.png" },
+    { name = "Blueberries", cost = 15397, sprite_path = "blueberries.png" },
 ]
 
 [[products.tiers]]
 id = 2
+name = "Vegetable"
+products = [
+    { name = "Tomato", cost = 15, sprite_path = "tomato.png" },
+    { name = "Cucumber", cost = 31, sprite_path = "cucumber.png" },
+    { name = "Onion", cost = 64, sprite_path = "onion.png" },
+    { name = "Carrot", cost = 131, sprite_path = "carrot.png" },
+    { name = "Eggplant", cost = 267, sprite_path = "eggplant.png" },
+    { name = "Bell Pepper", cost = 542, sprite_path = "bell-pepper.png" },
+    { name = "Potato", cost = 1097, sprite_path = "potato.png" },
+    { name = "Corn", cost = 2215, sprite_path = "corn.png" },
+    { name = "Broccoli", cost = 4464, sprite_path = "broccoli.png" },
+    { name = "Garlic", cost = 8983, sprite_path = "garlic.png" },
+    { name = "Mushroom", cost = 18055, sprite_path = "mushroom.png" },
+]
+
+[[products.tiers]]
+id = 3
 name = "Bread"
 products = [
-    { name = "Bread", cost = 5, sprite_path = "bread.png" },
+    { name = "Bread", cost = 225, sprite_path = "bread.png" },
+    { name = "Croissant", cost = 451, sprite_path = "croissant.png" },
+    { name = "Baguette", cost = 904, sprite_path = "baguette.png" },
+    { name = "Flatbread", cost = 1809, sprite_path = "flatbread.png" },
+    { name = "Pretzel", cost = 3621, sprite_path = "pretzel.png" },
+    { name = "Bagel", cost = 7247, sprite_path = "bagel.png" },
+    { name = "Pancake", cost = 14502, sprite_path = "pancakes.png" },
+    { name = "Waffle", cost = 29017, sprite_path = "waffle.png" },
+    { name = "Fortune Cookie", cost = 58055, sprite_path = "fortune-cookie.png" },
+]
+
+[[products.tiers]]
+id = 4
+name = "Birds"
+products = [
+    { name = "Egg", cost = 3375, sprite_path = "egg.png" },
+    { name = "Baby Chick", cost = 6751, sprite_path = "baby-chick.png" },
+    { name = "Duck", cost = 13504, sprite_path = "duck.png" },
+    { name = "Swan", cost = 27011, sprite_path = "swan.png" },
+    { name = "Owl" cost = 54027, sprite_path = "owl.png" },
+    { name = "Peacock", cost = 108062, sprite_path = "peacock.png" },
+    { name = "Eagle", cost = 216137, sprite_path = "eagle.png" },
 ]
 
 [[factories.tiers]]
