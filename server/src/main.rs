@@ -3,6 +3,8 @@ extern crate rocket;
 
 pub(crate) mod config;
 pub(crate) mod game;
+#[cfg(test)]
+pub mod tests;
 pub(crate) mod types;
 pub(crate) mod util;
 
