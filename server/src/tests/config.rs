@@ -1,7 +1,7 @@
-use crate::config::Config;
+use crate::config;
 
 /// Ensure `config.toml` loads without issues.
 #[test]
 fn load_config() {
-    load().expect("failed to load config from file");
+    config::load().expect("failed to load config from file");
 }
