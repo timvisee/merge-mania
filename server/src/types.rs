@@ -25,7 +25,8 @@ pub struct Factory {
 }
 
 /// An inventory.
-#[derive(Default)]
+// TODO: do not deserialize, use different team struct for config
+#[derive(Deserialize, Debug, Default)]
 pub struct Inventory {
     items: [Option<Item>; crate::INV_SIZE as usize],
 }

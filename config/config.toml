@@ -1,3 +1,38 @@
+[[teams]]
+id = 1
+name = "Team 1"
+password = "team1"
+
+[[teams]]
+id = 2
+name = "Team 2"
+password = "team2"
+
+[[teams]]
+id = 3
+name = "Team 3"
+password = "team3"
+
+[[teams]]
+id = 4
+name = "Team 4"
+password = "team4"
+
+[[teams]]
+id = 5
+name = "Team 5"
+password = "team5"
+
+[[teams]]
+id = 6
+name = "Team 6"
+password = "team6"
+
+[[teams]]
+id = 7
+name = "Team 7"
+password = "team7"
+
 [[products.tiers]]
 id = 1
 name = "Fruit"

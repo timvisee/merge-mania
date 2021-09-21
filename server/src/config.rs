@@ -10,6 +10,7 @@ const CONFIG_PATH: &str = "./../config/config.toml";
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
+    teams: Vec<ConfigTeam>,
     products: LibProducts,
     factories: LibFactories,
 }
@@ -24,4 +25,12 @@ pub fn load() -> Result<Config, ()> {
     let config = toml::from_slice(&data).expect("failed to parse config.toml");
 
     Ok(config)
+}
+
+/// Represents a configured team.
+#[derive(Deserialize, Debug)]
+pub struct ConfigTeam {
+    id: u32,
+    name: String,
+    password: String,
 }

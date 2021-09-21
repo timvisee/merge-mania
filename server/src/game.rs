@@ -18,6 +18,8 @@ impl Game {
 }
 
 /// Represents a team.
+#[derive(Debug)]
 pub struct Team {
+    id: u32,
     inventory: Inventory,
 }

@@ -1,6 +1,9 @@
 <template>
   <div id="app">
     <nav>
+      <router-link to="/login">
+        Login
+      </router-link>
       <router-link to="/game">
         Game
       </router-link>
@@ -16,6 +19,8 @@
 export default {
   name: "app"
 };
+
+// TODO: redirect to login route if not authenticated
 </script>
 
 <style scoped>

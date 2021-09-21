@@ -8,11 +8,12 @@ pub mod tests;
 pub(crate) mod types;
 pub(crate) mod util;
 
+use rocket::fs::{relative, FileServer, Options};
 use rocket::http::Method;
+use rocket::serde::json::Json;
 use rocket_cors::{AllowedOrigins, CorsOptions};
 
 use game::Game;
-use rocket::fs::{relative, FileServer, Options};
 use types::*;
 
 /// Inventory width/height.
@@ -45,7 +46,7 @@ fn rocket() -> _ {
     // Set up and ignite rocket
     rocket::build()
         .attach(cors.to_cors().expect("failed to build CORS config"))
-        .mount("/", routes![hello])
+        .mount("/api", routes![api_teams])
         .mount(
             "/",
             FileServer::new(
@@ -55,7 +56,26 @@ fn rocket() -> _ {
         )
 }
 
-#[get("/test")]
-async fn hello() -> &'static str {
-    "Hello, world!"
+#[get("/teams")]
+async fn api_teams() -> Json<Vec<TestTeam>> {
+    // Build list of test teams
+    let teams = vec![
+        TestTeam::new(1, "Team 1".into()),
+        TestTeam::new(2, "Team 2".into()),
+        TestTeam::new(3, "Team 3".into()),
+    ];
+
+    Json(teams)
+}
+
+#[derive(rocket::serde::Serialize, Debug)]
+struct TestTeam {
+    id: u32,
+    name: String,
+}
+
+impl TestTeam {
+    pub fn new(id: u32, name: String) -> Self {
+        TestTeam { id, name }
+    }
 }
