@@ -76,3 +76,6 @@ Initial inventory items (default items, factories)
   - scan all QRs instead of just 2 for more credits
 - increase factory price when buying more
 - tag each other, scan others QR code: trade/steal
+- missions
+  - gather items to complete missions
+  - production time factor
