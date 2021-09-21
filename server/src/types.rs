@@ -126,6 +126,13 @@ pub struct LibFactory {
     sprite_path: String,
 }
 
+impl LibFactory {
+    /// Check whether factory is buyable.
+    fn can_buy(&self) -> bool {
+        !self.cost_buy.is_empty()
+    }
+}
+
 #[derive(Deserialize, Debug)]
 pub struct LibFactoryDrop {
     item: ItemRef,
@@ -133,6 +140,7 @@ pub struct LibFactoryDrop {
 }
 
 /// An amount of money or items.
+// TODO: find better name for this
 #[derive(Deserialize, Debug)]
 #[serde(untagged)]
 pub enum Amount {
