@@ -3,6 +3,8 @@ id = 1
 name = "Fruit"
 products = [
     { name = "Apple", cost = 1, sprite_path = "apple.png" },
+    { name = "Banana", cost = 3, sprite_path = "banana.png" },
+    { name = "Pineapple", cost = 5, sprite_path = "pineapple.png" },
 ]
 
 [[products.tiers]]
@@ -16,14 +18,14 @@ products = [
 id = 101
 name = "Fruit factory"
 levels = [
-    { name = "Fruit factory 1", cost_buy = 5, cost_sell = 2, time = 60, drops = [
+    { name = "Fruit fac lvl 1", cost_buy = 5, cost_sell = 2, time = 60, drops = [
         { item = "1.1", chance = 0.95 },
         { item = "1.2", chance = 0.04 },
         { item = "2.0", chance = 0.01 },
     ], sprite_path = "fruit-factory-1.png" },
-    { name = "Fruit factory 2", cost_buy = 5, cost_sell = 2, time = 60, drops = [
-        { item = "1.1", chance = 0.95 },
-        { item = "1.2", chance = 0.04 },
-        { item = "2.0", chance = 0.01 },
+    { name = "Fruit fac lvl 2", cost_buy = 15, cost_sell = 10, time = 45, drops = [
+        { item = "1.1", chance = 0.90 },
+        { item = "1.2", chance = 0.08 },
+        { item = "2.0", chance = 0.02 },
     ], sprite_path = "fruit-factory-2.png" },
 ]

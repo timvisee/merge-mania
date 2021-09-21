@@ -61,7 +61,6 @@ pub struct LibFactoryTier {
 #[derive(Deserialize, Debug)]
 pub struct LibFactory {
     name: String,
-    // TODO: may cost multiple items
     cost_buy: u32,
     cost_sell: u32,
     time: u32,
@@ -71,7 +70,10 @@ pub struct LibFactory {
 
 #[derive(Deserialize, Debug)]
 pub struct LibFactoryDrop {
-    // TODO: change to Item ?
-    item: String,
+    item: ItemRef,
     chance: f32,
 }
+
+/// Item reference.
+#[derive(Deserialize, Debug)]
+pub struct ItemRef(String);
