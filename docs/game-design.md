@@ -67,7 +67,7 @@ Energy requirements:
 
 Initial inventory items (default items, factories)
 
-## Future ideaso
+## Future ideas
 
 - effort vs reward -> more qr code credits
   - scan all QRs instead of just 2 for more credits
