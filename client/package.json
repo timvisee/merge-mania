@@ -1,12 +1,27 @@
 {
   "name": "merge-mania-client",
   "version": "0.1.0",
-  "description": "Merge Mania game client",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "private": true,
-  "author": "Tim Visee <3a4fb3964f@sinenomine.email>",
-  "license": "AGPL-3.0-or-later"
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@sanity/block-content-to-html": "^1.3.8",
+    "@sanity/client": "^0.136.2",
+    "@sanity/image-url": "^0.136.0",
+    "vue": "^2.5.17",
+    "vue-router": "^3.0.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.2.0",
+    "@vue/cli-plugin-eslint": "^3.2.1",
+    "@vue/cli-service": "^3.2.0",
+    "@vue/eslint-config-prettier": "^4.0.1",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.9.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "vue-template-compiler": "^2.5.17"
+  }
 }
