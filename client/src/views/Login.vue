@@ -9,19 +9,34 @@
     </div>
 
     <div v-if="!loading">
-        <form>
+        <b-container fluid="sm" class="py-3">
+            <b-form @submit.prevent="onSubmit" @reset="onReset">
 
-            <label for="team">Team:</label>
-            <select name="team" id="team">
-                <option v-for="team in teams" value="{{ team.id }}">{{ team.name }}</option>
-            </select>
+                <b-form-group
+                    id="team"
+                    label="Team:"
+                    label-for="team"
+                    description="Choose your team"
+                    required
+                >
+                    <b-form-select v-model="form.team" id="team" :options="teams"></b-form-select>
+                </b-form-group>
 
-            <label for="password">Password:</label>
-            <input type="password" name="password" />
+                <b-form-group
+                    id="password"
+                    label="Password:"
+                    label-for="password"
+                    description="What's the password?"
+                    required
+                >
+                    <b-form-input v-model="form.password" id="password" type="password"></b-form-input>
+                </b-form-group>
 
-            <input type="submit" name="submit" value="Inloggen" />
+                <b-button type="submit" variant="primary">Inloggen</b-button>
+                <b-button type="reset" variant="danger">Reset</b-button>
 
-        </form>
+            </b-form>
+        </b-container>
     </div>
   </div>
 </template>
@@ -33,6 +48,10 @@ export default {
   name: "Login",
   data() {
     return {
+      form: {
+        team: null,
+        password: null,
+      },
       loading: true,
       teams: [],
     };
@@ -50,14 +69,31 @@ export default {
         // Request teams
         axios.get("/api/teams")
             .then(response => {
-                this.teams = response.data;
+                // Transform list of teams into form select model
+                this.teams = response.data.map((team) => {
+                    return {
+                        value: team.id,
+                        text: team.name,
+                    };
+                });
             })
             .catch(err => {
                 // TODO: report error
             })
             .finally(() => {
                 this.loading = false;
+                this.onReset();
             });
+    },
+    onSubmit() {
+        let data = this.form;
+        alert("TODO: submit form data: " + JSON.stringify(data));
+        return false;
+    },
+    onReset() {
+        this.form.team = null;
+        this.form.password = null;
+        return false;
     }
   }
 };
