@@ -1,6 +1,7 @@
 pub(crate) mod config;
 pub(crate) mod game;
 pub(crate) mod types;
+pub(crate) mod util;
 
 use game::Game;
 use types::*;
@@ -15,4 +16,6 @@ fn main() {
     let config = config::load().expect("failed to load game config");
 
     let game = Game::from(config);
+
+    let inventory = crate::types::Inventory::default();
 }
