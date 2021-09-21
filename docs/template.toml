@@ -1,0 +1,35 @@
+[product.1]
+name = "Fruit"
+items = [
+  "Apple",
+  "Pear",
+  "Banana",
+]
+
+[product.2]
+name = "Vegetable"
+items = [
+  "Tomato",
+]
+
+[factory.1]
+name = "Fruit factory"
+values = [
+  {
+    time = 60,
+    drops = [
+      {
+        item = 1.0,
+        chance = 0.95,
+      },
+      {
+        item = 1.1,
+        chance = 0.04,
+      },
+      {
+        item = 2.0,
+        chance = 0.01,
+      },
+    ],
+  }
+]
