@@ -57,7 +57,7 @@ products = [
     { name = "Baby Chick", cost = 6751, sprite_path = "baby-chick.png" },
     { name = "Duck", cost = 13504, sprite_path = "duck.png" },
     { name = "Swan", cost = 27011, sprite_path = "swan.png" },
-    { name = "Owl" cost = 54027, sprite_path = "owl.png" },
+    { name = "Owl", cost = 54027, sprite_path = "owl.png" },
     { name = "Peacock", cost = 108062, sprite_path = "peacock.png" },
     { name = "Eagle", cost = 216137, sprite_path = "eagle.png" },
 ]
