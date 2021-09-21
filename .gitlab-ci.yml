@@ -1,0 +1,28 @@
+image: "rust:slim"
+
+stages:
+  - check
+  - build
+  - test
+
+before_script:
+  - |
+    rustc --version
+    cargo --version
+
+check:
+  stage: check
+  script:
+    - cargo check --verbose
+
+test:
+  stage: test
+  needs: []
+  script:
+    - cargo test --release --verbose
+
+build:
+  stage: build
+  needs: []
+  script:
+    - cargo build --release --verbose
