@@ -118,8 +118,9 @@ pub struct LibFactoryTier {
 #[derive(Deserialize, Debug)]
 pub struct LibFactory {
     name: String,
-    cost_buy: Option<u32>,
-    cost_sell: u32,
+    #[serde(default)]
+    cost_buy: Vec<Amount>,
+    cost_sell: Vec<Amount>,
     time: u32,
     drops: Vec<LibFactoryDrop>,
     sprite_path: String,
@@ -129,6 +130,17 @@ pub struct LibFactory {
 pub struct LibFactoryDrop {
     item: ItemRef,
     chance: f32,
+}
+
+/// An amount of money or items.
+#[derive(Deserialize, Debug)]
+#[serde(untagged)]
+pub enum Amount {
+    /// Money amount.
+    Money(u32),
+
+    /// An item with quantity.
+    Item(ItemRef, u32),
 }
 
 /// Item reference.
