@@ -1,0 +1,29 @@
+[[products.tiers]]
+id = 1
+name = "Fruit"
+products = [
+    { name = "Apple", cost = 1, sprite_path = "apple.png" },
+]
+
+[[products.tiers]]
+id = 2
+name = "Bread"
+products = [
+    { name = "Bread", cost = 5, sprite_path = "bread.png" },
+]
+
+[[factories.tiers]]
+id = 101
+name = "Fruit factory"
+levels = [
+    { name = "Fruit factory 1", cost_buy = 5, cost_sell = 2, time = 60, drops = [
+        { item = "1.1", chance = 0.95 },
+        { item = "1.2", chance = 0.04 },
+        { item = "2.0", chance = 0.01 },
+    ], sprite_path = "fruit-factory-1.png" },
+    { name = "Fruit factory 2", cost_buy = 5, cost_sell = 2, time = 60, drops = [
+        { item = "1.1", chance = 0.95 },
+        { item = "1.2", chance = 0.04 },
+        { item = "2.0", chance = 0.01 },
+    ], sprite_path = "fruit-factory-2.png" },
+]

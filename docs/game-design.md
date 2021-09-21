@@ -43,11 +43,14 @@ Product types:
 
 Factories:
 - Fruit:
-  - Build cost: cost 5
   - Level 1:
+    - Buy cost: 5 money
+    - Sell cost: 2 money
     - production time: 1 min
     - 95% apple, 4% Pear, 1% Tomato
   - Level 2:
+    - Buy cost: 20 money
+    - Sell cost: 5 money
     - production time: 45 sec
     - 87% apple, 10% Pear, 3% Tomato
   - Level 3: ...
@@ -72,3 +75,4 @@ Initial inventory items (default items, factories)
 - effort vs reward -> more qr code credits
   - scan all QRs instead of just 2 for more credits
 - increase factory price when buying more
+- tag each other, scan others QR code: trade/steal
