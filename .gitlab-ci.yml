@@ -2,8 +2,6 @@ image: "rust:slim"
 
 stages:
   - check
-  - build
-  - test
 
 before_script:
   - |
@@ -15,17 +13,5 @@ check:
   script:
     - cd server
     - cargo check --verbose
-
-test:
-  stage: test
-  needs: []
-  script:
-    - cd server
-    - cargo test --release --verbose
-
-build:
-  stage: build
-  needs: []
-  script:
-    - cd server
-    - cargo build --release --verbose
+    - cargo test --verbose
+    - cargo build --verbose
