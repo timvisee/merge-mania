@@ -118,7 +118,7 @@ pub struct LibFactoryTier {
 #[derive(Deserialize, Debug)]
 pub struct LibFactory {
     name: String,
-    cost_buy: u32,
+    cost_buy: Option<u32>,
     cost_sell: u32,
     time: u32,
     drops: Vec<LibFactoryDrop>,
