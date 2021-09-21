@@ -1,24 +1,13 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/movies">
-        Movies
-      </router-link>
-      <router-link to="/people">
-        People
+      <router-link to="/game">
+        Game
       </router-link>
     </nav>
     <router-view />
     <footer>
-      <a href="http://sanity.io">
-        <img class="logo" src="./assets/sanity-logo.svg"/>
-      </a>
-      +
-      <a href="https://vuejs.org">
-        <img class="logo" src="./assets/vue-logo.svg"/>
-      </a>
-      =
-      💖
+        Made by <a href="https://timvisee.com/" target="_blank">Tim Visée</a>
     </footer>
   </div>
 </template>
@@ -43,12 +32,6 @@ footer {
   padding: 5rem 1rem;
   text-align: center;
   font-size: 1rem;
-}
-
-footer img {
-  display: inline-block;
-  height: 1em;
-  width: auto;
 }
 
 nav {

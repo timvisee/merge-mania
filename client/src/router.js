@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Movies from "./views/Movies.vue";
+import Home from "./views/Home.vue";
+import Game from "./views/Game.vue";
 
 Vue.use(Router);
 
@@ -11,32 +12,18 @@ export default new Router({
     {
       path: "/",
       name: "index",
-      component: Movies
+      component: Home,
     },
     {
-      path: "/movies",
-      name: "movies",
-      component: Movies
+      path: "/game",
+      name: "game",
+      component: Game,
     },
-    {
-      path: "/people",
-      name: "people",
-      component: () =>
-        import(/* webpackChunkName: "people" */ "./views/People.vue")
-    },
-    {
-      path: "/movie/:id",
-      name: "movie",
-      component: () =>
-        import(/* webpackChunkName: "movie" */ "./views/Movie.vue"),
-      props: route => ({ id: route.params.id })
-    },
-    {
-      path: "/people/:id",
-      name: "person",
-      component: () =>
-        import(/* webpackChunkName: "person" */ "./views/Person.vue"),
-      props: route => ({ id: route.params.id })
-    }
+    // {
+    //   path: "/people",
+    //   name: "people",
+    //   component: () =>
+    //     import(/* webpackChunkName: "people" */ "./views/People.vue")
+    // },
   ]
 });
