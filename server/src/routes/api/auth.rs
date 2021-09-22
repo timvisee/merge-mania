@@ -43,18 +43,20 @@ pub fn login(state: SharedState, data: LoginData) -> Box<dyn Reply> {
         );
     }
 
-    // TODO: create and respond with session
-    let session = SessionData {
-        token: "abc".into(),
-    };
+    // Create session
+    let session = state.sessions.add(data.team);
 
-    Box::new(json(&session))
+    Box::new(json(&SessionData {
+        token: session.token().into(),
+    }))
 }
 
 /// Logout route.
 pub fn logout(state: SharedState, data: SessionData) -> impl Reply {
-    // TODO: invalidate session
-    crate::server::ApiError::from(crate::lang::NOT_YET_IMPLEMENTED).to_reply()
+    // TODO: we might want to check session token validity here
+
+    state.sessions.remove(&data.token);
+    json(&true)
 }
 
 /// Login data.
@@ -67,8 +69,7 @@ pub struct LoginData {
 
 /// Session validation route.
 pub fn validate(state: SharedState, data: SessionData) -> impl Reply {
-    // TODO: validate session
-    crate::server::ApiError::from(crate::lang::NOT_YET_IMPLEMENTED).to_reply()
+    json(&state.sessions.is_valid(&data.token))
 }
 
 /// Session data.

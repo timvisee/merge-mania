@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use crate::auth::SessionManager;
 use crate::config::Config;
 use crate::game::Game;
 
@@ -8,7 +9,8 @@ pub type SharedState = Arc<State>;
 /// Shared server state.
 pub struct State {
     pub config: Config,
-    game: Game,
+    pub sessions: SessionManager,
+    _game: Game,
 }
 
 impl State {
@@ -16,7 +18,8 @@ impl State {
     pub fn new(config: Config) -> Self {
         State {
             config,
-            game: Game::default(),
+            sessions: SessionManager::new(),
+            _game: Game::default(),
         }
     }
 

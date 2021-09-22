@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import auth from "../auth";
+
 export default {
   name: "Game",
   data() {
@@ -23,6 +25,13 @@ export default {
     };
   },
   created() {
+    // Redirect to login page if not authenticated
+    auth.isAuth()
+        .then((auth) => {
+            if(!auth)
+                this.redirectToLogin();
+        });
+
     this.fetchData();
   },
   watch: {
@@ -31,7 +40,11 @@ export default {
   methods: {
     fetchData() {
       this.loading = false;
-    }
+    },
+
+    redirectToLogin() {
+        this.$router.push({name: "login"});
+    },
   }
 };
 </script>

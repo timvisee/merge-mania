@@ -4,7 +4,7 @@ use warp::http::StatusCode;
 use warp::Reply;
 
 use crate::routes::ErrorMessage;
-use crate::state::{SharedState, State};
+use crate::state::SharedState;
 
 /// HTTP server.
 pub async fn server(state: SharedState) {

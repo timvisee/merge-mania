@@ -10,7 +10,7 @@
 
     <div v-if="!loading">
         <b-container fluid="sm" class="py-3">
-            <b-form @submit.prevent="onSubmit" @reset="onReset">
+            <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
 
                 <b-form-group
                     id="team"
@@ -47,6 +47,7 @@
 
 <script>
 import axios from "axios";
+import auth from "../auth";
 
 export default {
   name: "Login",
@@ -61,15 +62,35 @@ export default {
     };
   },
   created() {
-    this.checkLogin();
+    this.onPageShow();
   },
   watch: {
-    $route: "checkLogin"
+    $route: "onPageShow"
   },
   methods: {
-    checkLogin() {
-        // TODO: redirect to game if authenticated
+    // Invoked when page is shown
+    onPageShow() {
+        this.loading = true;
 
+        // Check whether we're authenticated
+        auth.isAuth()
+            .then((auth) => {
+                if(auth)
+                    this.showGame();
+                else
+                    this.loadTeams();
+            })
+            .catch((err) => {
+                // TODO: remove this line below!
+                alert(err);
+
+                // TODO: improve error handling
+                alert("Error: " + err.response.data.message);
+            });
+    },
+
+    // Load teams to show in form
+    loadTeams() {
         // Request teams
         axios.get("/api/auth/teams")
             .then(response => {
@@ -82,28 +103,33 @@ export default {
                 });
             })
             .catch(err => {
-                // TODO: report error
+                // TODO: improve error handling
+                alert("Error: " + error.response.data.message);
             })
             .finally(() => {
                 this.loading = false;
                 this.onReset();
             });
     },
+
+    // Submit form and authenticate
     onSubmit() {
-        this.attemptLogin();
-        return false;
+        this.attemptAuth();
     },
+
+    // Reset form
     onReset() {
         this.form.team = null;
         this.form.password = null;
-        return false;
     },
-    attemptLogin() {
+
+    // Attempt to authenticate with form data.
+    attemptAuth() {
         this.loading = true;
         axios.post("/api/auth/login", this.form)
             .then((response) => {
-                // TODO: handle response, set token
-                alert(JSON.stringify(response.data));
+                auth.setSessionToken(response.data.token);
+                this.showGame();
             })
             .catch((error) => {
                 // TODO: improve error handling
@@ -113,6 +139,11 @@ export default {
                 this.loading = false;
             });
     },
+
+    // Navigate to game page
+    showGame() {
+        this.$router.push({name: "game"});
+    }
   }
 };
 </script>

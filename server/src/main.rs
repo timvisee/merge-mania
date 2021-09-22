@@ -1,3 +1,4 @@
+pub(crate) mod auth;
 pub(crate) mod config;
 pub(crate) mod game;
 pub(crate) mod lang;
@@ -13,6 +14,9 @@ use state::{SharedState, State};
 
 /// Server host.
 pub const HOST: ([u8; 4], u16) = ([127, 0, 0, 1], 8000);
+
+/// Config path.
+pub const CONFIG_PATH: &str = "./../config/config.toml";
 
 /// Inventory width/height.
 pub const INV_WIDTH: u16 = 8;

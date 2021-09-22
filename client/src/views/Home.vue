@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import auth from "../auth";
+
 export default {
   name: "Home",
   data() {
@@ -19,14 +21,19 @@ export default {
     };
   },
   created() {
-    this.fetchData();
+    this.onShow();
   },
   watch: {
-    $route: "fetchData"
+    $route: "onShow"
   },
   methods: {
-    fetchData() {
-      this.loading = false;
+    onShow() {
+        // Redirect to game if authenticated
+        auth.isAuth()
+            .then((auth) => {
+                if(auth)
+                    this.$router.push({name: "game"});
+            });
     }
   }
 };

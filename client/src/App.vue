@@ -1,6 +1,4 @@
 <template>
-  <div id="app">
-
     <main>
 
         <!-- Nav bar -->
@@ -11,12 +9,18 @@
                 <b-collapse id="nav-collapse" is-nav>
                     <b-navbar-nav>
 
-                        <router-link to="/login" class="nav-link">
+                        <router-link :to="{name: 'home'}" class="nav-link">
+                            Home
+                        </router-link>
+                        <router-link :to="{name: 'login'}" class="nav-link">
                             Login
                         </router-link>
-                        <router-link to="/game" class="nav-link">
+                        <router-link :to="{name: 'game'}" class="nav-link">
                             Game
                         </router-link>
+                        <a href="#" @click.prevent="logout" class="nav-link">
+                            Logout
+                        </a>
 
                     </b-navbar-nav>
                 </b-collapse>
@@ -33,31 +37,39 @@
         </footer>
 
     </main>
-
-  </div>
 </template>
 
 <script>
-export default {
-  name: "app"
-};
+import auth from "./auth";
 
-// TODO: redirect to login route if not authenticated
+export default {
+  name: "app",
+  created() {
+    // Redirect to login page if not authenticated
+    auth.isAuth()
+        .then((auth) => {
+            if(!auth)
+                this.redirectToLogin();
+        });
+  },
+  methods: {
+    redirectToLogin() {
+        this.$router.push({name: "login"});
+    },
+
+    logout() {
+        // TODO: invalidate current session on server
+        auth.resetSessionToken();
+        this.redirectToLogin();
+    },
+  },
+};
 </script>
 
 <style scoped>
-#app {
-  margin: 0;
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  padding: 0;
-}
-
 footer {
-  padding: 5rem 1rem;
-  text-align: center;
-  font-size: 1rem;
+    padding: 5rem 1rem;
+    text-align: center;
+    font-size: 1rem;
 }
 </style>

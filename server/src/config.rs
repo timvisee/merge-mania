@@ -6,8 +6,6 @@ use toml;
 
 use crate::types::{LibFactories, LibProducts};
 
-const CONFIG_PATH: &str = "./../config/config.toml";
-
 #[derive(Deserialize, Debug)]
 pub struct Config {
     pub teams: Vec<ConfigTeam>,
@@ -18,7 +16,7 @@ pub struct Config {
 /// Load config from disk.
 // TODO: expose errors through error enum
 pub fn load() -> Result<Config, ()> {
-    let path = PathBuf::from(CONFIG_PATH);
+    let path = PathBuf::from(crate::CONFIG_PATH);
 
     let data = fs::read(path).expect("failed to read config.toml");
 
