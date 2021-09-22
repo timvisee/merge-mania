@@ -10,9 +10,9 @@ const CONFIG_PATH: &str = "./../config/config.toml";
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
-    teams: Vec<ConfigTeam>,
-    products: LibProducts,
-    factories: LibFactories,
+    pub teams: Vec<ConfigTeam>,
+    pub products: LibProducts,
+    pub factories: LibFactories,
 }
 
 /// Load config from disk.
@@ -28,9 +28,9 @@ pub fn load() -> Result<Config, ()> {
 }
 
 /// Represents a configured team.
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ConfigTeam {
-    id: u32,
-    name: String,
-    password: String,
+    pub id: u32,
+    pub name: String,
+    pub password: String,
 }
