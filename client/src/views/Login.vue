@@ -8,36 +8,44 @@
       {{ error }}
     </div>
 
-    <div v-if="!loading">
+    <div v-if="!loading" class="page-auth-card text-center mt-5">
 
         <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
 
-            <b-form-group
+            <h1 class="h3 mb-3 fw-normal">Inloggen</h1>
+
+            <b-form-select
+                v-model="form.team"
                 id="team"
-                label="Team:"
-                label-for="team"
-                required
+                :options="teams"
+                placeholder="Team"
+                class="mt-3"
+                size="lg"
             >
-                <b-form-select
-                    v-model="form.team"
-                    id="team"
-                    :options="teams"
-                ></b-form-select>
-            </b-form-group>
+                <b-form-select-option :value="null" disabled="disabled">Selecteer team</b-form-select-option>
+            </b-form-select>
 
-            <b-form-group
+            <b-form-input
+                v-model="form.password"
                 id="password"
-                label="Password:"
-                label-for="password"
-                description="What's the password?"
-                required
-            >
-                <b-form-input v-model="form.password" id="password" type="password"></b-form-input>
-            </b-form-group>
+                type="password"
+                placeholder="Wachtwoord"
+                class="mt-2"
+                size="lg"
+            ></b-form-input>
 
-            <b-button type="submit" variant="primary">Inloggen</b-button>
-            &nbsp;
-            <b-button type="reset" variant="danger">Reset</b-button>
+            <b-button
+                type="submit"
+                size="lg"
+                variant="primary"
+                class="w-100 mt-4"
+            >Inloggen</b-button>
+
+            <b-button
+                type="reset"
+                variant="link"
+                class="w-100 mt-2"
+            >Reset</b-button>
 
         </b-form>
 
@@ -147,3 +155,13 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.page-auth-card {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+    margin-top: auto;
+}
+</style>
