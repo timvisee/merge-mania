@@ -72,7 +72,37 @@ export default {
 .game-grid {
     --grid-cell-size: 48px;
     --grid-space: 5px;
+}
 
+@media screen and (max-width: 560px) {
+    .game-grid {
+        --grid-cell-size: 40px;
+        --grid-space: 4px;
+    }
+}
+
+@media screen and (max-width: 470px) {
+    .game-grid {
+        --grid-cell-size: 32px;
+        --grid-space: 3px;
+    }
+}
+
+@media screen and (max-width: 390px) {
+    .game-grid {
+        --grid-cell-size: 28px;
+        --grid-space: 2px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .game-grid {
+        --grid-cell-size: 24px;
+        --grid-space: 1px;
+    }
+}
+
+.game-grid {
     width: fit-content;
     min-width: max-content;
     max-width: fit-content;
@@ -100,8 +130,8 @@ export default {
     text-align: center;
 
     background-image: url(/sprites/red-apple.png);
-    background-clip: padding-box;
-    background-origin: padding-box;
+    background-clip: content-box;
+    background-origin: content-box;
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
