@@ -1,12 +1,18 @@
 <template>
   <div>
-    <div class="loading" v-if="loading">
-      Loading...
-    </div>
-
     <div v-if="error" class="error">
       {{ error }}
     </div>
+
+    <div class="page-small-card text-center mt-5">
+
+        <h1 class="h3 mb-3 fw-normal">Home</h1>
+        <p>
+            TODO: home page
+        </p>
+
+    </div>
+
   </div>
 </template>
 
@@ -15,11 +21,6 @@ import auth from "../auth";
 
 export default {
   name: "Home",
-  data() {
-    return {
-      loading: true,
-    };
-  },
   created() {
     this.onShow();
   },
@@ -38,3 +39,13 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.page-small-card {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+    margin-top: auto;
+}
+</style>

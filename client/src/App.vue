@@ -18,13 +18,16 @@
                         Home
                     </router-link>
                     <router-link :to="{name: 'login'}" class="nav-link">
-                        Login
+                        Inloggen
                     </router-link>
                     <router-link :to="{name: 'game'}" class="nav-link">
                         Game
                     </router-link>
+                    <router-link :to="{name: 'about'}" class="nav-link">
+                        Over
+                    </router-link>
                     <a href="#" @click.prevent="logout" class="nav-link">
-                        Logout
+                        Uitloggen
                     </a>
                 </b-navbar-nav>
             </b-collapse>
@@ -34,10 +37,6 @@
         <b-container class="py-3">
             <router-view />
         </b-container>
-
-        <footer>
-            Made by <a href="https://timvisee.com/" target="_blank">Tim Visée</a>
-        </footer>
 
     </main>
 </template>
@@ -68,11 +67,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-footer {
-    padding: 5rem 1rem;
-    text-align: center;
-    font-size: 1rem;
-}
-</style>

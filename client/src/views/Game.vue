@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div class="loading" v-if="loading">
-      Loading...
-    </div>
+    <loader v-if="loading" />
 
     <div v-if="error" class="error">
       {{ error }}

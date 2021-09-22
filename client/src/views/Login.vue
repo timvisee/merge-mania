@@ -1,14 +1,12 @@
 <template>
   <div>
-    <div class="loading" v-if="loading">
-      Loading...
-    </div>
+    <loader v-if="loading" />
 
     <div v-if="error" class="error">
       {{ error }}
     </div>
 
-    <div v-if="!loading" class="page-auth-card text-center mt-5">
+    <div v-if="!loading" class="page-small-card text-center mt-5">
 
         <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
 
@@ -157,7 +155,7 @@ export default {
 </script>
 
 <style scoped>
-.page-auth-card {
+.page-small-card {
     width: 100%;
     max-width: 330px;
     padding: 15px;
