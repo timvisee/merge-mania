@@ -2,32 +2,33 @@
     <main>
 
         <!-- Nav bar -->
-        <b-navbar toggleable="lg" type="dark" variant="info">
-            <b-container>
-                <b-navbar-brand href="#">Merge Mania</b-navbar-brand>
+        <b-navbar toggleable="sm" type="dark" variant="dark">
+            <b-navbar-brand href="#">Merge Mania</b-navbar-brand>
 
-                <b-collapse id="nav-collapse" is-nav>
-                    <b-navbar-nav>
+            <b-navbar-toggle target="navbar-toggle-collapse">
+                <template #default="{ expanded }">
+                    <b-icon v-if="expanded" icon="chevron-bar-up"></b-icon>
+                    <b-icon v-else icon="chevron-bar-down"></b-icon>
+                </template>
+            </b-navbar-toggle>
 
-                        <router-link :to="{name: 'home'}" class="nav-link">
-                            Home
-                        </router-link>
-                        <router-link :to="{name: 'login'}" class="nav-link">
-                            Login
-                        </router-link>
-                        <router-link :to="{name: 'game'}" class="nav-link">
-                            Game
-                        </router-link>
-                        <a href="#" @click.prevent="logout" class="nav-link">
-                            Logout
-                        </a>
+            <b-collapse id="navbar-toggle-collapse" is-nav>
+                <b-navbar-nav class="ml-auto">
+                    <router-link :to="{name: 'home'}" class="nav-link">
+                        Home
+                    </router-link>
+                    <router-link :to="{name: 'login'}" class="nav-link">
+                        Login
+                    </router-link>
+                    <router-link :to="{name: 'game'}" class="nav-link">
+                        Game
+                    </router-link>
+                    <a href="#" @click.prevent="logout" class="nav-link">
+                        Logout
+                    </a>
+                </b-navbar-nav>
+            </b-collapse>
 
-                    </b-navbar-nav>
-                </b-collapse>
-
-                <!-- TODO: expand button on small screens -->
-
-            </b-container>
         </b-navbar>
 
         <b-container class="py-3">
