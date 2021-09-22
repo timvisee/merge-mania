@@ -6,8 +6,19 @@
       {{ error }}
     </div>
 
-    <div>
-        TODO: game content here...
+    <div class="text-center">
+        <h1 class="h3 mb-3 fw-normal">Game</h1>
+
+        <!-- Inventory grid -->
+        <div class="game-grid">
+            <div v-for="row in inventory" class="row">
+                <div v-for="cell in row" class="game-cell">
+                    <!-- {{ cell }} -->
+                    <!-- <img src="/sprites/red-apple.png" /> -->
+                </div>
+            </div>
+        </div>
+
     </div>
   </div>
 </template>
@@ -20,6 +31,16 @@ export default {
   data() {
     return {
       loading: true,
+      inventory: [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+      ],
     };
   },
   created() {
@@ -46,3 +67,43 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.game-grid {
+    --grid-cell-size: 48px;
+    --grid-space: 5px;
+
+    width: fit-content;
+    min-width: max-content;
+    max-width: fit-content;
+    display: block;
+    border: black solid 1px;
+    margin: 2rem auto;
+    box-sizing: content-box;
+    padding: var(--grid-space) 0 0 var(--grid-space);
+}
+
+.game-grid .row {
+    /* display: block; */
+    margin: 0 0 var(--grid-space) 0;
+    box-sizing: content-box;
+}
+
+.game-grid .game-cell {
+    border: brown dashed 1px;
+    width: var(--grid-cell-size);
+    height: var(--grid-cell-size);
+    display: inline-block;
+    margin: 0 var(--grid-space) 0 0;
+    padding: var(--grid-space);
+    box-sizing: content-box;
+    text-align: center;
+
+    background-image: url(/sprites/red-apple.png);
+    background-clip: padding-box;
+    background-origin: padding-box;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+</style>

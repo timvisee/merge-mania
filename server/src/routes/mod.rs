@@ -51,11 +51,14 @@ pub fn routes(
 
     let static_client = warp::fs::dir("../client/dist");
 
+    let static_sprites = warp::path("sprites").and(warp::fs::dir("../sprites"));
+
     let static_server = warp::fs::dir("./public/");
 
     heartbeat
         .or(api)
         .or(static_client)
+        .or(static_sprites)
         .or(static_server)
         .recover(handle_rejection)
 }
