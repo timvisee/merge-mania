@@ -16,10 +16,14 @@
                     id="team"
                     label="Team:"
                     label-for="team"
-                    description="Choose your team"
                     required
                 >
-                    <b-form-select v-model="form.team" id="team" :options="teams"></b-form-select>
+                    <b-form-select
+                        v-model="form.team"
+                        id="team"
+                        class="form-select"
+                        :options="teams"
+                    ></b-form-select>
                 </b-form-group>
 
                 <b-form-group
@@ -67,7 +71,7 @@ export default {
         // TODO: redirect to game if authenticated
 
         // Request teams
-        axios.get("/api/teams")
+        axios.get("/api/auth/teams")
             .then(response => {
                 // Transform list of teams into form select model
                 this.teams = response.data.map((team) => {
@@ -86,15 +90,29 @@ export default {
             });
     },
     onSubmit() {
-        let data = this.form;
-        alert("TODO: submit form data: " + JSON.stringify(data));
+        this.attemptLogin();
         return false;
     },
     onReset() {
         this.form.team = null;
         this.form.password = null;
         return false;
-    }
+    },
+    attemptLogin() {
+        this.loading = true;
+        axios.post("/api/auth/login", this.form)
+            .then((response) => {
+                // TODO: handle response, set token
+                alert(JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                // TODO: improve error handling
+                alert("Error: " + error.response.data.message);
+            })
+            .finally(() => {
+                this.loading = false;
+            });
+    },
   }
 };
 </script>
