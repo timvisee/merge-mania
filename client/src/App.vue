@@ -30,7 +30,9 @@
             </b-container>
         </b-navbar>
 
-        <router-view />
+        <b-container class="py-3">
+            <router-view />
+        </b-container>
 
         <footer>
             Made by <a href="https://timvisee.com/" target="_blank">Tim Visée</a>

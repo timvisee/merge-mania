@@ -9,38 +9,38 @@
     </div>
 
     <div v-if="!loading">
-        <b-container fluid="sm" class="py-3">
-            <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
 
-                <b-form-group
+        <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
+
+            <b-form-group
+                id="team"
+                label="Team:"
+                label-for="team"
+                required
+            >
+                <b-form-select
+                    v-model="form.team"
                     id="team"
-                    label="Team:"
-                    label-for="team"
-                    required
-                >
-                    <b-form-select
-                        v-model="form.team"
-                        id="team"
-                        class="form-select"
-                        :options="teams"
-                    ></b-form-select>
-                </b-form-group>
+                    :options="teams"
+                ></b-form-select>
+            </b-form-group>
 
-                <b-form-group
-                    id="password"
-                    label="Password:"
-                    label-for="password"
-                    description="What's the password?"
-                    required
-                >
-                    <b-form-input v-model="form.password" id="password" type="password"></b-form-input>
-                </b-form-group>
+            <b-form-group
+                id="password"
+                label="Password:"
+                label-for="password"
+                description="What's the password?"
+                required
+            >
+                <b-form-input v-model="form.password" id="password" type="password"></b-form-input>
+            </b-form-group>
 
-                <b-button type="submit" variant="primary">Inloggen</b-button>
-                <b-button type="reset" variant="danger">Reset</b-button>
+            <b-button type="submit" variant="primary">Inloggen</b-button>
+            &nbsp;
+            <b-button type="reset" variant="danger">Reset</b-button>
 
-            </b-form>
-        </b-container>
+        </b-form>
+
     </div>
   </div>
 </template>
