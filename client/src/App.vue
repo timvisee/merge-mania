@@ -14,7 +14,7 @@
 
             <b-collapse id="navbar-toggle-collapse" is-nav>
                 <b-navbar-nav class="ml-auto">
-                    <router-link :to="{name: 'home'}" class="nav-link">
+                    <router-link :to="{name: 'index'}" class="nav-link">
                         Home
                     </router-link>
                     <router-link :to="{name: 'login'}" class="nav-link">
