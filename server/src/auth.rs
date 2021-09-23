@@ -5,6 +5,7 @@ use std::sync::{
 };
 
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
+use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc;
 use warp::filters::ws::{Message, WebSocket};
 
@@ -165,6 +166,12 @@ impl Client {
             tx,
         }
     }
+}
+
+/// Session data.
+#[derive(Serialize, Deserialize, Debug)]
+pub struct SessionData {
+    pub token: String,
 }
 
 /// Check whether the token format is valid.

@@ -88,7 +88,7 @@ async fn handle_auth(
         };
 
         // Try to parse session token and validate
-        let session: super::api::auth::SessionData = match serde_json::from_str(msg) {
+        let session: crate::auth::SessionData = match serde_json::from_str(msg) {
             Ok(session) => session,
             Err(err) => {
                 println!(

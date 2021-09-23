@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use warp::reply::{json, Json};
 
+use crate::auth::SessionData;
 use crate::state::SharedState;
 
 /// Get list of teams.
@@ -32,15 +33,13 @@ pub fn login(data: LoginData, state: SharedState) -> Box<dyn Reply> {
     let config_team = match state.config.teams.iter().find(|t| t.id == data.team) {
         Some(team) => team,
         None => {
-            return Box::new(crate::server::ApiError::from(crate::lang::TEAM_UNKNOWN).to_reply());
+            return Box::new(crate::web::ApiError::from(crate::lang::TEAM_UNKNOWN).to_reply());
         }
     };
 
     // Validate password
     if config_team.password != data.password {
-        return Box::new(
-            crate::server::ApiError::from(crate::lang::TEAM_INCORRECT_PASS).to_reply(),
-        );
+        return Box::new(crate::web::ApiError::from(crate::lang::TEAM_INCORRECT_PASS).to_reply());
     }
 
     // Create session
@@ -70,10 +69,4 @@ pub struct LoginData {
 /// Session validation route.
 pub fn validate(data: SessionData, state: SharedState) -> impl Reply {
     json(&state.sessions.is_valid(&data.token))
-}
-
-/// Session data.
-#[derive(Serialize, Deserialize, Debug)]
-pub struct SessionData {
-    pub token: String,
 }

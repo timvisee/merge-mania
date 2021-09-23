@@ -1,6 +1,5 @@
 pub mod api;
 pub mod magic;
-pub mod ws;
 
 use std::convert::Infallible;
 use std::error::Error;
@@ -60,7 +59,7 @@ pub fn routes(
             .and(s(state.clone()))
             .map(|ws: warp::ws::Ws, state| {
                 // Start handling socket when websocket handshake succeeds
-                ws.on_upgrade(move |socket| ws::connected(state, socket))
+                ws.on_upgrade(move |socket| crate::ws::connected(state, socket))
             });
 
     let static_client = warp::fs::dir("../client/dist");

@@ -1,16 +1,18 @@
+pub mod types;
+
 use std::fs;
 use std::path::PathBuf;
 
 use serde::Deserialize;
 use toml;
 
-use crate::types::{LibFactories, LibProducts};
+pub use types::*;
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
     pub teams: Vec<ConfigTeam>,
-    pub products: LibProducts,
-    pub factories: LibFactories,
+    pub products: ConfigProducts,
+    pub factories: ConfigFactories,
 }
 
 /// Load config from disk.
@@ -31,12 +33,4 @@ pub fn load() -> Result<Config, ()> {
     println!("Game configuration loaded.");
 
     Ok(config)
-}
-
-/// Represents a configured team.
-#[derive(Deserialize, Debug, Clone)]
-pub struct ConfigTeam {
-    pub id: u32,
-    pub name: String,
-    pub password: String,
 }

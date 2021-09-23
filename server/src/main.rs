@@ -6,16 +6,17 @@ pub(crate) mod config;
 pub(crate) mod game;
 pub(crate) mod lang;
 pub(crate) mod routes;
-pub(crate) mod server;
 pub(crate) mod state;
 #[cfg(test)]
 pub mod tests;
 pub(crate) mod types;
 pub(crate) mod util;
+pub(crate) mod web;
+pub(crate) mod ws;
 
 use state::{SharedState, State};
 
-/// Server host.
+/// Web server host.
 pub const HOST: ([u8; 4], u16) = ([0, 0, 0, 0], 8000);
 
 /// Config path.
@@ -36,12 +37,13 @@ fn main() {
         .build()
         .unwrap()
         .block_on(async {
-            crate::server::server(state).await;
+            crate::web::server(state).await;
         })
 }
 
 /// Load shared state.
 fn state() -> SharedState {
+    println!("Initializing global state...");
     let config = config::load().expect("failed to load game config");
     State::new(config).shared()
 }
