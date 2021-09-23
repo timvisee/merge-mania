@@ -1,10 +1,18 @@
 use std::iter;
-use std::sync::RwLock;
+use std::sync::{
+    atomic::{AtomicUsize, Ordering},
+    Arc, RwLock,
+};
 
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
+use tokio::sync::mpsc;
+use warp::filters::ws::{Message, WebSocket};
 
 /// Session token length.
 const TOKEN_LENGTH: usize = 64;
+
+/// Unique client ID provider.
+static CLIENT_IDS: AtomicUsize = AtomicUsize::new(1);
 
 /// A basic session manager.
 pub struct SessionManager {
@@ -52,6 +60,11 @@ impl SessionManager {
             .cloned()
     }
 
+    /// Get a session and explicitly check it is valid.
+    pub fn get_valid(&self, token: &str) -> Option<Session> {
+        self.get(token)
+    }
+
     /// Check whether the given token is valid.
     pub fn is_valid(&self, token: &str) -> bool {
         self.sessions
@@ -66,7 +79,7 @@ impl SessionManager {
 #[derive(Clone)]
 pub struct Session {
     // Team this session is for.
-    team_id: u32,
+    pub team_id: u32,
 
     // Session token.
     token: String,
@@ -94,6 +107,68 @@ impl Session {
     /// Get session token.
     pub fn token(&self) -> &str {
         &self.token
+    }
+}
+
+/// A basic client connection manager.
+///
+/// Tracks active client websocket connections.
+pub struct ClientManager {
+    pub clients: RwLock<Vec<Client>>,
+}
+
+impl ClientManager {
+    /// Construct a new client manager.
+    pub fn new() -> Self {
+        Self {
+            clients: RwLock::new(vec![]),
+        }
+    }
+
+    /// Register a client.
+    pub fn register(&self, client: Client) {
+        self.clients.write().unwrap().push(client);
+    }
+
+    /// Unregister a client.
+    pub fn unregister(&self, client_id: usize) -> bool {
+        let mut clients = self.clients.write().unwrap();
+        match clients.iter().position(|c| c.client_id == client_id) {
+            Some(i) => {
+                clients.remove(i);
+                true
+            }
+            None => false,
+        }
+    }
+
+    /// Generate an unique client ID.
+    pub fn generate_id() -> usize {
+        CLIENT_IDS.fetch_add(1, Ordering::Relaxed)
+    }
+}
+
+/// An active and authenticated client connection.
+pub struct Client {
+    /// Unique websocket client ID.
+    pub client_id: usize,
+
+    /// Authenticated team ID.
+    pub team_id: u32,
+
+    /// Message send queue.
+    // TODO: make this private, send through JSON serialize function instead
+    pub tx: mpsc::UnboundedSender<Message>,
+}
+
+impl Client {
+    /// Construct a new client.
+    pub fn new(client_id: usize, team_id: u32, tx: mpsc::UnboundedSender<Message>) -> Self {
+        Self {
+            client_id,
+            team_id,
+            tx,
+        }
     }
 }
 

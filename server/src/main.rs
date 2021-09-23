@@ -1,3 +1,6 @@
+// TODO: remove this before release
+#![allow(unused)]
+
 pub(crate) mod auth;
 pub(crate) mod config;
 pub(crate) mod game;
@@ -13,7 +16,7 @@ pub(crate) mod util;
 use state::{SharedState, State};
 
 /// Server host.
-pub const HOST: ([u8; 4], u16) = ([127, 0, 0, 1], 8000);
+pub const HOST: ([u8; 4], u16) = ([0, 0, 0, 0], 8000);
 
 /// Config path.
 pub const CONFIG_PATH: &str = "./../config/config.toml";

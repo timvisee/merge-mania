@@ -27,7 +27,7 @@ impl From<&crate::config::ConfigTeam> for TeamData {
 use warp::Reply;
 
 /// Login route.
-pub fn login(state: SharedState, data: LoginData) -> Box<dyn Reply> {
+pub fn login(data: LoginData, state: SharedState) -> Box<dyn Reply> {
     // Find team with ID
     let config_team = match state.config.teams.iter().find(|t| t.id == data.team) {
         Some(team) => team,
@@ -52,7 +52,7 @@ pub fn login(state: SharedState, data: LoginData) -> Box<dyn Reply> {
 }
 
 /// Logout route.
-pub fn logout(state: SharedState, data: SessionData) -> impl Reply {
+pub fn logout(data: SessionData, state: SharedState) -> impl Reply {
     // TODO: we might want to check session token validity here
 
     state.sessions.remove(&data.token);
@@ -68,12 +68,12 @@ pub struct LoginData {
 }
 
 /// Session validation route.
-pub fn validate(state: SharedState, data: SessionData) -> impl Reply {
+pub fn validate(data: SessionData, state: SharedState) -> impl Reply {
     json(&state.sessions.is_valid(&data.token))
 }
 
 /// Session data.
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SessionData {
-    token: String,
+    pub token: String,
 }

@@ -1,5 +1,6 @@
 pub mod api;
 pub mod magic;
+pub mod ws;
 
 use std::convert::Infallible;
 use std::error::Error;
@@ -14,30 +15,34 @@ use crate::state::SharedState;
 pub fn routes(
     state: SharedState,
 ) -> impl Filter<Extract = impl Reply, Error = Infallible> + Clone + Send + Sync + 'static {
+    // Helper to transform state in shareable warp filter.
+    let s = |s: SharedState| warp::any().map(move || s.clone());
+
     let heartbeat = warp::path("__heartbeat__").map(magic::heartbeat);
 
-    let state_cloned = state.clone();
-    let api_auth_teams = warp::path("teams").map(move || api::auth::teams(state_cloned.clone()));
+    let api_auth_teams = warp::path("teams")
+        .and(s(state.clone()))
+        .map(|state: SharedState| api::auth::teams(state));
 
-    let state_cloned = state.clone();
     let api_auth_login = warp::path("login").and(
         warp::post()
             .and(warp::body::json())
-            .map(move |data| api::auth::login(state_cloned.clone(), data)),
+            .and(s(state.clone()))
+            .map(api::auth::login),
     );
 
-    let state_cloned = state.clone();
     let api_auth_logout = warp::path("logout").and(
         warp::post()
             .and(warp::body::json())
-            .map(move |data| api::auth::logout(state_cloned.clone(), data)),
+            .and(s(state.clone()))
+            .map(api::auth::logout),
     );
 
-    let state_cloned = state.clone();
     let api_auth_validate = warp::path("validate").and(
         warp::post()
             .and(warp::body::json())
-            .map(move |data| api::auth::validate(state_cloned.clone(), data)),
+            .and(s(state.clone()))
+            .map(api::auth::validate),
     );
 
     let api_auth = warp::path("auth").and(
@@ -49,6 +54,15 @@ pub fn routes(
 
     let api = warp::path("api").and(api_auth.recover(handle_api_rejection));
 
+    let ws =
+        warp::path("ws")
+            .and(warp::ws())
+            .and(s(state.clone()))
+            .map(|ws: warp::ws::Ws, state| {
+                // Start handling socket when websocket handshake succeeds
+                ws.on_upgrade(move |socket| ws::connected(state, socket))
+            });
+
     let static_client = warp::fs::dir("../client/dist");
 
     let static_sprites = warp::path("sprites").and(warp::fs::dir("../sprites"));
@@ -57,6 +71,7 @@ pub fn routes(
 
     heartbeat
         .or(api)
+        .or(ws)
         .or(static_client)
         .or(static_sprites)
         .or(static_server)

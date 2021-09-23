@@ -22,6 +22,10 @@ pub fn load() -> Result<Config, ()> {
 
     let config = toml::from_slice(&data).expect("failed to parse config.toml");
 
+    // TODO: validate config
+    // TODO: - ensure unique IDs
+    // TODO: - ensure sprite paths a correct
+
     Ok(config)
 }
 
