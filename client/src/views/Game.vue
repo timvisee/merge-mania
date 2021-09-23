@@ -52,6 +52,8 @@ export default {
         });
 
     this.fetchData();
+
+    this.testWebsocket();
   },
   watch: {
     $route: "fetchData"
@@ -63,6 +65,40 @@ export default {
 
     redirectToLogin() {
         this.$router.push({name: "login"});
+    },
+    testWebsocket() {
+        let ws_url = window.location.origin.replace(/^http/, 'ws') + '/ws';
+
+        // let socket = new WebSocket("ws://");
+        let socket = new WebSocket(ws_url);
+
+        // TODO: remove console.log here
+
+        socket.onopen = function(e) {
+            console.log("[open] Connection established");
+            console.log("Sending to server");
+            socket.send(JSON.stringify({
+                token: auth.getSessionToken(),
+            }));
+        };
+
+        socket.onmessage = function(event) {
+            console.log(`[message] Data received from server: ${event.data}`);
+        };
+
+        socket.onclose = function(event) {
+            if (event.wasClean) {
+                console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+            } else {
+                // e.g. server process killed or network down
+                // event.code is usually 1006 in this case
+                console.log('[close] Connection died');
+            }
+        };
+
+        socket.onerror = function(error) {
+            console.log(`[error] ${error.message}`);
+        };
     },
   }
 };
@@ -111,6 +147,7 @@ export default {
     margin: 2rem auto;
     box-sizing: content-box;
     padding: var(--grid-space) 0 0 var(--grid-space);
+    background: #eee;
 }
 
 .game-grid .row {
