@@ -28,6 +28,8 @@ pub const INV_WIDTH: u16 = 8;
 /// Inventory slot count.
 pub const INV_SIZE: u16 = INV_WIDTH * 2;
 
+pub const TICK_SEC: u64 = 1;
+
 /// Main entrypoint.
 fn main() {
     let state = state();
@@ -37,7 +39,11 @@ fn main() {
         .build()
         .unwrap()
         .block_on(async {
-            crate::web::server(state).await;
+            let server = crate::web::server(state.clone());
+            let game_loop = crate::game::run(state);
+
+            // Run server and game loop
+            futures::future::select(Box::pin(server), Box::pin(game_loop)).await;
         })
 }
 

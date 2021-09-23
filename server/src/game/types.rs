@@ -1,5 +1,6 @@
 use rand::Rng;
 
+use super::Update;
 use crate::config::ConfigFactoryTier;
 use crate::util::{i_to_xy, xy_to_i};
 
@@ -13,11 +14,26 @@ pub struct GameTeam {
     inventory: GameInventory,
 }
 
+impl Update for GameTeam {
+    fn update(&mut self, tick: usize) {
+        self.inventory.update(tick);
+    }
+}
+
 /// Inventory item.
 #[derive(Debug)]
 pub enum GameItem {
     Product(GameProduct),
     Factory(GameFactory),
+}
+
+impl Update for GameItem {
+    fn update(&mut self, tick: usize) {
+        match self {
+            GameItem::Product(_) => {}
+            GameItem::Factory(factory) => factory.update(tick),
+        }
+    }
 }
 
 /// Inventory product.
@@ -30,8 +46,14 @@ pub struct GameProduct {
 /// Inventory factory.
 #[derive(Debug)]
 pub struct GameFactory {
+    /// Current tier ID.
     tier: u32,
+
+    /// Current level.
     level: u16,
+
+    /// Last processing tick.
+    tick: usize,
 }
 
 impl GameFactory {
@@ -39,7 +61,14 @@ impl GameFactory {
         Self {
             tier: factory.id,
             level: 0,
+            tick: 0,
         }
+    }
+}
+
+impl Update for GameFactory {
+    fn update(&mut self, tick: usize) {
+        // TODO: update factory here depending on tick
     }
 }
 
@@ -49,6 +78,12 @@ pub struct GameInventory {
     money: usize,
     energy: usize,
     grid: GameInventoryGrid,
+}
+
+impl Update for GameInventory {
+    fn update(&mut self, tick: usize) {
+        self.grid.update(tick);
+    }
 }
 
 /// An inventory grid.
@@ -108,5 +143,15 @@ impl GameInventoryGrid {
     /// Check whether inventory has any free cell.
     pub fn has_free_cell(&self) -> bool {
         self.items.iter().any(Option::is_none)
+    }
+}
+
+impl Update for GameInventoryGrid {
+    fn update(&mut self, tick: usize) {
+        self.items.iter_mut().for_each(|item| {
+            if let Some(item) = item {
+                item.update(tick);
+            }
+        });
     }
 }
