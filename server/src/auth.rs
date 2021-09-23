@@ -90,7 +90,7 @@ impl Session {
     fn new_random_token(team_id: u32) -> Self {
         Self {
             team_id,
-            token: gen_token(),
+            token: generate_token(),
         }
     }
 
@@ -141,11 +141,6 @@ impl ClientManager {
             None => false,
         }
     }
-
-    /// Generate an unique client ID.
-    pub fn generate_id() -> usize {
-        CLIENT_IDS.fetch_add(1, Ordering::Relaxed)
-    }
 }
 
 /// An active and authenticated client connection.
@@ -181,11 +176,16 @@ fn valid_token_format(token: &str) -> bool {
 }
 
 /// Generate a secure random token.
-fn gen_token() -> String {
+fn generate_token() -> String {
     let mut rng = thread_rng();
     iter::repeat(())
         .map(|()| rng.sample(Alphanumeric))
         .map(char::from)
         .take(TOKEN_LENGTH)
         .collect()
+}
+
+/// Generate an unique client ID.
+pub fn generate_client_id() -> usize {
+    CLIENT_IDS.fetch_add(1, Ordering::Relaxed)
 }

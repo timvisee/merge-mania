@@ -11,7 +11,7 @@ pub struct State {
     pub config: Config,
     pub sessions: SessionManager,
     pub clients: ClientManager,
-    _game: Game,
+    pub game: Game,
 }
 
 impl State {
@@ -21,7 +21,7 @@ impl State {
             config,
             sessions: SessionManager::new(),
             clients: ClientManager::new(),
-            _game: Game::default(),
+            game: Game::default(),
         }
     }
 

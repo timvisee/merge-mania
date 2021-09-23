@@ -10,13 +10,13 @@ use tokio_stream::wrappers::UnboundedReceiverStream;
 use warp::ws::{Message, WebSocket};
 use warp::Filter;
 
-use crate::auth::{Client, ClientManager, Session};
+use crate::auth::{generate_client_id, Client, Session};
 use crate::state::SharedState;
 
 /// New client connected.
 pub async fn connected(state: SharedState, ws: WebSocket) {
     // Obtain unique client ID
-    let client_id = ClientManager::generate_id();
+    let client_id = generate_client_id();
     println!("WS({}): connect", client_id);
 
     // Split socket sender/receiver, use unbound channel for buffering/flushing

@@ -8,6 +8,7 @@ use crate::state::SharedState;
 
 /// HTTP server.
 pub async fn server(state: SharedState) {
+    println!("Initialzing server...");
     let routes = crate::routes::routes(state);
     warp::serve(routes).run(crate::HOST).await;
 }
