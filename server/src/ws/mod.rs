@@ -159,8 +159,13 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: &str) {
 /// Send message to a team.
 ///
 /// Note: also sends to the current client as identified by `client_id`.
-async fn send_to_team(state: &SharedState, client_id: usize, team_id: u32, msg: &str) {
-    println!("WS({}): sending to team {}: {}", client_id, team_id, msg);
+pub fn send_to_team(state: &SharedState, client_id: Option<usize>, team_id: u32, msg: &str) {
+    println!(
+        "WS({}): sending to team {}: {}",
+        client_id.unwrap_or(0),
+        team_id,
+        msg.chars().take(16).collect::<String>()
+    );
 
     let clients = state.clients.clients.read().unwrap();
     let client_iter = clients.iter().filter(|c| c.team_id == team_id);
@@ -168,6 +173,12 @@ async fn send_to_team(state: &SharedState, client_id: usize, team_id: u32, msg: 
         // Send message, errors happen on disconnect, in which case disconnect logic will be
         // handled in other task
         let _ = client.tx.send(Message::text(msg));
+
+        println!(
+            "WS({}): - msg queued for client {}",
+            client_id.unwrap_or(0),
+            client.client_id
+        );
     }
 }
 

@@ -1,6 +1,7 @@
 use std::collections::VecDeque;
 
 use rand::Rng;
+use serde::Serialize;
 
 use super::Update;
 use crate::config::{
@@ -13,13 +14,13 @@ use crate::util::{i_to_xy, xy_to_i};
 const FACTORY_QUEUE_SIZE: usize = 4;
 
 /// Represents a team.
-#[derive(Debug)]
+#[derive(Serialize, Debug)]
 pub struct GameTeam {
     /// Team ID.
-    id: u32,
+    pub id: u32,
 
     /// Team inventory.
-    inventory: GameInventory,
+    pub inventory: GameInventory,
 }
 
 impl GameTeam {
@@ -40,7 +41,7 @@ impl Update for GameTeam {
 }
 
 /// Inventory item.
-#[derive(Debug)]
+#[derive(Serialize, Debug)]
 pub enum GameItem {
     Product(GameProduct),
     Factory(GameFactory),
@@ -69,14 +70,14 @@ impl Update for GameItem {
 }
 
 /// Inventory product.
-#[derive(Debug)]
+#[derive(Serialize, Debug)]
 pub struct GameProduct {
     tier: u32,
     level: u16,
 
-    // #[serde(skip)]
+    #[serde(skip)]
     config_tier: Option<ConfigProductTier>,
-    // #[serde(skip)]
+    #[serde(skip)]
     config_item: Option<ConfigProduct>,
 }
 
@@ -150,7 +151,7 @@ impl GameProduct {
 }
 
 /// Inventory factory.
-#[derive(Debug)]
+#[derive(Serialize, Debug)]
 pub struct GameFactory {
     /// Current tier ID.
     tier: u32,
@@ -162,11 +163,13 @@ pub struct GameFactory {
     tick: usize,
 
     /// Item drop queue.
+    // TODO: also serialize this
+    #[serde(skip)]
     queue: VecDeque<GameItem>,
 
-    // #[serde(skip)]
+    #[serde(skip)]
     config_tier: Option<ConfigFactoryTier>,
-    // #[serde(skip)]
+    #[serde(skip)]
     config_item: Option<ConfigFactory>,
 }
 
@@ -247,7 +250,7 @@ impl GameFactory {
     #[must_use]
     fn queue_drop(&mut self, item: GameItem) -> bool {
         if self.is_queue_space() {
-            dbg!("Added factory queue item");
+            println!("D: added factory queue item");
             self.queue.push_back(item);
             return true;
         }
@@ -287,13 +290,12 @@ impl Update for GameFactory {
 
         // Transpose into game item, add to queue
         let item = GameItem::from_config(item);
-        self.queue_drop(item);
-        true
+        self.queue_drop(item)
     }
 }
 
 /// An inventory.
-#[derive(Debug, Default)]
+#[derive(Serialize, Debug, Default)]
 pub struct GameInventory {
     money: usize,
     energy: usize,
@@ -307,7 +309,7 @@ impl Update for GameInventory {
 }
 
 /// An inventory grid.
-#[derive(Debug)]
+#[derive(Serialize, Debug)]
 pub struct GameInventoryGrid {
     items: Vec<Option<GameItem>>,
 }

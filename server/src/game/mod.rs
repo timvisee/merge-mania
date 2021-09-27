@@ -9,6 +9,7 @@ use tokio::time::{self, Duration};
 use crate::config::{Config, ConfigFactoryTier};
 use crate::state::SharedState;
 use crate::util::{i_to_xy, xy_to_i};
+use crate::ws;
 pub use types::*;
 
 /// A simple game loop.
@@ -23,7 +24,7 @@ pub(crate) async fn run(state: SharedState) {
 
         // Process ticks
         // TODO: catch up to missed ticks here
-        state.game.process_ticks(&state.config, 1);
+        state.game.process_ticks(&state, 1);
     }
 }
 
@@ -53,20 +54,27 @@ impl Game {
     ///
     /// This should be invoked from a game loop.
     /// Calls `update` on the full game state afterwards.
-    pub fn process_ticks(&self, config: &Config, ticks: usize) {
+    pub fn process_ticks(&self, state: &SharedState, ticks: usize) {
         let tick = {
             let mut lock = self.tick.lock().unwrap();
             *lock += ticks;
             *lock
         };
 
-        dbg!("Processing game tick");
+        println!("D: processing game tick");
 
         // Update each team
         let mut changed = false;
         for team in self.teams.iter() {
             let mut team = team.write().unwrap();
-            changed = changed || team.update(config, tick);
+            let team_changed = team.update(&state.config, tick);
+
+            // Broadcast inventory update if team changed
+            if team_changed {
+                broadcast_team_inventory(state, &team);
+            }
+
+            changed = changed || team_changed;
         }
 
         // TODO: put factory items onto field
@@ -79,4 +87,10 @@ pub trait Update {
     ///
     /// Return `true` if internally changed.
     fn update(&mut self, config: &Config, tick: usize) -> bool;
+}
+
+/// Broadcast current inventory state to team clients.
+fn broadcast_team_inventory(state: &SharedState, team: &GameTeam) {
+    let inventory = serde_json::to_string(&team.inventory).expect("failed to serialize inventory");
+    ws::send_to_team(&state, None, team.id, &inventory);
 }
