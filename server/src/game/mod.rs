@@ -44,9 +44,9 @@ pub struct Game {
 
 impl Game {
     /// Add a new team.
-    pub fn add_team(&mut self, team_id: u32) {
+    pub fn add_team(&mut self, config: &Config, team_id: u32) {
         // TODO: ensure team isn't added multiple times
-        let team = GameTeam::new(team_id);
+        let team = GameTeam::new(config, team_id);
         self.teams.push(RwLock::new(team));
     }
 

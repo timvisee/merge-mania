@@ -14,6 +14,7 @@ pub struct Config {
     pub teams: Vec<ConfigTeam>,
     pub products: ConfigProducts,
     pub factories: ConfigFactories,
+    pub defaults: ConfigDefaults,
 }
 
 impl Config {

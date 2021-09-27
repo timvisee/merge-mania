@@ -18,7 +18,7 @@ impl State {
     /// Construct new state.
     pub fn new(config: Config) -> Self {
         let mut game = Game::default();
-        game.add_team(1);
+        game.add_team(&config, 1);
 
         State {
             config,

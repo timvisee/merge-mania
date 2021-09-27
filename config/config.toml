@@ -186,3 +186,13 @@ levels = [
         { item = "4.1", chance = 0.05 },
     ], sprite_path = "chicken.png" },
 ]
+
+[defaults]
+money = 0
+energy = 0
+inventory = [
+    "1.0",
+    "1.0",
+    "1.0",
+    "101.0",
+]

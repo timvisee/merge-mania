@@ -109,10 +109,10 @@ impl ConfigFactory {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct ConfigFactoryDrop {
-    item: ItemRef,
+    pub item: ItemRef,
 
     /// Chance float.
-    chance: f64,
+    pub chance: f64,
 }
 
 impl ConfigFactoryDrop {
@@ -120,4 +120,11 @@ impl ConfigFactoryDrop {
     pub fn into_item(&self, config: &Config) -> Option<ConfigItem> {
         config.find_item(&self.item)
     }
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct ConfigDefaults {
+    pub money: usize,
+    pub energy: usize,
+    pub inventory: Vec<ItemRef>,
 }

@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use rand::Rng;
+use rand::prelude::*;
 use serde::Serialize;
 
 use super::Update;
@@ -25,11 +25,11 @@ pub struct GameTeam {
 
 impl GameTeam {
     /// Construct a new team.
-    pub fn new(id: u32) -> Self {
+    pub fn new(config: &Config, id: u32) -> Self {
         Self {
             id,
-            // TODO: use default inventory items instead
-            inventory: GameInventory::default(),
+            inventory: GameInventory::from_config(config)
+                .unwrap_or_else(|| GameInventory::default()),
         }
     }
 }
@@ -308,6 +308,19 @@ pub struct GameInventory {
     grid: GameInventoryGrid,
 }
 
+impl GameInventory {
+    /// Get a default inventory from configuration.
+    ///
+    /// Returns `None` on failure.
+    pub fn from_config(config: &Config) -> Option<Self> {
+        Some(Self {
+            money: config.defaults.money,
+            energy: config.defaults.energy,
+            grid: GameInventoryGrid::from_config(config)?,
+        })
+    }
+}
+
 impl Update for GameInventory {
     fn update(&mut self, config: &Config, tick: usize) -> bool {
         self.grid.update(config, tick)
@@ -321,6 +334,35 @@ pub struct GameInventoryGrid {
 }
 
 impl GameInventoryGrid {
+    /// Get a default inventory from configuration.
+    ///
+    /// Returns `None` on failure.
+    pub fn from_config(config: &Config) -> Option<Self> {
+        let refs = &config.defaults.inventory;
+
+        // Get config items from refs
+        let mut config_items: Vec<crate::config::ConfigItem> = Vec::with_capacity(refs.len());
+        for item_ref in refs {
+            config_items.push(config.find_item(&item_ref)?);
+        }
+
+        // Transpose config into game items
+        let mut items: Vec<Option<GameItem>> = config_items
+            .into_iter()
+            .map(|i| Some(GameItem::from_config(i)))
+            .collect();
+
+        // Give list correct length
+        items.truncate(crate::INV_SIZE as usize);
+        items.extend((0..crate::INV_SIZE as usize - items.len()).map(|_| None));
+
+        // Shuffle items
+        let mut rng = rand::thread_rng();
+        items.shuffle(&mut rng);
+
+        Some(Self { items })
+    }
+
     /// Get item at grid position.
     ///
     /// Is `None` if cell is empty.
@@ -441,27 +483,12 @@ impl Update for GameInventoryGrid {
     }
 }
 
-// TODO: remove this, used for testing
 impl Default for GameInventoryGrid {
     fn default() -> Self {
-        // let mut items = Vec::with_capacity(crate::INV_SIZE as usize);
-        let mut items = (0..crate::INV_SIZE as usize)
-            .map(|_| None)
-            .collect::<Vec<_>>();
-        items[0] = Some(GameItem::Product(GameProduct {
-            tier: 1,
-            level: 0,
-            config_tier: None,
-            config_item: None,
-        }));
-        items[1] = Some(GameItem::Factory(GameFactory {
-            tier: 101,
-            level: 0,
-            tick: 0,
-            queue: VecDeque::new(),
-            config_tier: None,
-            config_item: None,
-        }));
-        Self { items }
+        Self {
+            items: (0..crate::INV_SIZE as usize)
+                .map(|_| None)
+                .collect::<Vec<_>>(),
+        }
     }
 }
