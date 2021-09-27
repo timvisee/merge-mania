@@ -17,7 +17,7 @@ use crate::state::SharedState;
 pub async fn connected(state: SharedState, ws: WebSocket) {
     // Obtain unique client ID
     let client_id = generate_client_id();
-    println!("WS({}): connect", client_id);
+    info!("WS({}): connect", client_id);
 
     // Split socket sender/receiver, use unbound channel for buffering/flushing
     let (mut user_ws_tx, mut user_ws_rx) = ws.split();
@@ -44,7 +44,7 @@ pub async fn connected(state: SharedState, ws: WebSocket) {
             user_ws_tx
                 .send(message)
                 .unwrap_or_else(|e| {
-                    println!("WS({}): send error: {}", client_id, e);
+                    warn!("WS({}): send error: {}", client_id, e);
                 })
                 .await;
         }
@@ -76,7 +76,7 @@ async fn handle_auth(
         let msg = match message {
             Ok(msg) => msg,
             Err(e) => {
-                println!("WS({}): auth err: {}", client_id, e);
+                warn!("WS({}): auth err: {}", client_id, e);
                 break;
             }
         };
@@ -91,7 +91,7 @@ async fn handle_auth(
         let session: crate::auth::SessionData = match serde_json::from_str(msg) {
             Ok(session) => session,
             Err(err) => {
-                println!(
+                warn!(
                     "WS({}): auth err, invalid session object: {}",
                     client_id, msg
                 );
@@ -103,7 +103,7 @@ async fn handle_auth(
         let token = &session.token;
         let session = state.sessions.get_valid(token);
         if let Some(session) = &session {
-            println!(
+            info!(
                 "WS({}): auth success (team: {}, token: {}...)",
                 client_id,
                 session.team_id,
@@ -111,7 +111,7 @@ async fn handle_auth(
             );
             // TODO: reply with success message
         } else {
-            println!(
+            warn!(
                 "WS({}): auth fail, session token invalid ({})",
                 client_id, token
             );
@@ -131,7 +131,7 @@ async fn handle(state: SharedState, client_id: usize, user_ws_rx: &mut SplitStre
         let msg = match result {
             Ok(msg) => msg,
             Err(e) => {
-                println!("WS({}): error: {}", client_id, e);
+                warn!("WS({}): error: {}", client_id, e);
                 break;
             }
         };
@@ -140,7 +140,7 @@ async fn handle(state: SharedState, client_id: usize, user_ws_rx: &mut SplitStre
         let msg = match msg.to_str() {
             Ok(msg) => msg,
             Err(err) => {
-                println!("WS({}): received non-text, skipping: {:?}", client_id, err);
+                warn!("WS({}): received non-text, skipping: {:?}", client_id, err);
                 continue;
             }
         };
@@ -151,7 +151,7 @@ async fn handle(state: SharedState, client_id: usize, user_ws_rx: &mut SplitStre
 
 /// Handle client messages.
 async fn handle_msg(state: &SharedState, client_id: usize, msg: &str) {
-    println!("WS({}): handle msg: {:?}", client_id, msg);
+    debug!("WS({}): handle msg: {:?}", client_id, msg);
 
     // TODO: implement logic to handle client messages
 }
@@ -160,7 +160,7 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: &str) {
 ///
 /// Note: also sends to the current client as identified by `client_id`.
 pub fn send_to_team(state: &SharedState, client_id: Option<usize>, team_id: u32, msg: &str) {
-    println!(
+    debug!(
         "WS({}): sending to team {}: {}",
         client_id.unwrap_or(0),
         team_id,
@@ -174,7 +174,7 @@ pub fn send_to_team(state: &SharedState, client_id: Option<usize>, team_id: u32,
         // handled in other task
         let _ = client.tx.send(Message::text(msg));
 
-        println!(
+        debug!(
             "WS({}): - msg queued for client {}",
             client_id.unwrap_or(0),
             client.client_id
@@ -185,5 +185,5 @@ pub fn send_to_team(state: &SharedState, client_id: Option<usize>, team_id: u32,
 /// Client disconnected.
 async fn disconnected(state: SharedState, client_id: usize) {
     state.clients.unregister(client_id);
-    println!("WS({}): disconnect", client_id);
+    info!("WS({}): disconnect", client_id);
 }

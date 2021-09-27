@@ -62,17 +62,17 @@ pub fn routes(
                 ws.on_upgrade(move |socket| crate::ws::connected(state, socket))
             });
 
-    let static_client = warp::fs::dir("../client/dist");
-
     let static_sprites = warp::path("sprites").and(warp::fs::dir("../sprites"));
+
+    let static_client = warp::fs::dir("../client/dist");
 
     let static_server = warp::fs::dir("./public/");
 
     heartbeat
         .or(api)
         .or(ws)
-        .or(static_client)
         .or(static_sprites)
+        .or(static_client)
         .or(static_server)
         .recover(handle_rejection)
 }
@@ -112,7 +112,7 @@ async fn handle_api_rejection(err: Rejection) -> Result<impl Reply, Infallible> 
         message = "METHOD_NOT_ALLOWED";
     } else {
         // We should have expected this... Just log and say its a 500
-        eprintln!("unhandled rejection: {:?}", err);
+        error!("unhandled rejection: {:?}", err);
         code = StatusCode::INTERNAL_SERVER_ERROR;
         message = "UNHANDLED_REJECTION";
     }
@@ -139,7 +139,7 @@ async fn handle_rejection(err: Rejection) -> Result<impl Reply, Infallible> {
         code = StatusCode::METHOD_NOT_ALLOWED;
         message = "HTTP 405 - Method not allowed";
     } else {
-        eprintln!("unhandled rejection: {:?}", err);
+        error!("unhandled rejection: {:?}", err);
         code = StatusCode::INTERNAL_SERVER_ERROR;
         message = "HTTP 500 - Internal server error (unhandled rejection)";
     }

@@ -138,7 +138,7 @@ impl GameProduct {
                 Ok(())
             }
             _ => {
-                println!("Failed to resolve for product config: {:?}", reference);
+                warn!("Failed to resolve for product config: {:?}", reference);
                 Err(())
             }
         }
@@ -233,7 +233,7 @@ impl GameFactory {
                 Ok(())
             }
             _ => {
-                println!("Failed to resolve for factory config: {:?}", reference);
+                warn!("Failed to resolve for factory config: {:?}", reference);
                 Err(())
             }
         }
@@ -250,7 +250,7 @@ impl GameFactory {
     #[must_use]
     fn queue_drop(&mut self, item: GameItem) -> bool {
         if self.is_queue_space() {
-            println!("D: added factory queue item");
+            info!("Added factory queue item");
             self.queue.push_back(item);
             return true;
         }
@@ -283,7 +283,7 @@ impl Update for GameFactory {
         let item = match config.find_item(&item) {
             Some(item) => item,
             None => {
-                println!("Failed to resolve for factory drop: {:?}", item);
+                warn!("Failed to resolve for factory drop: {:?}", item);
                 return false;
             }
         };

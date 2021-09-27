@@ -1,6 +1,9 @@
 // TODO: remove this before release
 #![allow(unused)]
 
+#[macro_use]
+extern crate log;
+
 pub(crate) mod auth;
 pub(crate) mod config;
 pub(crate) mod game;
@@ -32,6 +35,10 @@ pub const TICK_SEC: u64 = 1;
 
 /// Main entrypoint.
 fn main() {
+    // Initialize logging
+    dotenv::dotenv();
+    pretty_env_logger::init();
+
     let state = state();
 
     tokio::runtime::Builder::new_multi_thread()
@@ -49,7 +56,7 @@ fn main() {
 
 /// Load shared state.
 fn state() -> SharedState {
-    println!("Initializing global state...");
+    info!("Initializing global state...");
     let config = config::load().expect("failed to load game config");
     State::new(config).shared()
 }

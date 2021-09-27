@@ -20,11 +20,11 @@ pub(crate) async fn run(state: SharedState) {
         // Wait for tick
         interval.tick().await;
 
-        // TODO: do not progress in game.running is false
-
         // Process ticks
         // TODO: catch up to missed ticks here
-        state.game.process_ticks(&state, 1);
+        if state.game.running {
+            state.game.process_ticks(&state, 1);
+        }
     }
 }
 
@@ -61,7 +61,7 @@ impl Game {
             *lock
         };
 
-        println!("D: processing game tick");
+        error!("Processing game tick");
 
         // Update each team
         let mut changed = false;

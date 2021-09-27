@@ -74,7 +74,7 @@ pub enum ConfigItem {
 /// Load config from disk.
 // TODO: expose errors through error enum
 pub fn load() -> Result<Config, ()> {
-    println!("Loading game configuration...");
+    debug!("Loading game configuration...");
 
     let path = PathBuf::from(crate::CONFIG_PATH);
 
@@ -86,7 +86,7 @@ pub fn load() -> Result<Config, ()> {
     // TODO: - ensure unique IDs
     // TODO: - ensure sprite paths a correct
 
-    println!("Game configuration loaded.");
+    info!("Game configuration loaded");
 
     Ok(config)
 }
