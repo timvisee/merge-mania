@@ -22,7 +22,7 @@ impl State {
 
         State {
             config,
-            sessions: SessionManager::new(),
+            sessions: SessionManager::load().expect("failed to load session manager"),
             clients: ClientManager::new(),
             game,
         }

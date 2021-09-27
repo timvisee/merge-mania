@@ -1,4 +1,6 @@
+use std::fs;
 use std::iter;
+use std::path::PathBuf;
 use std::sync::{
     atomic::{AtomicUsize, Ordering},
     Arc, RwLock,
@@ -9,6 +11,9 @@ use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc;
 use warp::filters::ws::{Message, WebSocket};
 
+/// Sessions file path.
+const SESSIONS_PATH: &str = "save.sessions.toml";
+
 /// Session token length.
 const TOKEN_LENGTH: usize = 64;
 
@@ -16,6 +21,7 @@ const TOKEN_LENGTH: usize = 64;
 static CLIENT_IDS: AtomicUsize = AtomicUsize::new(1);
 
 /// A basic session manager.
+#[derive(Serialize, Deserialize, Debug)]
 pub struct SessionManager {
     sessions: RwLock<Vec<Session>>,
 }
@@ -34,6 +40,10 @@ impl SessionManager {
     pub fn add(&self, team_id: u32) -> Session {
         let session = Session::new_random_token(team_id);
         self.sessions.write().unwrap().push(session.clone());
+
+        // TODO: properly save, handle errors
+        self.save().expect("failed to save");
+
         session
     }
 
@@ -45,10 +55,14 @@ impl SessionManager {
         match sessions.iter().position(|session| session.is_token(token)) {
             Some(i) => {
                 sessions.remove(i);
-                true
             }
-            None => false,
+            None => return false,
         }
+
+        // TODO: properly save, handle errors
+        self.save().expect("failed to save");
+
+        true
     }
 
     /// Get a session.
@@ -74,10 +88,59 @@ impl SessionManager {
             .iter()
             .any(|session| session.is_token_and_valid(token))
     }
+
+    /// Load sessions from file.
+    pub fn load() -> Result<Self, ()> {
+        // Load default if file doesn't exist
+        let path = PathBuf::from(SESSIONS_PATH);
+        if !path.is_file() {
+            info!("no sessions file, starting fresh");
+            return Ok(Self::new());
+        }
+
+        // Load data from file
+        debug!("loading sessions from file");
+        let data = fs::read(path).expect("failed to read sessions file");
+
+        // Deserialize
+        match toml::from_slice(data.as_slice()) {
+            Ok(state) => Ok(state),
+            Err(err) => {
+                error!(
+                    "failed to load sessions from file, couldn't deserialize: {}",
+                    err
+                );
+                Err(())
+            }
+        }
+    }
+
+    /// Save sessions to file.
+    pub fn save(&self) -> Result<(), ()> {
+        debug!("saving sessions to file");
+        let data = match toml::to_vec(self) {
+            Ok(data) => data,
+            Err(err) => {
+                error!(
+                    "failed to save sessions to file, couldn't serialize: {}",
+                    err
+                );
+                return Err(());
+            }
+        };
+
+        match fs::write(SESSIONS_PATH, data.as_slice()) {
+            Ok(result) => Ok(result),
+            Err(err) => {
+                error!("failed to save sessions to file: {}", err);
+                Err(())
+            }
+        }
+    }
 }
 
 /// A team session.
-#[derive(Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Session {
     // Team this session is for.
     pub team_id: u32,

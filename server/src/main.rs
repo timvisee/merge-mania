@@ -31,6 +31,7 @@ pub const INV_WIDTH: u16 = 8;
 /// Inventory slot count.
 pub const INV_SIZE: u16 = INV_WIDTH * 2;
 
+/// Number of seconds for each tick.
 pub const TICK_SEC: u64 = 1;
 
 /// Main entrypoint.

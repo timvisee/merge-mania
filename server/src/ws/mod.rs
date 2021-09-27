@@ -184,6 +184,6 @@ pub fn send_to_team(state: &SharedState, client_id: Option<usize>, team_id: u32,
 
 /// Client disconnected.
 async fn disconnected(state: SharedState, client_id: usize) {
-    state.clients.unregister(client_id);
     info!("WS({}): disconnect", client_id);
+    state.clients.unregister(client_id);
 }

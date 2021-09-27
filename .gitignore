@@ -3,3 +3,6 @@ target/
 **/*.rs.bk
 .idea/
 .env
+
+# Merge Mania save data
+save.*.toml
