@@ -61,7 +61,7 @@ impl Game {
             *lock
         };
 
-        error!("Processing game tick");
+        info!("Processing game tick");
 
         // Update each team
         let mut changed = false;

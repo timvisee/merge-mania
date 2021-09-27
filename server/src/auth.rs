@@ -94,12 +94,12 @@ impl SessionManager {
         // Load default if file doesn't exist
         let path = PathBuf::from(SESSIONS_PATH);
         if !path.is_file() {
-            info!("no sessions file, starting fresh");
+            info!("No sessions file, starting fresh");
             return Ok(Self::new());
         }
 
         // Load data from file
-        debug!("loading sessions from file");
+        debug!("Loading sessions from file");
         let data = fs::read(path).expect("failed to read sessions file");
 
         // Deserialize
@@ -107,7 +107,7 @@ impl SessionManager {
             Ok(state) => Ok(state),
             Err(err) => {
                 error!(
-                    "failed to load sessions from file, couldn't deserialize: {}",
+                    "Failed to load sessions from file, couldn't deserialize: {}",
                     err
                 );
                 Err(())
@@ -122,7 +122,7 @@ impl SessionManager {
             Ok(data) => data,
             Err(err) => {
                 error!(
-                    "failed to save sessions to file, couldn't serialize: {}",
+                    "Failed to save sessions to file, couldn't serialize: {}",
                     err
                 );
                 return Err(());
@@ -132,7 +132,7 @@ impl SessionManager {
         match fs::write(SESSIONS_PATH, data.as_slice()) {
             Ok(result) => Ok(result),
             Err(err) => {
-                error!("failed to save sessions to file: {}", err);
+                error!("Failed to save sessions to file: {}", err);
                 Err(())
             }
         }

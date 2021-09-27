@@ -248,7 +248,7 @@ impl GameFactory {
     ///
     /// Returns `false` if the item wasn't queued because there was no space.
     #[must_use]
-    fn queue_drop(&mut self, item: GameItem) -> bool {
+    fn push_queue_drop(&mut self, item: GameItem) -> bool {
         if self.is_queue_space() {
             info!("Added factory queue item");
             self.queue.push_back(item);
@@ -256,6 +256,12 @@ impl GameFactory {
         }
 
         false
+    }
+
+    /// Pop an item from the drop queue if there is any.
+    #[must_use]
+    fn pop_queue_drop(&mut self) -> Option<GameItem> {
+        self.queue.pop_front()
     }
 
     /// Check whether there is space in the item drop queue.
@@ -290,7 +296,7 @@ impl Update for GameFactory {
 
         // Transpose into game item, add to queue
         let item = GameItem::from_config(item);
-        self.queue_drop(item)
+        self.push_queue_drop(item)
     }
 }
 
@@ -366,6 +372,56 @@ impl GameInventoryGrid {
     pub fn has_free_cell(&self) -> bool {
         self.items.iter().any(Option::is_none)
     }
+
+    /// Count the number of free cells.
+    pub fn count_free_cells(&self) -> usize {
+        self.items.iter().filter(|i| i.is_none()).count()
+    }
+
+    /// Place factory queue items if there is space.
+    fn place_queue_items(&mut self) -> bool {
+        // There must be space
+        let max = self.count_free_cells();
+        if max <= 0 {
+            return false;
+        }
+
+        // Obtain list of items to place
+        let mut items: Vec<GameItem> = Vec::with_capacity(max);
+        for item in self.items.iter_mut() {
+            match item {
+                Some(GameItem::Factory(factory)) => {
+                    while items.len() < max {
+                        match factory.pop_queue_drop() {
+                            Some(item) => items.push(item),
+                            None => break,
+                        }
+                    }
+
+                    // Stop outer loop if we reached max
+                    if items.len() >= max {
+                        break;
+                    }
+                }
+                _ => {}
+            }
+        }
+
+        // We're done if we got no items
+        if items.is_empty() {
+            return false;
+        }
+
+        // Place all items
+        // TODO: when factory is placed ensure tick setting is correct
+        for item in items {
+            if !self.place_item(item) {
+                error!("failed to place selected item, no inventory space");
+            }
+        }
+
+        true
+    }
 }
 
 impl Update for GameInventoryGrid {
@@ -377,6 +433,9 @@ impl Update for GameInventoryGrid {
                 None => {}
             }
         }
+
+        // Place queued factory items onto field
+        changed = self.place_queue_items() || changed;
 
         changed
     }
