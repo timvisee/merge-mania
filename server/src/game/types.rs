@@ -373,7 +373,7 @@ impl Update for GameInventoryGrid {
         let mut changed = false;
         for item in self.items.iter_mut() {
             match item {
-                Some(item) => changed = changed || item.update(config, tick),
+                Some(item) => changed = item.update(config, tick) || changed,
                 None => {}
             }
         }

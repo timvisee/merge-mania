@@ -29,7 +29,7 @@ pub const CONFIG_PATH: &str = "./../config/config.toml";
 pub const INV_WIDTH: u16 = 8;
 
 /// Inventory slot count.
-pub const INV_SIZE: u16 = INV_WIDTH * 2;
+pub const INV_SIZE: u16 = INV_WIDTH.pow(2);
 
 /// Number of seconds for each tick.
 pub const TICK_SEC: u64 = 1;
@@ -59,5 +59,9 @@ fn main() {
 fn state() -> SharedState {
     info!("Initializing global state...");
     let config = config::load().expect("failed to load game config");
-    State::new(config).shared()
+
+    let mut state = State::new(config);
+    state.game.running = true;
+
+    state.shared()
 }

@@ -32,7 +32,7 @@ pub(crate) async fn run(state: SharedState) {
 #[derive(Default)]
 pub struct Game {
     /// Whether the game is running.
-    running: bool,
+    pub running: bool,
 
     /// Current game tick.
     // TODO: switch to atomic?
@@ -74,7 +74,7 @@ impl Game {
                 broadcast_team_inventory(state, &team);
             }
 
-            changed = changed || team_changed;
+            changed = team_changed || changed;
         }
 
         // TODO: put factory items onto field
