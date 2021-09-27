@@ -1,12 +1,12 @@
 pub mod types;
 
-use std::sync::Mutex;
+use std::sync::{Mutex, RwLock};
 
 use rand::Rng;
 use serde::Deserialize;
 use tokio::time::{self, Duration};
 
-use crate::config::ConfigFactoryTier;
+use crate::config::{Config, ConfigFactoryTier};
 use crate::state::SharedState;
 use crate::util::{i_to_xy, xy_to_i};
 pub use types::*;
@@ -23,7 +23,7 @@ pub(crate) async fn run(state: SharedState) {
 
         // Process ticks
         // TODO: catch up to missed ticks here
-        state.game.process_ticks(1);
+        state.game.process_ticks(&state.config, 1);
     }
 }
 
@@ -38,35 +38,45 @@ pub struct Game {
     tick: Mutex<usize>,
 
     /// Team state.
-    teams: Vec<GameTeam>,
+    teams: Vec<RwLock<GameTeam>>,
 }
 
 impl Game {
+    /// Add a new team.
+    pub fn add_team(&mut self, team_id: u32) {
+        // TODO: ensure team isn't added multiple times
+        let team = GameTeam::new(team_id);
+        self.teams.push(RwLock::new(team));
+    }
+
     /// Process the game by the given amount of ticks.
     ///
     /// This should be invoked from a game loop.
     /// Calls `update` on the full game state afterwards.
-    pub fn process_ticks(&self, ticks: usize) {
+    pub fn process_ticks(&self, config: &Config, ticks: usize) {
         let tick = {
             let mut lock = self.tick.lock().unwrap();
             *lock += ticks;
             *lock
         };
 
-        println!("TODO: run team ticks");
-        // TODO: self.update(tick);
-    }
-}
+        dbg!("Processing game tick");
 
-impl Update for Game {
-    fn update(&mut self, tick: usize) {
-        for team in self.teams.iter_mut() {
-            team.update(tick);
+        // Update each team
+        let mut changed = false;
+        for team in self.teams.iter() {
+            let mut team = team.write().unwrap();
+            changed = changed || team.update(config, tick);
         }
+
+        // TODO: put factory items onto field
+        // TODO: do not return true if only queue item was added
     }
 }
 
 pub trait Update {
     /// Update this state upto the given tick.
-    fn update(&mut self, tick: usize);
+    ///
+    /// Return `true` if internally changed.
+    fn update(&mut self, config: &Config, tick: usize) -> bool;
 }

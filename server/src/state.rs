@@ -17,11 +17,14 @@ pub struct State {
 impl State {
     /// Construct new state.
     pub fn new(config: Config) -> Self {
+        let mut game = Game::default();
+        game.add_team(1);
+
         State {
             config,
             sessions: SessionManager::new(),
             clients: ClientManager::new(),
-            game: Game::default(),
+            game,
         }
     }
 

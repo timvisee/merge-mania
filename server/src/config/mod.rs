@@ -6,6 +6,7 @@ use std::path::PathBuf;
 use serde::Deserialize;
 use toml;
 
+use crate::types::ItemRef;
 pub use types::*;
 
 #[derive(Deserialize, Debug)]
@@ -13,6 +14,61 @@ pub struct Config {
     pub teams: Vec<ConfigTeam>,
     pub products: ConfigProducts,
     pub factories: ConfigFactories,
+}
+
+impl Config {
+    /// Find an item by reference.
+    ///
+    /// Returns a configuration product or factory.
+    // TODO: cache results by `item_ref`
+    // TODO: return arc/ref
+    pub fn find_item(&self, item_ref: &ItemRef) -> Option<ConfigItem> {
+        let (tier, level) = item_ref.tier_level()?;
+
+        // Find product
+        if let Some(tier) = self.find_product_tier(tier) {
+            return tier
+                .level(level)
+                .cloned()
+                .map(|p| ConfigItem::Product(tier.clone(), p, level));
+        }
+
+        // Find factory
+        if let Some(tier) = self.find_factory_tier(tier) {
+            return tier
+                .level(level)
+                .cloned()
+                .map(|f| ConfigItem::Factory(tier.clone(), f, level));
+        }
+
+        None
+    }
+
+    /// Find product tier configuration by tier ID.
+    fn find_product_tier(&self, tier: u32) -> Option<&ConfigProductTier> {
+        self.products.tiers.iter().find(|t| t.id == tier)
+    }
+
+    /// Find factory tier configuration by tier ID.
+    fn find_factory_tier(&self, tier: u32) -> Option<&ConfigFactoryTier> {
+        self.factories.tiers.iter().find(|t| t.id == tier)
+    }
+}
+
+/// A config product or factory tier.
+#[derive(Debug)]
+pub enum ConfigTierItem {
+    Product(ConfigProductTier),
+    Factory(ConfigFactoryTier),
+}
+
+/// A config product or factory item.
+///
+/// Contains both tier and product.
+#[derive(Debug)]
+pub enum ConfigItem {
+    Product(ConfigProductTier, ConfigProduct, u16),
+    Factory(ConfigFactoryTier, ConfigFactory, u16),
 }
 
 /// Load config from disk.
