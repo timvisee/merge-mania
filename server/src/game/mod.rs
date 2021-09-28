@@ -16,7 +16,7 @@ pub use types::*;
 
 /// A simple game loop.
 pub(crate) async fn run(state: SharedState) {
-    let mut interval = time::interval(Duration::from_millis(crate::TICK_MILLIS));
+    let mut interval = time::interval(Duration::from_millis(state.config.game.tick_millis));
 
     loop {
         // Wait for tick

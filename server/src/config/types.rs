@@ -5,6 +5,16 @@ use crate::config::{Config, ConfigItem};
 use crate::types::{Amount, ItemRef};
 use crate::util::{i_to_xy, xy_to_i};
 
+/// Game configuration.
+#[derive(Deserialize, Debug, Clone)]
+pub struct ConfigGame {
+    /// Milliseconds per game tick.
+    pub tick_millis: u64,
+
+    /// Whether to reset the game state on start.
+    pub reset: bool,
+}
+
 /// Represents a configured team.
 #[derive(Deserialize, Debug, Clone)]
 pub struct ConfigTeam {

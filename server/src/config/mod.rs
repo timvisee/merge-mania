@@ -11,6 +11,7 @@ pub use types::*;
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
+    pub game: ConfigGame,
     pub teams: Vec<ConfigTeam>,
     pub products: ConfigProducts,
     pub factories: ConfigFactories,

@@ -32,9 +32,6 @@ pub const INV_WIDTH: u16 = 8;
 /// Inventory slot count.
 pub const INV_SIZE: u16 = INV_WIDTH.pow(2);
 
-/// Number of milliseconds for each tick.
-pub const TICK_MILLIS: u64 = 1000;
-
 /// Main entrypoint.
 fn main() {
     // Initialize logging
