@@ -20,7 +20,11 @@
 
         <!-- Inventory grid -->
         <div class="game-grid">
-            <div v-for="cell in game.inventory.grid.items" class="cell">
+            <div v-for="(cell, index) in game.inventory.grid.items"
+                class="cell"
+                @click.stop="toggleSelect(index)"
+                v-bind:class="{ select: selected == index, item: cell }"
+            >
                 <div v-if="cell && cell.Product">
                     <img :src="'/sprites/' + cell.Product.sprite"
                         :title="cell.Product.name"
@@ -60,6 +64,7 @@ export default {
   data() {
     return {
       game: this.$game,
+      selected: null,
     };
   },
   created() {
@@ -82,6 +87,13 @@ export default {
     onRouteChange() {},
     redirectToLogin() {
         this.$router.push({name: "login"});
+    },
+
+    /**
+     * Toggle selection of given cell index.
+     */
+    toggleSelect(index) {
+        this.selected = this.selected !== index ? index : null;
     },
   }
 };
@@ -148,7 +160,16 @@ export default {
     box-sizing: content-box;
 
     border: brown dashed 1px;
+    border-radius: 0.15em;
     text-align: center;
+}
+
+.game-grid .cell.select {
+    background: #bbb;
+}
+
+.game-grid .cell.select.item {
+    background: #eb983c;
 }
 
 .game-grid .cell img {
