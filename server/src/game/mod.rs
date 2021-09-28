@@ -1,5 +1,6 @@
 pub mod types;
 
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Mutex, RwLock};
 
 use rand::Rng;
@@ -15,7 +16,7 @@ pub use types::*;
 
 /// A simple game loop.
 pub(crate) async fn run(state: SharedState) {
-    let mut interval = time::interval(Duration::from_secs(crate::TICK_SEC));
+    let mut interval = time::interval(Duration::from_millis(crate::TICK_MILLIS));
 
     loop {
         // Wait for tick
@@ -37,8 +38,7 @@ pub struct Game {
     pub running: bool,
 
     /// Current game tick.
-    // TODO: switch to atomic?
-    tick: Mutex<usize>,
+    tick: AtomicUsize,
 
     /// Team state.
     teams: Vec<RwLock<GameTeam>>,
@@ -47,9 +47,15 @@ pub struct Game {
 impl Game {
     /// Add a new team.
     pub fn add_team(&mut self, config: &Config, team_id: u32) {
+        // TODO: dynamically load team when data is requested
         // TODO: ensure team isn't added multiple times
-        let team = GameTeam::new(config, team_id);
+        let team = GameTeam::new(self.tick(), config, team_id);
         self.teams.push(RwLock::new(team));
+    }
+
+    /// Get current game tick.
+    pub fn tick(&self) -> usize {
+        self.tick.load(Ordering::Relaxed)
     }
 
     /// Process the game by the given amount of ticks.
@@ -57,13 +63,10 @@ impl Game {
     /// This should be invoked from a game loop.
     /// Calls `update` on the full game state afterwards.
     pub fn process_ticks(&self, state: &SharedState, ticks: usize) {
-        let tick = {
-            let mut lock = self.tick.lock().unwrap();
-            *lock += ticks;
-            *lock
-        };
+        trace!("Processing game tick");
 
-        debug!("Processing game tick");
+        // Increase tick by 1
+        let tick = self.tick.fetch_add(1, Ordering::Relaxed) + 1;
 
         // Update each team
         let mut changed = false;

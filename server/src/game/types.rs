@@ -29,10 +29,10 @@ pub struct GameTeam {
 
 impl GameTeam {
     /// Construct a new team.
-    pub fn new(config: &Config, id: u32) -> Self {
+    pub fn new(tick: usize, config: &Config, id: u32) -> Self {
         Self {
             id,
-            inventory: GameInventory::from_config(config)
+            inventory: GameInventory::from_config(tick, config)
                 .unwrap_or_else(|| GameInventory::default()),
             config: config.team(id).cloned(),
         }
@@ -53,13 +53,13 @@ pub enum GameItem {
 }
 
 impl GameItem {
-    pub fn from_config(item: ConfigItem) -> Self {
+    pub fn from_config(tick: usize, item: ConfigItem) -> Self {
         match item {
             ConfigItem::Product(tier, item, level) => {
                 GameItem::Product(GameProduct::from_config(tier, level))
             }
             ConfigItem::Factory(tier, item, level) => {
-                GameItem::Factory(GameFactory::from_config(tier, level))
+                GameItem::Factory(GameFactory::from_config(tick, tier, level))
             }
         }
     }
@@ -164,7 +164,7 @@ pub struct GameFactory {
     /// Current level.
     pub level: u16,
 
-    /// Last processing tick.
+    /// Next drop tick.
     tick: usize,
 
     /// Item drop queue.
@@ -180,12 +180,12 @@ pub struct GameFactory {
 
 impl GameFactory {
     /// Construct from config.
-    // TODO: return None for invalid level and no config item
-    pub fn from_config(factory: ConfigFactoryTier, level: u16) -> Self {
+    // TODO: return None for invalid level and no config item!
+    pub fn from_config(tick: usize, factory: ConfigFactoryTier, level: u16) -> Self {
         Self {
             tier: factory.id,
             level,
-            tick: 0,
+            tick: tick + factory.level(level).as_ref().unwrap().time as usize,
             queue: VecDeque::default(),
             config_item: factory.level(level).cloned(),
             config_tier: Some(factory.clone()),
@@ -255,7 +255,7 @@ impl GameFactory {
     #[must_use]
     fn push_queue_drop(&mut self, item: GameItem) -> bool {
         if self.is_queue_space() {
-            info!("Added factory queue item");
+            trace!("Add drop to factory queue");
             self.queue.push_back(item);
             return true;
         }
@@ -282,7 +282,14 @@ impl Update for GameFactory {
             return false;
         }
 
-        // TODO: make sure it is time to drop an item
+        // Do nothing if we didn't reach the tick
+        // TODO: catch up to missed ticks
+        if self.tick > tick {
+            return false;
+        }
+
+        // Update tick to next
+        self.tick = tick + self.config_item.as_ref().unwrap().time as usize;
 
         // Select config item to drop
         let item = match self.config_item.as_ref().unwrap().random_drop() {
@@ -300,7 +307,7 @@ impl Update for GameFactory {
         };
 
         // Transpose into game item, add to queue
-        let item = GameItem::from_config(item);
+        let item = GameItem::from_config(tick, item);
         self.push_queue_drop(item)
     }
 }
@@ -317,11 +324,11 @@ impl GameInventory {
     /// Get a default inventory from configuration.
     ///
     /// Returns `None` on failure.
-    pub fn from_config(config: &Config) -> Option<Self> {
+    pub fn from_config(tick: usize, config: &Config) -> Option<Self> {
         Some(Self {
             money: config.defaults.money,
             energy: config.defaults.energy,
-            grid: GameInventoryGrid::from_config(config)?,
+            grid: GameInventoryGrid::from_config(tick, config)?,
         })
     }
 }
@@ -342,7 +349,7 @@ impl GameInventoryGrid {
     /// Get a default inventory from configuration.
     ///
     /// Returns `None` on failure.
-    pub fn from_config(config: &Config) -> Option<Self> {
+    pub fn from_config(tick: usize, config: &Config) -> Option<Self> {
         let refs = &config.defaults.inventory;
 
         // Get config items from refs
@@ -354,7 +361,7 @@ impl GameInventoryGrid {
         // Transpose config into game items
         let mut items: Vec<Option<GameItem>> = config_items
             .into_iter()
-            .map(|i| Some(GameItem::from_config(i)))
+            .map(|i| Some(GameItem::from_config(tick, i)))
             .collect();
 
         // Give list correct length
