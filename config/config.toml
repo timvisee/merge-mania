@@ -188,8 +188,8 @@ levels = [
 ]
 
 [defaults]
-money = 0
-energy = 0
+money = 10
+energy = 5
 inventory = [
     "1.0",
     "101.0",

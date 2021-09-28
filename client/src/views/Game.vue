@@ -9,8 +9,14 @@
     <div v-if="!loading" class="text-center">
         <h1 class="h3 mb-3 fw-normal">Game</h1>
 
-        <h5 class="h5 mb-3 fw-normal text-right float-right">Energie: 0</h5>
-        <h5 class="h5 mb-3 fw-normal text-left">Geld: 1337</h5>
+        <h5 class="h5 mb-3 fw-normal text-right float-right">
+            Energie:
+            {{ inventory.energy }}
+        </h5>
+        <h5 class="h5 mb-3 fw-normal text-left">
+            Geld:
+            {{ inventory.money }}
+        </h5>
 
         <!-- Inventory grid -->
         <div class="game-grid">
