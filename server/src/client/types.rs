@@ -46,15 +46,18 @@ impl ClientItem {
 pub struct ClientProduct {
     tier: u32,
     level: u16,
+    name: String,
     sprite: String,
 }
 
 impl ClientProduct {
     pub fn from_game(game: &GameProduct) -> Result<Self, ()> {
+        let config = game.config_item.as_ref().ok_or(())?;
         Ok(Self {
             tier: game.tier,
             level: game.level,
-            sprite: game.config_item.as_ref().ok_or(())?.sprite_path.clone(),
+            name: config.name.clone(),
+            sprite: config.sprite_path.clone(),
         })
     }
 }
@@ -64,15 +67,18 @@ impl ClientProduct {
 pub struct ClientFactory {
     tier: u32,
     level: u16,
+    name: String,
     sprite: String,
 }
 
 impl ClientFactory {
     pub fn from_game(game: &GameFactory) -> Result<Self, ()> {
+        let config = game.config_item.as_ref().ok_or(())?;
         Ok(Self {
             tier: game.tier,
             level: game.level,
-            sprite: game.config_item.as_ref().ok_or(())?.sprite_path.clone(),
+            name: config.name.clone(),
+            sprite: config.sprite_path.clone(),
         })
     }
 }

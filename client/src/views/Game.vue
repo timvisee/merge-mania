@@ -21,8 +21,18 @@
         <!-- Inventory grid -->
         <div class="game-grid">
             <div v-for="cell in game.inventory.grid.items" class="cell">
-                <img v-if="cell && cell.Product" :src="'/sprites/' + cell.Product.sprite" />
-                <img v-if="cell && cell.Factory" :src="'/sprites/' + cell.Factory.sprite" />
+                <div v-if="cell && cell.Product">
+                    <img :src="'/sprites/' + cell.Product.sprite"
+                        :title="cell.Product.name"
+                        :alt="cell.Product.name"
+                    />
+                </div>
+                <div v-if="cell && cell.Factory">
+                    <img :src="'/sprites/' + cell.Factory.sprite"
+                        :title="cell.Factory.name"
+                        :alt="cell.Factory.name"
+                    />
+                </div>
             </div>
         </div>
 
