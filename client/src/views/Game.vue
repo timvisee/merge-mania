@@ -124,8 +124,16 @@ export default {
     actionMerge(index, otherIndex) {
         let isItem = !!this.game.inventory.grid.items[index];
         let isOtherItem = !!this.game.inventory.grid.items[otherIndex];
-        if(isItem && isOtherItem)
-            alert('TODO: merge items');
+
+        // We must merge two items
+        // TODO: do not allow to merge items of different types
+        if(!isItem || !isOtherItem)
+            return;
+
+        alert('TODO: merge items');
+
+        // Reset selectoin
+        this.selected = null;
     },
 
     actionBuy(index) {
@@ -161,14 +169,13 @@ export default {
 
         let a = this.game.inventory.grid.items[this.selected];
         let b = this.game.inventory.grid.items[index];
-        return this.itemsEqual(a, b);
+        return this.itemsTypeEqual(a, b);
     },
 
     /**
      * Check whether two cells have equal tier and level.
      */
-    // TODO: find better name for this function, or extract
-    itemsEqual(a, b) {
+    itemsTypeEqual(a, b) {
         if(a == null || b == null)
             return false;
 
