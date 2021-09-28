@@ -25,12 +25,14 @@
                     <img :src="'/sprites/' + cell.Product.sprite"
                         :title="cell.Product.name"
                         :alt="cell.Product.name"
+                        draggable="false"
                     />
                 </div>
                 <div v-if="cell && cell.Factory">
                     <img :src="'/sprites/' + cell.Factory.sprite"
                         :title="cell.Factory.name"
                         :alt="cell.Factory.name"
+                        draggable="false"
                     />
                 </div>
             </div>
@@ -131,6 +133,12 @@ export default {
     border: black solid 1px;
     box-sizing: content-box;
     background: #eee;
+
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 .game-grid .cell {
