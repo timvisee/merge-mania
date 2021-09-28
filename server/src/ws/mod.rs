@@ -180,14 +180,14 @@ pub fn send_to_team(
     );
 
     // Serialize
-    let msg = serde_json::to_vec(msg)?;
+    let msg = serde_json::to_string(msg)?;
 
     let clients = state.clients.clients.read().unwrap();
     let client_iter = clients.iter().filter(|c| c.team_id == team_id);
     for client in client_iter {
         // Send message, errors happen on disconnect, in which case disconnect logic will be
         // handled in other task
-        let _ = client.tx.send(Message::binary(msg.as_slice()));
+        let _ = client.tx.send(Message::text(&msg));
 
         debug!(
             "WS({}): - msg queued for client {}",

@@ -6,18 +6,29 @@
       {{ error }}
     </div>
 
-    <div class="text-center">
+    <div v-if="!loading" class="text-center">
         <h1 class="h3 mb-3 fw-normal">Game</h1>
+
+        <h5 class="h5 mb-3 fw-normal text-right float-right">Energie: 0</h5>
+        <h5 class="h5 mb-3 fw-normal text-left">Geld: 1337</h5>
 
         <!-- Inventory grid -->
         <div class="game-grid">
-            <div v-for="row in inventory" class="row">
-                <div v-for="cell in row" class="game-cell">
-                    <!-- {{ cell }} -->
-                    <!-- <img src="/sprites/red-apple.png" /> -->
-                </div>
+            <div v-for="cell in inventory.grid.items" class="cell">
+                <img v-if="cell && cell.Product" :src="'/sprites/' + cell.Product.sprite" />
+                <img v-if="cell && cell.Factory" :src="'/sprites/' + cell.Factory.sprite" />
             </div>
         </div>
+
+        <b-button-group size="lg w-100">
+            <b-button type="button" variant="success" class="w-100">Samenvoegen</b-button>
+            <b-button type="button" variant="info" class="w-100">Details</b-button>
+        </b-button-group>
+
+        <b-button-group size="lg w-100">
+            <b-button type="button" variant="success" class="w-100">Kopen</b-button>
+            <b-button type="button" variant="info" class="w-100">Verkopen</b-button>
+        </b-button-group>
 
     </div>
   </div>
@@ -31,16 +42,7 @@ export default {
   data() {
     return {
       loading: true,
-      inventory: [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-      ],
+      inventory: {},
     };
   },
   created() {
@@ -51,28 +53,22 @@ export default {
                 this.redirectToLogin();
         });
 
-    this.fetchData();
+    this.onRouteChange();
 
     this.testWebsocket();
   },
   watch: {
-    $route: "fetchData"
+    $route: "onRouteChange"
   },
   methods: {
-    fetchData() {
-      this.loading = false;
-    },
-
+    onRouteChange() {},
     redirectToLogin() {
         this.$router.push({name: "login"});
     },
     testWebsocket() {
+        // Set up websocket connection
         let ws_url = window.location.origin.replace(/^http/, 'ws') + '/ws';
-
-        // let socket = new WebSocket("ws://");
         let socket = new WebSocket(ws_url);
-
-        // TODO: remove console.log here
 
         socket.onopen = function(e) {
             console.log("[open] Connection established");
@@ -82,8 +78,13 @@ export default {
             }));
         };
 
-        socket.onmessage = function(event) {
-            console.log(`[message] Data received from server: ${event.data}`);
+        socket.onmessage = (event) => {
+            console.log(`[message] Data received from server: ${event.data.substring(0, 32)}...`);
+
+            // TODO: handle all incoming messages here
+            let data = JSON.parse(event.data);
+            this.inventory = data.data;
+            this.loading = false;
         };
 
         socket.onclose = function(event) {
@@ -106,71 +107,73 @@ export default {
 
 <style scoped>
 .game-grid {
-    --grid-cell-size: 48px;
     --grid-space: 5px;
 }
 
 @media screen and (max-width: 560px) {
     .game-grid {
-        --grid-cell-size: 40px;
         --grid-space: 4px;
     }
 }
 
 @media screen and (max-width: 470px) {
     .game-grid {
-        --grid-cell-size: 32px;
         --grid-space: 3px;
     }
 }
 
 @media screen and (max-width: 390px) {
     .game-grid {
-        --grid-cell-size: 28px;
         --grid-space: 2px;
     }
 }
 
 @media screen and (max-width: 320px) {
     .game-grid {
-        --grid-cell-size: 24px;
         --grid-space: 1px;
     }
 }
 
 .game-grid {
-    width: fit-content;
-    min-width: max-content;
-    max-width: fit-content;
-    display: block;
-    border: black solid 1px;
+    display: grid;
     margin: 2rem auto;
+    padding: var(--grid-space);
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: var(--grid-space);
+    justify-items: stretch;
+    align-items: stretch;
+    justify-content: stretch;
+    align-content: stretch;
+    aspect-ratio: 1;
+
+    border: black solid 1px;
     box-sizing: content-box;
-    padding: var(--grid-space) 0 0 var(--grid-space);
     background: #eee;
 }
 
-.game-grid .row {
-    /* display: block; */
-    margin: 0 0 var(--grid-space) 0;
-    box-sizing: content-box;
-}
-
-.game-grid .game-cell {
-    border: brown dashed 1px;
-    width: var(--grid-cell-size);
-    height: var(--grid-cell-size);
+.game-grid .cell {
     display: inline-block;
-    margin: 0 var(--grid-space) 0 0;
+    aspect-ratio: 1;
     padding: var(--grid-space);
     box-sizing: content-box;
-    text-align: center;
 
-    background-image: url(/sprites/red-apple.png);
-    background-clip: content-box;
-    background-origin: content-box;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
+    border: brown dashed 1px;
+    text-align: center;
+}
+
+.game-grid .cell img {
+    width: 100%;
+    height: 100%;
+}
+</style>
+
+<style>
+body {
+    background: #f6eada;
+}
+
+.game-grid {
+    background: #dab382;
 }
 </style>
