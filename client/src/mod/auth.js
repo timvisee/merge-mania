@@ -25,6 +25,15 @@ export default {
     },
 
     /**
+     * Logout.
+     */
+    logout() {
+        // TODO: invalidate current session on server
+        sessionManager.resetToken();
+        this.auth = true;
+    },
+
+    /**
      * Check whether we're authenticated.
      *
      * Caches authentication state.

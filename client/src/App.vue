@@ -58,8 +58,7 @@ export default {
     },
 
     logout() {
-        // TODO: invalidate current session on server
-        auth.resetSessionToken();
+        this.$auth.logout();
         this.redirectToLogin();
     },
   },
