@@ -30,7 +30,7 @@
             <div v-for="(cell, index) in game.inventory.grid.items"
                 class="cell"
                 @click.stop="toggleSelect(index)"
-                v-bind:class="{ select: selected == index, item: cell }"
+                v-bind:class="{ select: selected == index, item: cell, subtle: merging && !canMerge(index) }"
             >
                 <div v-if="cell && cell.Product">
                     <img :src="'/sprites/' + cell.Product.sprite"
@@ -63,6 +63,7 @@ export default {
       game: this.$game,
       selected: null,
       mode: null,
+      merging: false,
     };
   },
   created() {
@@ -92,7 +93,7 @@ export default {
      */
     toggleSelect(index) {
         // In merge mode, merge when selecting second one
-        if(this.selected !== null && index !== null && this.selected !== index && this.mode == 'merge')
+        if(this.selected !== null && index !== null && this.selected !== index && this.mode == 'merge' && this.canMerge(index))
             this.actionMerge(this.selected, index);
 
         // Set selected
@@ -101,6 +102,10 @@ export default {
         // If item is selected, handle other modes
         if(this.selected !== null) {
             switch(this.mode) {
+                case 'merge':
+                    let isItem = !!this.game.inventory.grid.items[index];
+                    this.merging = isItem;
+                    break;
                 case 'buy':
                     this.actionBuy(index);
                     break;
@@ -111,6 +116,8 @@ export default {
                     this.actionDetails(index);
                     break;
             }
+        } else {
+            this.merging = false
         }
     },
 
@@ -140,11 +147,46 @@ export default {
     },
 
     /**
+     * Check whether the given cell index can be merged with the selected cell.
+     */
+    canMerge(index) {
+        // Must be selected
+        if(this.selected == null)
+            return false;
+
+        // An item must be selected
+        let isItem = !!this.game.inventory.grid.items[this.selected];
+        if(!isItem)
+            return false;
+
+        let a = this.game.inventory.grid.items[this.selected];
+        let b = this.game.inventory.grid.items[index];
+        return this.itemsEqual(a, b);
+    },
+
+    /**
+     * Check whether two cells have equal tier and level.
+     */
+    // TODO: find better name for this function, or extract
+    itemsEqual(a, b) {
+        if(a == null || b == null)
+            return false;
+
+        if(a.Product && b.Product)
+            return a.Product.level == b.Product.level;
+        if(a.Factory && b.Factory)
+            return a.Factory.level == b.Factory.level;
+
+        return false;
+    },
+
+    /**
      * Toggle the current mode.
      */
     toggleMode(mode) {
         this.selected = null;
         this.mode = this.mode !== mode ? mode : null;
+        this.merging = false;
     }
   }
 };
@@ -219,6 +261,10 @@ export default {
 
 .game-grid .cell.select {
     background: #bbb;
+}
+
+.game-grid .cell.subtle {
+    opacity: 0.5;
 }
 
 .game-grid .cell.select.item {
