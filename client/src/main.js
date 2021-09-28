@@ -2,6 +2,8 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import Loader from "./components/Loader.vue";
+import authState from "./mod/auth";
+import gameState from "./mod/game";
 
 
 
@@ -29,6 +31,9 @@ Vue.use(IconsPlugin)
 Vue.config.productionTip = false;
 
 Vue.component('loader', Loader);
+
+Vue.prototype.$auth = authState;
+Vue.prototype.$game = gameState;
 
 new Vue({
   router,

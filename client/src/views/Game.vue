@@ -35,19 +35,20 @@
 </template>
 
 <script>
-import auth from "../auth";
+import sessionManager from "../util/session.js";
 
 export default {
   name: "Game",
   data() {
     return {
       loading: true,
-      inventory: {},
+      inventory: this.$game.inventory,
     };
   },
   created() {
     // Redirect to login page if not authenticated
-    auth.isAuth()
+    this.$auth
+        .isAuth()
         .then((auth) => {
             if(!auth)
                 this.redirectToLogin();
@@ -70,11 +71,11 @@ export default {
         let ws_url = window.location.origin.replace(/^http/, 'ws') + '/ws';
         let socket = new WebSocket(ws_url);
 
-        socket.onopen = function(e) {
+        socket.onopen = (e) => {
             console.log("[open] Connection established");
             console.log("Sending to server");
             socket.send(JSON.stringify({
-                token: auth.getSessionToken(),
+                token: sessionManager.getToken(),
             }));
         };
 
@@ -108,6 +109,7 @@ export default {
 <style scoped>
 .game-grid {
     --grid-space: 5px;
+    --grid-row-cells: 8;
 }
 
 @media screen and (max-width: 560px) {
@@ -138,8 +140,8 @@ export default {
     display: grid;
     margin: 2rem auto;
     padding: var(--grid-space);
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr);
+    grid-template-columns: repeat(var(--grid-row-cells), 1fr);
+    grid-template-rows: repeat(var(--grid-row-cells), 1fr);
     gap: var(--grid-space);
     justify-items: stretch;
     align-items: stretch;

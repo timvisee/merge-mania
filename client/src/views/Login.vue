@@ -53,7 +53,6 @@
 
 <script>
 import axios from "axios";
-import auth from "../auth";
 
 export default {
   name: "Login",
@@ -79,7 +78,8 @@ export default {
         this.loading = true;
 
         // Check whether we're authenticated
-        auth.isAuth()
+        this.$auth
+            .checkAuth()
             .then((auth) => {
                 if(auth)
                     this.showGame();
@@ -120,7 +120,7 @@ export default {
 
     // Submit form and authenticate
     onSubmit() {
-        this.attemptAuth();
+        this.doAuth();
     },
 
     // Reset form
@@ -130,20 +130,15 @@ export default {
     },
 
     // Attempt to authenticate with form data.
-    attemptAuth() {
+    doAuth() {
         this.loading = true;
-        axios.post("/api/auth/login", this.form)
-            .then((response) => {
-                auth.setSessionToken(response.data.token);
-                this.showGame();
-            })
-            .catch((error) => {
-                // TODO: improve error handling
+        this.$auth.login(this.form)
+            .then(() => this.showGame())
+            .catch(() => {
+                // TODO: improve error message
                 alert("Error: " + error.response.data.message);
             })
-            .finally(() => {
-                this.loading = false;
-            });
+            .finally(() => this.loading = false);
     },
 
     // Navigate to game page

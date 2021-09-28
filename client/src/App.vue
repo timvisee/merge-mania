@@ -42,13 +42,11 @@
 </template>
 
 <script>
-import auth from "./auth";
-
 export default {
   name: "app",
   created() {
     // Redirect to login page if not authenticated
-    auth.isAuth()
+    this.$auth.isAuth()
         .then((auth) => {
             if(!auth)
                 this.redirectToLogin();

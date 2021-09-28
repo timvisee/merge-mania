@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import auth from "../auth";
-
 export default {
   name: "Home",
   created() {
@@ -30,7 +28,8 @@ export default {
   methods: {
     onShow() {
         // Redirect to game if authenticated
-        auth.isAuth()
+        this.$auth
+            .isAuth()
             .then((auth) => {
                 if(auth)
                     this.$router.push({name: "game"});
