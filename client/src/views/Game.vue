@@ -141,6 +141,8 @@ export default {
     justify-content: stretch;
     align-content: stretch;
     aspect-ratio: 1;
+    max-width: 70vh;
+    max-height: 70vh;
 
     border: black solid 1px;
     box-sizing: content-box;
