@@ -11,6 +11,7 @@ use warp::ws::{Message, WebSocket};
 use warp::Filter;
 
 use crate::auth::{generate_client_id, Client, Session};
+use crate::client::Msg;
 use crate::state::SharedState;
 
 /// New client connected.
@@ -54,6 +55,11 @@ pub async fn connected(state: SharedState, ws: WebSocket) {
     state
         .clients
         .register(Client::new(client_id, session.team_id, tx));
+
+    // TODO: send initial data
+    // TODO: - team info
+    // TODO: - game state
+    // TODO: - inventory
 
     // Handle client messages
     handle(state.clone(), client_id, &mut user_ws_rx).await;
@@ -158,21 +164,30 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: &str) {
 
 /// Send message to a team.
 ///
-/// Note: also sends to the current client as identified by `client_id`.
-pub fn send_to_team(state: &SharedState, client_id: Option<usize>, team_id: u32, msg: &str) {
+/// Notes:
+/// - also sends to the current client as identified by `client_id`.
+/// - returns `Ok` even if the message reaches no team.
+pub fn send_to_team(
+    state: &SharedState,
+    client_id: Option<usize>,
+    team_id: u32,
+    msg: &Msg,
+) -> serde_json::Result<()> {
     debug!(
-        "WS({}): sending to team {}: {}",
+        "WS({}): send msg to team {}",
         client_id.unwrap_or(0),
         team_id,
-        msg.chars().take(16).collect::<String>()
     );
+
+    // Serialize
+    let msg = serde_json::to_vec(msg)?;
 
     let clients = state.clients.clients.read().unwrap();
     let client_iter = clients.iter().filter(|c| c.team_id == team_id);
     for client in client_iter {
         // Send message, errors happen on disconnect, in which case disconnect logic will be
         // handled in other task
-        let _ = client.tx.send(Message::text(msg));
+        let _ = client.tx.send(Message::binary(msg.as_slice()));
 
         debug!(
             "WS({}): - msg queued for client {}",
@@ -180,6 +195,8 @@ pub fn send_to_team(state: &SharedState, client_id: Option<usize>, team_id: u32,
             client.client_id
         );
     }
+
+    Ok(())
 }
 
 /// Client disconnected.

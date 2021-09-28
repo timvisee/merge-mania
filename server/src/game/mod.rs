@@ -6,6 +6,7 @@ use rand::Rng;
 use serde::Deserialize;
 use tokio::time::{self, Duration};
 
+use crate::client::{ClientInventory, MsgKind};
 use crate::config::{Config, ConfigFactoryTier};
 use crate::state::SharedState;
 use crate::util::{i_to_xy, xy_to_i};
@@ -29,6 +30,7 @@ pub(crate) async fn run(state: SharedState) {
 }
 
 /// Represents runnable game state.
+// TODO: when loading (deserializing) game, make sure all config properties get attached!
 #[derive(Default)]
 pub struct Game {
     /// Whether the game is running.
@@ -61,7 +63,7 @@ impl Game {
             *lock
         };
 
-        info!("Processing game tick");
+        debug!("Processing game tick");
 
         // Update each team
         let mut changed = false;
@@ -91,6 +93,8 @@ pub trait Update {
 
 /// Broadcast current inventory state to team clients.
 fn broadcast_team_inventory(state: &SharedState, team: &GameTeam) {
-    let inventory = serde_json::to_string(&team.inventory).expect("failed to serialize inventory");
-    ws::send_to_team(&state, None, team.id, &inventory);
+    let inventory = ClientInventory::from_game(&team.inventory)
+        .expect("failed to transpose game to client inventory");
+    let msg = MsgKind::Inventory(inventory);
+    ws::send_to_team(&state, None, team.id, &msg.into());
 }

@@ -6,6 +6,7 @@ use serde::Serialize;
 use super::Update;
 use crate::config::{
     Config, ConfigFactory, ConfigFactoryTier, ConfigItem, ConfigProduct, ConfigProductTier,
+    ConfigTeam,
 };
 use crate::types::ItemRef;
 use crate::util::{i_to_xy, xy_to_i};
@@ -21,6 +22,9 @@ pub struct GameTeam {
 
     /// Team inventory.
     pub inventory: GameInventory,
+
+    #[serde(skip)]
+    pub config: Option<ConfigTeam>,
 }
 
 impl GameTeam {
@@ -30,6 +34,7 @@ impl GameTeam {
             id,
             inventory: GameInventory::from_config(config)
                 .unwrap_or_else(|| GameInventory::default()),
+            config: config.team(id).cloned(),
         }
     }
 }
@@ -72,13 +77,13 @@ impl Update for GameItem {
 /// Inventory product.
 #[derive(Serialize, Debug)]
 pub struct GameProduct {
-    tier: u32,
-    level: u16,
+    pub tier: u32,
+    pub level: u16,
 
     #[serde(skip)]
-    config_tier: Option<ConfigProductTier>,
+    pub config_tier: Option<ConfigProductTier>,
     #[serde(skip)]
-    config_item: Option<ConfigProduct>,
+    pub config_item: Option<ConfigProduct>,
 }
 
 impl GameProduct {
@@ -154,10 +159,10 @@ impl GameProduct {
 #[derive(Serialize, Debug)]
 pub struct GameFactory {
     /// Current tier ID.
-    tier: u32,
+    pub tier: u32,
 
     /// Current level.
-    level: u16,
+    pub level: u16,
 
     /// Last processing tick.
     tick: usize,
@@ -168,9 +173,9 @@ pub struct GameFactory {
     queue: VecDeque<GameItem>,
 
     #[serde(skip)]
-    config_tier: Option<ConfigFactoryTier>,
+    pub config_tier: Option<ConfigFactoryTier>,
     #[serde(skip)]
-    config_item: Option<ConfigFactory>,
+    pub config_item: Option<ConfigFactory>,
 }
 
 impl GameFactory {
@@ -303,9 +308,9 @@ impl Update for GameFactory {
 /// An inventory.
 #[derive(Serialize, Debug, Default)]
 pub struct GameInventory {
-    money: usize,
-    energy: usize,
-    grid: GameInventoryGrid,
+    pub money: usize,
+    pub energy: usize,
+    pub grid: GameInventoryGrid,
 }
 
 impl GameInventory {
@@ -330,7 +335,7 @@ impl Update for GameInventory {
 /// An inventory grid.
 #[derive(Serialize, Debug)]
 pub struct GameInventoryGrid {
-    items: Vec<Option<GameItem>>,
+    pub items: Vec<Option<GameItem>>,
 }
 
 impl GameInventoryGrid {

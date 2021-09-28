@@ -18,6 +18,11 @@ pub struct Config {
 }
 
 impl Config {
+    /// Get a team.
+    pub fn team(&self, team_id: u32) -> Option<&ConfigTeam> {
+        self.teams.iter().find(|t| t.id == team_id)
+    }
+
     /// Find an item by reference.
     ///
     /// Returns a configuration product or factory.

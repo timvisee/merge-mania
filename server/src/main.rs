@@ -5,6 +5,7 @@
 extern crate log;
 
 pub(crate) mod auth;
+pub(crate) mod client;
 pub(crate) mod config;
 pub(crate) mod game;
 pub(crate) mod lang;
