@@ -473,16 +473,17 @@ impl GameInventoryGrid {
 
 impl Update for GameInventoryGrid {
     fn update(&mut self, config: &Config, tick: usize) -> bool {
-        let mut changed = false;
         for item in self.items.iter_mut() {
             match item {
-                Some(item) => changed = item.update(config, tick) || changed,
+                Some(item) => {
+                    item.update(config, tick);
+                }
                 None => {}
             }
         }
 
         // Place queued factory items onto field
-        changed = self.place_queue_items() || changed;
+        let changed = self.place_queue_items();
 
         changed
     }

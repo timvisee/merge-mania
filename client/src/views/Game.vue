@@ -1,26 +1,26 @@
 <template>
   <div>
-    <loader v-if="loading" />
+    <loader v-if="!game || !game.ready" />
 
     <div v-if="error" class="error">
       {{ error }}
     </div>
 
-    <div v-if="!loading" class="text-center">
+    <div v-if="game && game.ready" class="text-center">
         <h1 class="h3 mb-3 fw-normal">Game</h1>
 
         <h5 class="h5 mb-3 fw-normal text-right float-right">
             Energie:
-            {{ inventory.energy }}
+            {{ game.inventory.energy }}
         </h5>
         <h5 class="h5 mb-3 fw-normal text-left">
             Geld:
-            {{ inventory.money }}
+            {{ game.inventory.money }}
         </h5>
 
         <!-- Inventory grid -->
         <div class="game-grid">
-            <div v-for="cell in inventory.grid.items" class="cell">
+            <div v-for="cell in game.inventory.grid.items" class="cell">
                 <img v-if="cell && cell.Product" :src="'/sprites/' + cell.Product.sprite" />
                 <img v-if="cell && cell.Factory" :src="'/sprites/' + cell.Factory.sprite" />
             </div>
@@ -47,22 +47,21 @@ export default {
   name: "Game",
   data() {
     return {
-      loading: true,
-      inventory: this.$game.inventory,
+      game: this.$game,
     };
   },
   created() {
-    // Redirect to login page if not authenticated
+    this.onRouteChange();
+
+    // Check auth, initialize game or redirect to login
     this.$auth
         .isAuth()
         .then((auth) => {
-            if(!auth)
+            if(auth)
+                this.$game.init();
+            else
                 this.redirectToLogin();
         });
-
-    this.onRouteChange();
-
-    this.testWebsocket();
   },
   watch: {
     $route: "onRouteChange"
@@ -71,42 +70,6 @@ export default {
     onRouteChange() {},
     redirectToLogin() {
         this.$router.push({name: "login"});
-    },
-    testWebsocket() {
-        // Set up websocket connection
-        let ws_url = window.location.origin.replace(/^http/, 'ws') + '/ws';
-        let socket = new WebSocket(ws_url);
-
-        socket.onopen = (e) => {
-            console.log("[open] Connection established");
-            console.log("Sending to server");
-            socket.send(JSON.stringify({
-                token: sessionManager.getToken(),
-            }));
-        };
-
-        socket.onmessage = (event) => {
-            console.log(`[message] Data received from server: ${event.data.substring(0, 32)}...`);
-
-            // TODO: handle all incoming messages here
-            let data = JSON.parse(event.data);
-            this.inventory = data.data;
-            this.loading = false;
-        };
-
-        socket.onclose = function(event) {
-            if (event.wasClean) {
-                console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
-            } else {
-                // e.g. server process killed or network down
-                // event.code is usually 1006 in this case
-                console.log('[close] Connection died');
-            }
-        };
-
-        socket.onerror = function(error) {
-            console.log(`[error] ${error.message}`);
-        };
     },
   }
 };
