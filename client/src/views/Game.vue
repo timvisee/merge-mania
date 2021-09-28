@@ -18,6 +18,13 @@
             {{ game.inventory.money }}
         </h5>
 
+        <b-button-group size="lg w-100">
+            <b-button type="button" squared variant="outline-dark" class="w-100" @click.stop="toggleMode('merge')" :pressed="mode == 'merge'">Merge</b-button>
+            <b-button type="button" squared variant="outline-dark" class="w-100" @click.stop="toggleMode('buy')"  :pressed="mode == 'buy'">Buy</b-button>
+            <b-button type="button" squared variant="outline-dark" class="w-100" @click.stop="toggleMode('sell')"  :pressed="mode == 'sell'">Sell</b-button>
+            <b-button type="button" squared variant="outline-dark" class="w-100" @click.stop="toggleMode('details')"  :pressed="mode == 'details'">Details</b-button>
+        </b-button-group>
+
         <!-- Inventory grid -->
         <div class="game-grid">
             <div v-for="(cell, index) in game.inventory.grid.items"
@@ -42,16 +49,6 @@
             </div>
         </div>
 
-        <b-button-group size="lg w-100">
-            <b-button type="button" variant="success" class="w-100">Samenvoegen</b-button>
-            <b-button type="button" variant="info" class="w-100">Details</b-button>
-        </b-button-group>
-
-        <b-button-group size="lg w-100">
-            <b-button type="button" variant="success" class="w-100">Kopen</b-button>
-            <b-button type="button" variant="info" class="w-100">Verkopen</b-button>
-        </b-button-group>
-
     </div>
   </div>
 </template>
@@ -65,6 +62,7 @@ export default {
     return {
       game: this.$game,
       selected: null,
+      mode: null,
     };
   },
   created() {
@@ -93,8 +91,61 @@ export default {
      * Toggle selection of given cell index.
      */
     toggleSelect(index) {
+        // In merge mode, merge when selecting second one
+        if(this.selected !== null && index !== null && this.selected !== index && this.mode == 'merge')
+            this.actionMerge(this.selected, index);
+
+        // Set selected
         this.selected = this.selected !== index ? index : null;
+
+        // If item is selected, handle other modes
+        if(this.selected !== null) {
+            switch(this.mode) {
+                case 'buy':
+                    this.actionBuy(index);
+                    break;
+                case 'sell':
+                    this.actionSell(index);
+                    break;
+                case 'details':
+                    this.actionDetails(index);
+                    break;
+            }
+        }
     },
+
+    actionMerge(index, otherIndex) {
+        let isItem = !!this.game.inventory.grid.items[index];
+        let isOtherItem = !!this.game.inventory.grid.items[otherIndex];
+        if(isItem && isOtherItem)
+            alert('TODO: merge items');
+    },
+
+    actionBuy(index) {
+        let isItem = !!this.game.inventory.grid.items[index];
+        if(!isItem)
+            alert('TODO: buy item');
+    },
+
+    actionSell(index) {
+        let isItem = !!this.game.inventory.grid.items[index];
+        if(isItem)
+            alert('TODO: sell item');
+    },
+
+    actionDetails(index) {
+        let isItem = !!this.game.inventory.grid.items[index];
+        if(isItem)
+            alert('TODO: show item details');
+    },
+
+    /**
+     * Toggle the current mode.
+     */
+    toggleMode(mode) {
+        this.selected = null;
+        this.mode = this.mode !== mode ? mode : null;
+    }
   }
 };
 </script>
@@ -131,7 +182,7 @@ export default {
 
 .game-grid {
     display: grid;
-    margin: 2rem auto;
+    margin: 0 auto 2rem auto;
     padding: var(--grid-space);
     grid-template-columns: repeat(var(--grid-row-cells), 1fr);
     grid-template-rows: repeat(var(--grid-row-cells), 1fr);
