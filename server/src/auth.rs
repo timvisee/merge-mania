@@ -205,6 +205,12 @@ impl ClientManager {
             None => false,
         }
     }
+
+    /// Find the team ID for a given client.
+    pub fn client_team_id(&self, client_id: usize) -> Option<u32> {
+        let clients = self.clients.read().unwrap();
+        Some(clients.iter().find(|c| c.client_id == client_id)?.team_id)
+    }
 }
 
 /// An active and authenticated client connection.

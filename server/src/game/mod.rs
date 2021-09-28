@@ -82,6 +82,19 @@ impl Game {
         // TODO: put factory items onto field
         // TODO: do not return true if only queue item was added
     }
+
+    /// Get the team client inventory.
+    pub fn team_client_inventory(&self, team_id: u32) -> Option<ClientInventory> {
+        let team = self
+            .teams
+            .iter()
+            .map(|t| t.read().unwrap())
+            .filter(|t| t.id == team_id)
+            .next()?;
+        let inventory = ClientInventory::from_game(&team.inventory)
+            .expect("failed to transpose game to client inventory");
+        Some(inventory)
+    }
 }
 
 pub trait Update {

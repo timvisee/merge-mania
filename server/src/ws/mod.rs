@@ -12,6 +12,7 @@ use warp::Filter;
 
 use crate::auth::{generate_client_id, Client, Session};
 use crate::client::Msg;
+use crate::client::MsgKind;
 use crate::state::SharedState;
 
 /// New client connected.
@@ -56,10 +57,8 @@ pub async fn connected(state: SharedState, ws: WebSocket) {
         .clients
         .register(Client::new(client_id, session.team_id, tx));
 
-    // TODO: send initial data
-    // TODO: - team info
-    // TODO: - game state
-    // TODO: - inventory
+    // Send game state to client
+    send_initial(state.clone(), client_id).await;
 
     // Handle client messages
     handle(state.clone(), client_id, &mut user_ws_rx).await;
@@ -128,6 +127,30 @@ async fn handle_auth(
     None
 }
 
+/// Send current state to client.
+async fn send_initial(state: SharedState, client_id: usize) {
+    // TODO: send initial data
+    // TODO: - team info
+    // TODO: - game state
+    // TODO: - inventory
+
+    // Find client team ID
+    let team_id = match state.clients.client_team_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // Get team client inventory
+    let inventory = match state.game.team_client_inventory(team_id) {
+        Some(inv) => inv,
+        None => return,
+    };
+
+    // Send inventory state
+    let msg = MsgKind::Inventory(inventory);
+    send_to_client(&state, client_id, &msg.into());
+}
+
 /// Handle client messages.
 async fn handle(state: SharedState, client_id: usize, user_ws_rx: &mut SplitStream<WebSocket>) {
     // TODO: timeout if not recieving heartbeat each minute
@@ -160,6 +183,30 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: &str) {
     debug!("WS({}): handle msg: {:?}", client_id, msg);
 
     // TODO: implement logic to handle client messages
+}
+
+/// Send message to client.
+///
+/// - returns `Ok` even if the message is never sent
+pub fn send_to_client(state: &SharedState, client_id: usize, msg: &Msg) -> serde_json::Result<()> {
+    debug!("WS({0}): send msg to client {0}", client_id);
+
+    // Serialize
+    let msg = serde_json::to_string(msg)?;
+
+    let clients = state.clients.clients.read().unwrap();
+    let client_iter = clients.iter().filter(|c| c.client_id == client_id);
+    for client in client_iter {
+        // Send message, errors happen on disconnect, in which case disconnect logic will be
+        // handled in other task
+        let _ = client.tx.send(Message::text(&msg));
+
+        debug!("WS({0}): - msg queued for client {0}", client.client_id);
+        return Ok(());
+    }
+
+    // TODO: return error, no client with this ID
+    Ok(())
 }
 
 /// Send message to a team.
