@@ -19,10 +19,34 @@
         </h5>
 
         <b-button-group size="lg w-100">
-            <b-button type="button" squared variant="outline-dark" class="w-100" @click.stop="toggleMode('merge')" :pressed="mode == 'merge'">Merge</b-button>
-            <b-button type="button" squared variant="outline-dark" class="w-100" @click.stop="toggleMode('buy')"  :pressed="mode == 'buy'">Buy</b-button>
-            <b-button type="button" squared variant="outline-dark" class="w-100" @click.stop="toggleMode('sell')"  :pressed="mode == 'sell'">Sell</b-button>
-            <b-button type="button" squared variant="outline-dark" class="w-100" @click.stop="toggleMode('details')"  :pressed="mode == 'details'">Details</b-button>
+            <b-button
+                type="button"
+                class="w-100"
+                variant="outline-dark"
+                squared
+                @click.stop.prevent="toggleMode('merge')"
+                :pressed="mode == 'merge'">Merge</b-button>
+            <b-button
+                type="button"
+                class="w-100"
+                variant="outline-dark"
+                squared
+                @click.prevent="toggleMode('buy')"
+                :pressed="mode == 'buy'">Buy</b-button>
+            <b-button
+                type="button"
+                class="w-100"
+                variant="outline-dark"
+                squared
+                @click.prevent="toggleMode('sell')"
+                :pressed="mode == 'sell'">Sell</b-button>
+            <b-button
+                type="button"
+                class="w-100"
+                variant="outline-dark"
+                squared
+                @click.prevent="toggleMode('details')"
+                :pressed="mode == 'details'">Details</b-button>
         </b-button-group>
 
         <!-- Inventory grid -->
@@ -303,6 +327,15 @@ export default {
     width: 100%;
     height: 100%;
 }
+
+// Patch to fix inactive mode button staying highlighted on mobile
+.btn-outline-dark:not(:disabled):not(.disabled):not(.active):active,
+.btn-outline-dark:not(:disabled):not(.disabled):not(.active):hover {
+    background: transparent;
+    color: #343a40;
+    border-color: #343a40;
+}
+
 </style>
 
 <style>
