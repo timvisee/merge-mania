@@ -30,7 +30,7 @@
             <div v-for="(cell, index) in game.inventory.grid.items"
                 class="cell"
                 @click.stop="toggleSelect(index)"
-                v-bind:class="{ select: selected == index, item: cell, subtle: merging && !canMerge(index) }"
+                v-bind:class="{ select: selected == index, item: cell, subtle: isSubtle(index) }"
             >
                 <div v-if="cell && cell.Product">
                     <img :src="'/sprites/' + cell.Product.sprite"
@@ -61,9 +61,8 @@ export default {
   data() {
     return {
       game: this.$game,
-      selected: null,
       mode: null,
-      merging: false,
+      selected: null,
     };
   },
   created() {
@@ -89,23 +88,29 @@ export default {
     },
 
     /**
+     * Toggle the current mode.
+     */
+    toggleMode(mode) {
+        this.selected = null;
+        this.mode = this.mode !== mode ? mode : null;
+    },
+
+    /**
      * Toggle selection of given cell index.
      */
     toggleSelect(index) {
         // In merge mode, merge when selecting second one
-        if(this.selected !== null && index !== null && this.selected !== index && this.mode == 'merge' && this.canMerge(index))
+        if(this.selected !== null && index !== null && this.selected !== index && this.mode == 'merge' && this.canMerge(index)) {
             this.actionMerge(this.selected, index);
+            return;
+        }
 
-        // Set selected
+        // Update selected
         this.selected = this.selected !== index ? index : null;
 
-        // If item is selected, handle other modes
+        // If a cell is selected, invoke an action
         if(this.selected !== null) {
             switch(this.mode) {
-                case 'merge':
-                    let isItem = !!this.game.inventory.grid.items[index];
-                    this.merging = isItem;
-                    break;
                 case 'buy':
                     this.actionBuy(index);
                     break;
@@ -116,18 +121,13 @@ export default {
                     this.actionDetails(index);
                     break;
             }
-        } else {
-            this.merging = false
         }
     },
 
     actionMerge(index, otherIndex) {
-        let isItem = !!this.game.inventory.grid.items[index];
-        let isOtherItem = !!this.game.inventory.grid.items[otherIndex];
-
         // We must merge two items
         // TODO: do not allow to merge items of different types
-        if(!isItem || !isOtherItem)
+        if(!this.hasItem(index) || !this.hasItem(otherIndex))
             return;
 
         alert('TODO: merge items');
@@ -137,64 +137,85 @@ export default {
     },
 
     actionBuy(index) {
-        let isItem = !!this.game.inventory.grid.items[index];
-        if(!isItem)
+        if(!this.hasItem(index))
             alert('TODO: buy item');
     },
 
     actionSell(index) {
-        let isItem = !!this.game.inventory.grid.items[index];
-        if(isItem)
+        if(this.hasItem(index))
             alert('TODO: sell item');
     },
 
     actionDetails(index) {
-        let isItem = !!this.game.inventory.grid.items[index];
-        if(isItem)
+        if(this.hasItem(index))
             alert('TODO: show item details');
     },
 
     /**
-     * Check whether the given cell index can be merged with the selected cell.
+     * Whether a cell should be shown as subtle.
      */
-    canMerge(index) {
-        // Must be selected
-        if(this.selected == null)
+    isSubtle(index) {
+        switch(this.mode) {
+            case 'merge':
+                // A cell with an item must be selected
+                if(!this.hasItem(this.selected))
+                    return false;
+
+                // Show as subtle if can't merge
+                return !this.canMerge(index);
+            case 'buy':
+                return this.hasItem(index);
+            case 'sell':
+            case 'details':
+                return !this.hasItem(index);
+            defaut:
+                return false;
+        }
+    },
+
+    /**
+     * Check whether a cell by index has an item.
+     */
+    hasItem(index) {
+        return index !== null && !!this.game.inventory.grid.items[index];
+    },
+
+    /**
+     * Check whether the given cell index can be merged with the other cell.
+     * Uses selected cell by default.
+     */
+    canMerge(index, other) {
+        other = other !== undefined ? other : this.selected;
+
+        // Cells must be items
+        if(!this.hasItem(index) || !this.hasItem(other))
             return false;
 
-        // An item must be selected
-        let isItem = !!this.game.inventory.grid.items[this.selected];
-        if(!isItem)
-            return false;
-
-        let a = this.game.inventory.grid.items[this.selected];
+        let a = this.game.inventory.grid.items[other];
         let b = this.game.inventory.grid.items[index];
-        return this.itemsTypeEqual(a, b);
+        return this.isEqualItemType(a, b);
     },
 
     /**
      * Check whether two cells have equal tier and level.
      */
-    itemsTypeEqual(a, b) {
+    isEqualItemType(a, b) {
         if(a == null || b == null)
             return false;
 
-        if(a.Product && b.Product)
-            return a.Product.level == b.Product.level;
-        if(a.Factory && b.Factory)
-            return a.Factory.level == b.Factory.level;
+        // Must both be products or factories
+        if(a.Product && b.Product) {
+            a = a.Product;
+            b = b.Product;
+        } else if(a.Factory && b.Factory) {
+            a = a.Factory;
+            b = b.Factory;
+        } else
+            return false;
 
-        return false;
+        // Tier and level must equal
+        return a.tier == b.tier && a.level == b.level;
     },
-
-    /**
-     * Toggle the current mode.
-     */
-    toggleMode(mode) {
-        this.selected = null;
-        this.mode = this.mode !== mode ? mode : null;
-        this.merging = false;
-    }
   }
 };
 </script>
