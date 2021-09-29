@@ -54,7 +54,7 @@
             <div v-for="(cell, index) in game.inventory.grid.items"
                 class="cell"
                 @click.stop="toggleSelect(index)"
-                v-bind:class="{ select: selected == index, item: cell, subtle: isSubtle(index) }"
+                v-bind:class="{ select: selected == index, item: cell, factory: cell && cell.Factory, subtle: isSubtle(index) }"
             >
                 <div v-if="cell && cell.Product">
                     <img :src="'/sprites/' + cell.Product.sprite"
@@ -313,16 +313,20 @@ export default {
     text-align: center;
 }
 
+.game-grid .cell.factory {
+    background: lightblue;
+}
+
 .game-grid .cell.select {
     background: #bbb;
 }
 
-.game-grid .cell.subtle {
-    opacity: 0.5;
-}
-
 .game-grid .cell.select.item {
     background: #eb983c;
+}
+
+.game-grid .cell.subtle {
+    opacity: 0.5;
 }
 
 .game-grid .cell img {
