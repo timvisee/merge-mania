@@ -134,7 +134,7 @@ impl ConfigFactoryDrop {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct ConfigDefaults {
-    pub money: usize,
-    pub energy: usize,
+    pub money: u64,
+    pub energy: u64,
     pub inventory: Vec<ItemRef>,
 }

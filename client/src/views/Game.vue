@@ -172,18 +172,38 @@ export default {
         if(!this.hasItem(index) || !this.hasItem(otherIndex))
             return;
 
-        // Reset selection
+        // Send merge action
+        this.$game.socket.send('action_merge', {
+            cell: otherIndex,
+            other: index,
+        });
+
+        // Reset selection, clear other cell for instant feedback
+        this.$game.inventory.grid.items[index] = null;
         this.selected = null;
     },
 
     actionBuy(index) {
-        if(!this.hasItem(index))
-            alert('TODO: buy item');
+        // Cell must be empty
+        if(this.hasItem(index))
+            return;
+
+        // Send merge action
+        this.$game.socket.send('action_buy', {
+            cell: index,
+            item: '101.0',
+        });
     },
 
     actionSell(index) {
-        if(this.hasItem(index))
-            alert('TODO: sell item');
+        // Cell must not be empty
+        if(!this.hasItem(index))
+            return;
+
+        // Send merge action
+        this.$game.socket.send('action_sell', {
+            cell: index,
+        });
     },
 
     actionDetails(index) {

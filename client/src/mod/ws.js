@@ -35,6 +35,17 @@ export default {
     },
 
     /**
+     * Send a message over the socket.
+     */
+    send(kind, data) {
+        this.socket.send(JSON.stringify({
+            status: 'ok',
+            kind,
+            data,
+        }));
+    },
+
+    /**
      * Invoked when websocket connection is opened.
      */
     onOpen(event) {

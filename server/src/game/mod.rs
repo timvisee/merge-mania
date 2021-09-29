@@ -7,8 +7,8 @@ use rand::Rng;
 use serde::Deserialize;
 use tokio::time::{self, Duration};
 
-use crate::client::{ClientInventory, MsgKind};
-use crate::config::{Config, ConfigFactoryTier};
+use crate::client::{ClientInventory, MsgSendKind};
+use crate::config::{Config, ConfigFactoryTier, ConfigItem};
 use crate::state::SharedState;
 use crate::util::{i_to_xy, xy_to_i};
 use crate::ws;
@@ -98,6 +98,99 @@ impl Game {
             .expect("failed to transpose game to client inventory");
         Some(inventory)
     }
+
+    /// Merge two items for a team.
+    pub fn team_merge(
+        &self,
+        team_id: u32,
+        config: &Config,
+        cell: u8,
+        other: u8,
+    ) -> Option<ClientInventory> {
+        let mut team = self
+            .teams
+            .iter()
+            .map(|t| t.write().unwrap())
+            .filter(|t| t.id == team_id)
+            .next()?;
+
+        // TODO: validate indices
+        // TODO: ensure items are same type
+        // TODO: ensure item can be upgraded
+
+        let upgraded = team.inventory.grid.items[cell as usize]
+            .as_mut()
+            .unwrap()
+            .upgrade(config);
+        if upgraded {
+            team.inventory.grid.items[other as usize] = None;
+        }
+
+        let inventory = ClientInventory::from_game(&team.inventory)
+            .expect("failed to transpose game to client inventory");
+        Some(inventory)
+    }
+
+    /// Buy an item for a team.
+    pub fn team_buy(
+        &self,
+        team_id: u32,
+        config: &Config,
+        cell: u8,
+        item: ConfigItem,
+    ) -> Option<ClientInventory> {
+        let mut team = self
+            .teams
+            .iter()
+            .map(|t| t.write().unwrap())
+            .filter(|t| t.id == team_id)
+            .next()?;
+
+        // TODO: validate indices
+        // TODO: ensure user has costs, pay costs
+
+        let mut cell = &mut team.inventory.grid.items[cell as usize];
+
+        // Cell must be empty
+        if cell.is_some() {
+            return None;
+        }
+
+        *cell = Some(GameItem::from_config(self.tick(), item));
+
+        let inventory = ClientInventory::from_game(&team.inventory)
+            .expect("failed to transpose game to client inventory");
+        Some(inventory)
+    }
+
+    /// Sell an item for a team.
+    pub fn team_sell(&self, team_id: u32, config: &Config, cell: u8) -> Option<ClientInventory> {
+        let mut team = self
+            .teams
+            .iter()
+            .map(|t| t.write().unwrap())
+            .filter(|t| t.id == team_id)
+            .next()?;
+
+        // TODO: validate indices
+
+        // Get sell, must contain item
+        let mut cell = &mut team.inventory.grid.items[cell as usize];
+
+        match cell.take() {
+            Some(item) => {
+                // TODO: give proper money to user
+                if let Some(money) = item.sell_amounts() {
+                    team.inventory.money += money;
+                }
+            }
+            None => return None,
+        }
+
+        let inventory = ClientInventory::from_game(&team.inventory)
+            .expect("failed to transpose game to client inventory");
+        Some(inventory)
+    }
 }
 
 pub trait Update {
@@ -111,6 +204,6 @@ pub trait Update {
 fn broadcast_team_inventory(state: &SharedState, team: &GameTeam) {
     let inventory = ClientInventory::from_game(&team.inventory)
         .expect("failed to transpose game to client inventory");
-    let msg = MsgKind::Inventory(inventory);
+    let msg = MsgSendKind::Inventory(inventory);
     ws::send_to_team(&state, None, team.id, &msg.into());
 }

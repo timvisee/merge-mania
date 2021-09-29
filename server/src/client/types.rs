@@ -96,8 +96,8 @@ impl ClientFactory {
 /// An inventory.
 #[derive(Serialize, Debug)]
 pub struct ClientInventory {
-    money: usize,
-    energy: usize,
+    money: u64,
+    energy: u64,
     grid: ClientInventoryGrid,
 }
 
@@ -133,7 +133,7 @@ impl ClientInventoryGrid {
 }
 
 /// For given amounts, if all are money, get money sum.
-fn amount_only_money(amounts: &[Amount]) -> Option<u64> {
+pub fn amount_only_money(amounts: &[Amount]) -> Option<u64> {
     // All amounts must be money
     if amounts.iter().all(|a| matches!(a, Amount::Money(_))) {
         return Some(

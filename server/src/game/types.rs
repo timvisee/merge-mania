@@ -63,6 +63,28 @@ impl GameItem {
             }
         }
     }
+
+    /// Get sell amounts for item.
+    // TODO: return amounts here, instead of just money
+    pub fn sell_amounts(&self) -> Option<u64> {
+        match self {
+            GameItem::Product(product) => Some(product.config_item.as_ref()?.cost),
+            GameItem::Factory(factory) => {
+                crate::client::types::amount_only_money(&factory.config_item.as_ref()?.cost_sell)
+            }
+        }
+    }
+
+    /// Attemp to upgrade 1 level.
+    ///
+    /// Returns true if something changed, false if failed.
+    #[must_use]
+    pub fn upgrade(&mut self, config: &Config) -> bool {
+        match self {
+            GameItem::Product(product) => product.upgrade(config),
+            GameItem::Factory(factory) => factory.upgrade(config),
+        }
+    }
 }
 
 impl Update for GameItem {
@@ -315,8 +337,8 @@ impl Update for GameFactory {
 /// An inventory.
 #[derive(Serialize, Debug, Default)]
 pub struct GameInventory {
-    pub money: usize,
-    pub energy: usize,
+    pub money: u64,
+    pub energy: u64,
     pub grid: GameInventoryGrid,
 }
 

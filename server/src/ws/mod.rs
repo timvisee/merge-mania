@@ -11,8 +11,10 @@ use warp::ws::{Message, WebSocket};
 use warp::Filter;
 
 use crate::auth::{generate_client_id, Client, Session};
-use crate::client::Msg;
-use crate::client::MsgKind;
+use crate::client::{
+    ClientActionBuy, ClientActionMerge, ClientActionSell, MsgRecv, MsgRecvKind, MsgSend,
+    MsgSendKind,
+};
 use crate::state::SharedState;
 
 /// New client connected.
@@ -93,6 +95,7 @@ async fn handle_auth(
         };
 
         // Try to parse session token and validate
+        // TODO: get MsgRecv here, instead of SessionData directly
         let session: crate::auth::SessionData = match serde_json::from_str(msg) {
             Ok(session) => session,
             Err(err) => {
@@ -147,7 +150,7 @@ async fn send_initial(state: SharedState, client_id: usize) {
     };
 
     // Send inventory state
-    let msg = MsgKind::Inventory(inventory);
+    let msg = MsgSendKind::Inventory(inventory);
     send_to_client(&state, client_id, &msg.into());
 }
 
@@ -174,21 +177,133 @@ async fn handle(state: SharedState, client_id: usize, user_ws_rx: &mut SplitStre
             }
         };
 
-        handle_msg(&state, client_id, &msg).await;
+        // Parse message
+        let msg: MsgRecv = match serde_json::from_str(msg) {
+            Ok(msg) => msg,
+            Err(err) => {
+                warn!(
+                    "WS({}): could not parse client message: {:?}",
+                    client_id, err
+                );
+                continue;
+            }
+        };
+
+        handle_msg(&state, client_id, msg).await;
     }
 }
 
 /// Handle client messages.
-async fn handle_msg(state: &SharedState, client_id: usize, msg: &str) {
-    debug!("WS({}): handle msg: {:?}", client_id, msg);
+async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
+    // Report error kinds
+    let msg = match msg {
+        MsgRecv::Ok(msg) => msg,
+        MsgRecv::Err(err) => {
+            warn!(
+                "WS({}): received error from client, unhandled: {:?}",
+                client_id, err
+            );
+            return;
+        }
+    };
 
-    // TODO: implement logic to handle client messages
+    // Handle specific message
+    match msg {
+        MsgRecvKind::ActionMerge(action) => action_merge(state, client_id, action),
+        MsgRecvKind::ActionBuy(action) => action_buy(state, client_id, action),
+        MsgRecvKind::ActionSell(action) => action_sell(state, client_id, action),
+        // _ => {
+        //     warn!("WS({}): unhandled client message: {:?}", client_id, msg);
+        // }
+    }
+}
+
+fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge) {
+    // TODO: log merge
+
+    // Find client team ID
+    let team_id = match state.clients.client_team_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // TODO: ensure we can merge
+
+    // Do merge, get inventory
+    let mut inventory =
+        match state
+            .game
+            .team_merge(team_id, &state.config, action.cell, action.other)
+        {
+            Some(inv) => inv,
+            None => return,
+        };
+
+    // Broadcast inventory state
+    let msg = MsgSendKind::Inventory(inventory);
+    send_to_team(&state, Some(client_id), team_id, &msg.into());
+}
+
+fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
+    // TODO: log buy
+
+    // Find client team ID
+    let team_id = match state.clients.client_team_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // TODO: ensure we can buy
+    // TODO: resolve item
+
+    // Resolve item from config
+    let item = match state.config.find_item(&action.item) {
+        Some(item) => item,
+        None => return,
+    };
+
+    // Do buy, get inventory
+    let mut inventory = match state
+        .game
+        .team_buy(team_id, &state.config, action.cell, item)
+    {
+        Some(inv) => inv,
+        None => return,
+    };
+
+    // Broadcast inventory state
+    let msg = MsgSendKind::Inventory(inventory);
+    send_to_team(&state, Some(client_id), team_id, &msg.into());
+}
+
+fn action_sell(state: &SharedState, client_id: usize, action: ClientActionSell) {
+    // TODO: log sell
+
+    // Find client team ID
+    let team_id = match state.clients.client_team_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // Do sell, get inventory
+    let mut inventory = match state.game.team_sell(team_id, &state.config, action.cell) {
+        Some(inv) => inv,
+        None => return,
+    };
+
+    // Broadcast inventory state
+    let msg = MsgSendKind::Inventory(inventory);
+    send_to_team(&state, Some(client_id), team_id, &msg.into());
 }
 
 /// Send message to client.
 ///
 /// - returns `Ok` even if the message is never sent
-pub fn send_to_client(state: &SharedState, client_id: usize, msg: &Msg) -> serde_json::Result<()> {
+pub fn send_to_client(
+    state: &SharedState,
+    client_id: usize,
+    msg: &MsgSend,
+) -> serde_json::Result<()> {
     debug!("WS({0}): send msg to client {0}", client_id);
 
     // Serialize
@@ -218,7 +333,7 @@ pub fn send_to_team(
     state: &SharedState,
     client_id: Option<usize>,
     team_id: u32,
-    msg: &Msg,
+    msg: &MsgSend,
 ) -> serde_json::Result<()> {
     debug!(
         "WS({}): send msg to team {}",
