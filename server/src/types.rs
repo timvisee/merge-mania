@@ -6,7 +6,7 @@ use serde::Deserialize;
 #[serde(untagged)]
 pub enum Amount {
     /// Money amount.
-    Money(usize),
+    Money(u64),
 
     /// An item with quantity.
     Item(ItemRef, u32),

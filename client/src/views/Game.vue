@@ -57,6 +57,11 @@
                 v-bind:class="{ select: selected == index, item: cell, factory: cell && cell.Factory, subtle: isSubtle(index) }"
             >
                 <div v-if="cell && cell.Product">
+                    <div v-if="mode == 'sell'" class="overlay">
+                        <div v-if="cell.Product.sell_price" class="nw">
+                            {{ cell.Product.sell_price }}
+                        </div>
+                    </div>
                     <img :src="'/sprites/' + cell.Product.sprite"
                         :title="cell.Product.name"
                         :alt="cell.Product.name"
@@ -64,11 +69,24 @@
                     />
                 </div>
                 <div v-if="cell && cell.Factory">
+                    <div class="overlay">
+                        <div v-if="mode == 'details'" class="ne">
+                            {{ cell.Factory.interval }}t
+                        </div>
+                        <div v-if="mode == 'sell' && cell.Factory.sell_price" class="nw">
+                            {{ cell.Factory.sell_price }}
+                        </div>
+                    </div>
                     <img :src="'/sprites/' + cell.Factory.sprite"
                         :title="cell.Factory.name"
                         :alt="cell.Factory.name"
                         draggable="false"
                     />
+                    <div class="overlay">
+                        <div class="sw">
+                            {{ cell.Factory.level + 1 }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -332,6 +350,35 @@ export default {
 .game-grid .cell img {
     width: 100%;
     height: 100%;
+}
+
+.game-grid .cell .overlay {
+    position: relative;
+}
+
+.game-grid .cell .overlay div {
+    font-weight: 900;
+    font-size: 0.9em;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
+}
+
+.game-grid .cell .overlay .ne {
+    position: absolute;
+    right: 0;
+    top: -5px;
+}
+
+.game-grid .cell .overlay .nw {
+    position: absolute;
+    left: 0;
+    top: -5px;
+}
+
+.game-grid .cell .overlay .sw {
+    position: absolute;
+    left: 0;
+    bottom: -5px;
 }
 
 // Patch to fix inactive mode button staying highlighted on mobile

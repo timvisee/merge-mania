@@ -51,7 +51,7 @@ impl ConfigProductTier {
 #[derive(Deserialize, Debug, Clone)]
 pub struct ConfigProduct {
     pub name: String,
-    pub cost: u32,
+    pub cost: u64,
     pub sprite_path: String,
 }
 

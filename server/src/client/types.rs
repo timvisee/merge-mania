@@ -5,7 +5,7 @@ use crate::config::{
     Config, ConfigFactory, ConfigFactoryTier, ConfigItem, ConfigProduct, ConfigProductTier,
 };
 use crate::game::types::*;
-use crate::types::ItemRef;
+use crate::types::{Amount, ItemRef};
 
 /// Represents a team.
 #[derive(Serialize, Debug)]
@@ -47,6 +47,9 @@ pub struct ClientProduct {
     tier: u32,
     level: u16,
     name: String,
+
+    /// Sell price in money. May be None if price cannot be represented by money.
+    sell_price: Option<u64>,
     sprite: String,
 }
 
@@ -57,6 +60,7 @@ impl ClientProduct {
             tier: game.tier,
             level: game.level,
             name: config.name.clone(),
+            sell_price: Some(config.cost),
             sprite: config.sprite_path.clone(),
         })
     }
@@ -68,6 +72,10 @@ pub struct ClientFactory {
     tier: u32,
     level: u16,
     name: String,
+    interval: u32,
+
+    /// Sell price in money. May be None if price cannot be represented by money.
+    sell_price: Option<u64>,
     sprite: String,
 }
 
@@ -78,6 +86,8 @@ impl ClientFactory {
             tier: game.tier,
             level: game.level,
             name: config.name.clone(),
+            interval: config.time,
+            sell_price: amount_only_money(&config.cost_sell),
             sprite: config.sprite_path.clone(),
         })
     }
@@ -120,4 +130,21 @@ impl ClientInventoryGrid {
 
         Ok(Self { items })
     }
+}
+
+/// For given amounts, if all are money, get money sum.
+fn amount_only_money(amounts: &[Amount]) -> Option<u64> {
+    // All amounts must be money
+    if amounts.iter().all(|a| matches!(a, Amount::Money(_))) {
+        return Some(
+            amounts
+                .iter()
+                .map(|a| match a {
+                    Amount::Money(money) => money,
+                    _ => unreachable!(),
+                })
+                .sum(),
+        );
+    }
+    None
 }
