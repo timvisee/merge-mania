@@ -17,16 +17,16 @@
                     <router-link :to="{name: 'index'}" class="nav-link">
                         Home
                     </router-link>
-                    <router-link :to="{name: 'login'}" class="nav-link">
+                    <router-link v-if="!auth.auth" :to="{name: 'login'}" class="nav-link">
                         Inloggen
                     </router-link>
-                    <router-link :to="{name: 'game'}" class="nav-link">
+                    <router-link v-if="auth.auth" :to="{name: 'game'}" class="nav-link">
                         Game
                     </router-link>
                     <router-link :to="{name: 'about'}" class="nav-link">
                         Over
                     </router-link>
-                    <a href="#" @click.prevent="logout" class="nav-link">
+                    <a v-if="auth.auth" href="#" @click.prevent="logout" class="nav-link">
                         Uitloggen
                     </a>
                 </b-navbar-nav>
@@ -44,6 +44,11 @@
 <script>
 export default {
   name: "app",
+  data() {
+    return {
+      auth: this.$auth,
+    };
+  },
   created() {
     // Redirect to login page if not authenticated
     this.$auth.isAuth()
