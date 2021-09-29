@@ -154,9 +154,7 @@ export default {
         if(!this.hasItem(index) || !this.hasItem(otherIndex))
             return;
 
-        alert('TODO: merge items');
-
-        // Reset selectoin
+        // Reset selection
         this.selected = null;
     },
 
@@ -181,6 +179,10 @@ export default {
     isSubtle(index) {
         switch(this.mode) {
             case 'merge':
+                // A cell with no item is always subtle
+                if(!this.hasItem(index))
+                    return true;
+
                 // A cell with an item must be selected
                 if(!this.hasItem(this.selected))
                     return false;
