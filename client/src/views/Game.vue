@@ -91,6 +91,75 @@
             </div>
         </div>
 
+        <!-- Buy modal -->
+        <b-modal
+            id="game-buy-modal"
+            title="Buy factory"
+            @hidden="selected = null"
+            centered
+            no-fade
+        >
+            <div>
+                <b-button @click.stop.prevent="doBuy(selected, '101.0')">Tree</b-button>
+            </div>
+
+            <div>
+                <b-button @click.stop.prevent="doBuy(selected, '102.0')">Chicken</b-button>
+            </div>
+
+            <template #modal-footer="{ cancel }">
+                <b-button variant="secondary" @click="cancel()">
+                    Close
+                </b-button>
+            </template>
+        </b-modal>
+
+        <!-- Details modal -->
+        <b-modal
+            id="game-details-modal"
+            title="Item details"
+            @hidden="selected = null"
+            centered
+            no-fade
+        >
+            <div v-if="selectedCell && selectedCell.Product" class="text-center">
+                <img :src="'/sprites/' + selectedCell.Product.sprite"
+                    :title="selectedCell.Product.name"
+                    :alt="selectedCell.Product.name"
+                    draggable="false"
+                />
+                <table>
+                    <tr><td>Type:</td><td>Product</td></tr>
+                    <tr><td>Name:</td><td>{{ selectedCell.Product.name }}</td></tr>
+                    <tr><td>Tier:</td><td>{{ selectedCell.Product.tier }}</td></tr>
+                    <tr><td>Level:</td><td>{{ selectedCell.Product.level }}</td></tr>
+                    <tr><td>Sell price:</td><td>{{ selectedCell.Product.sell_price }}</td></tr>
+                </table>
+            </div>
+
+            <div v-if="selectedCell && selectedCell.Factory" class="text-center">
+                <img :src="'/sprites/' + selectedCell.Factory.sprite"
+                    :title="selectedCell.Factory.name"
+                    :alt="selectedCell.Factory.name"
+                    draggable="false"
+                />
+                <table>
+                    <tr><td>Type:</td><td>Factory</td></tr>
+                    <tr><td>Name:</td><td>{{ selectedCell.Factory.name }}</td></tr>
+                    <tr><td>Tier:</td><td>{{ selectedCell.Factory.tier }}</td></tr>
+                    <tr><td>Level:</td><td>{{ selectedCell.Factory.level }}</td></tr>
+                    <tr><td>Production interval:</td><td>{{ selectedCell.Factory.interval }} ticks</td></tr>
+                    <tr><td>Sell price:</td><td>{{ selectedCell.Factory.sell_price }}</td></tr>
+                </table>
+            </div>
+
+            <template #modal-footer="{ cancel }">
+                <b-button variant="secondary" @click="cancel()">
+                    Close
+                </b-button>
+            </template>
+        </b-modal>
+
     </div>
   </div>
 </template>
@@ -105,6 +174,7 @@ export default {
       game: this.$game,
       mode: null,
       selected: null,
+      selectedCell: null,
     };
   },
   created() {
@@ -188,11 +258,17 @@ export default {
         if(this.hasItem(index))
             return;
 
-        // Send merge action
-        // TODO: client should select factory type to build
+        // Show buy modal
+        this.$bvModal.show('game-buy-modal');
+    },
+
+    doBuy(index, item) {
+        this.$bvModal.hide('game-buy-modal');
+
+        // Send buy action
         this.$game.socket.send('action_buy', {
             cell: index,
-            item: '101.0',
+            item,
         });
     },
 
@@ -201,15 +277,20 @@ export default {
         if(!this.hasItem(index))
             return;
 
-        // Send merge action
+        // Send sell action
         this.$game.socket.send('action_sell', {
             cell: index,
         });
     },
 
     actionDetails(index) {
-        if(this.hasItem(index))
-            alert('TODO: show item details');
+        // Cell must not be empty
+        if(!this.hasItem(index))
+            return;
+
+        // Show details modal
+        this.selectedCell = this.$game.inventory.grid.items[index];
+        this.$bvModal.show('game-details-modal');
     },
 
     /**
