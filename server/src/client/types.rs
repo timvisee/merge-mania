@@ -51,6 +51,9 @@ pub struct ClientProduct {
     /// Sell price in money. May be None if price cannot be represented by money.
     sell_price: Option<u64>,
     sprite: String,
+
+    /// Whether there is a higher level of this tier available.
+    can_upgrade: bool,
 }
 
 impl ClientProduct {
@@ -62,6 +65,7 @@ impl ClientProduct {
             name: config.name.clone(),
             sell_price: Some(config.cost),
             sprite: config.sprite_path.clone(),
+            can_upgrade: game.can_upgrade(),
         })
     }
 }
@@ -77,6 +81,9 @@ pub struct ClientFactory {
     /// Sell price in money. May be None if price cannot be represented by money.
     sell_price: Option<u64>,
     sprite: String,
+
+    /// Whether there is a higher level of this tier available.
+    can_upgrade: bool,
 }
 
 impl ClientFactory {
@@ -89,6 +96,7 @@ impl ClientFactory {
             interval: config.time,
             sell_price: amount_only_money(&config.cost_sell),
             sprite: config.sprite_path.clone(),
+            can_upgrade: game.can_upgrade(),
         })
     }
 }

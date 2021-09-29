@@ -125,8 +125,13 @@ impl GameProduct {
     /// Returns true if something changed, false if failed.
     #[must_use]
     pub fn upgrade(&mut self, config: &Config) -> bool {
+        // We must have config
+        if self.fetch_config(config).is_err() {
+            return false;
+        }
+
         // We must be able to upgrade
-        if !self.can_upgrade(config) {
+        if !self.can_upgrade() {
             return false;
         }
 
@@ -140,11 +145,8 @@ impl GameProduct {
     /// Check whether we can upgrade.
     ///
     /// Checks whether there is a next level.
-    pub fn can_upgrade(&mut self, config: &Config) -> bool {
-        // We must have config
-        if self.fetch_config(config).is_err() {
-            return false;
-        }
+    pub fn can_upgrade(&self) -> bool {
+        // TODO: we must have the config
 
         self.config_tier.as_ref().unwrap().max_level() > self.level
     }
@@ -219,9 +221,14 @@ impl GameFactory {
     /// Returns true if something changed, false if failed.
     #[must_use]
     pub fn upgrade(&mut self, config: &Config) -> bool {
+        // We must have config
+        if self.fetch_config(config).is_err() {
+            return false;
+        }
+
         // We must be able to upgrade
         let reference = self.reference();
-        if !self.can_upgrade(config) {
+        if !self.can_upgrade() {
             return false;
         }
 
@@ -235,11 +242,8 @@ impl GameFactory {
     /// Check whether we can upgrade.
     ///
     /// Checks whether there is a next level.
-    pub fn can_upgrade(&mut self, config: &Config) -> bool {
-        // We must have config
-        if self.fetch_config(config).is_err() {
-            return false;
-        }
+    pub fn can_upgrade(&self) -> bool {
+        // TODO: we must have the config
 
         self.config_tier.as_ref().unwrap().max_level() > self.level
     }
