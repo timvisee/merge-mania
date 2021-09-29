@@ -1,6 +1,6 @@
 [game]
 # Milliseconds per tick
-tick_millis = 150
+tick_millis = 100
 
 # Reset game state when starting server
 reset = true

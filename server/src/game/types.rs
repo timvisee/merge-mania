@@ -12,7 +12,7 @@ use crate::types::ItemRef;
 use crate::util::{i_to_xy, xy_to_i};
 
 /// Maximum number of items in factory drop queue.
-const FACTORY_QUEUE_SIZE: usize = 4;
+const FACTORY_QUEUE_SIZE: usize = 2;
 
 /// Represents a team.
 #[derive(Serialize, Debug)]

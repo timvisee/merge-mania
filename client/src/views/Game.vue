@@ -18,7 +18,7 @@
             {{ game.inventory.money }}
         </h5>
 
-        <b-button-group size="lg w-100">
+        <b-button-group class="tabs w-100" size="lg">
             <b-button
                 type="button"
                 class="w-100"
@@ -189,6 +189,7 @@ export default {
             return;
 
         // Send merge action
+        // TODO: client should select factory type to build
         this.$game.socket.send('action_buy', {
             cell: index,
             item: '101.0',
@@ -285,6 +286,10 @@ export default {
 </script>
 
 <style scoped>
+.tabs {
+    overflow-x: auto;
+}
+
 .game-grid {
     --grid-space: 5px;
     --grid-row-cells: 8;
@@ -400,15 +405,6 @@ export default {
     left: 0;
     bottom: -5px;
 }
-
-// Patch to fix inactive mode button staying highlighted on mobile
-.btn-outline-dark:not(:disabled):not(.disabled):not(.active):active,
-.btn-outline-dark:not(:disabled):not(.disabled):not(.active):hover {
-    background: transparent;
-    color: #343a40;
-    border-color: #343a40;
-}
-
 </style>
 
 <style>
@@ -418,5 +414,13 @@ body {
 
 .game-grid {
     background: #dab382;
+}
+
+// Patch to fix inactive mode button staying highlighted on mobile
+.btn-outline-dark:not(.disabled):not(.active):active,
+.btn-outline-dark:not(.disabled):not(.active):hover {
+    background: transparent;
+    color: #343a40;
+    border-color: #343a40;
 }
 </style>
