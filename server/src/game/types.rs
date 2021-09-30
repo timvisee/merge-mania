@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 
 use rand::prelude::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use super::Update;
 use crate::config::{
@@ -15,7 +15,7 @@ use crate::util::{i_to_xy, xy_to_i};
 const FACTORY_QUEUE_SIZE: usize = 2;
 
 /// Represents a team.
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct GameTeam {
     /// Team ID.
     pub id: u32,
@@ -46,7 +46,7 @@ impl Update for GameTeam {
 }
 
 /// Inventory item.
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub enum GameItem {
     Product(GameProduct),
     Factory(GameFactory),
@@ -97,7 +97,7 @@ impl Update for GameItem {
 }
 
 /// Inventory product.
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct GameProduct {
     pub tier: u32,
     pub level: u16,
@@ -180,7 +180,7 @@ impl GameProduct {
 }
 
 /// Inventory factory.
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct GameFactory {
     /// Current tier ID.
     pub tier: u32,
@@ -339,7 +339,7 @@ impl Update for GameFactory {
 }
 
 /// An inventory.
-#[derive(Serialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Debug, Default)]
 pub struct GameInventory {
     pub money: u64,
     pub energy: u64,
@@ -366,7 +366,7 @@ impl Update for GameInventory {
 }
 
 /// An inventory grid.
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct GameInventoryGrid {
     pub items: Vec<Option<GameItem>>,
 }

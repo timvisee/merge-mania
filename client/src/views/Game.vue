@@ -91,6 +91,21 @@
             </div>
         </div>
 
+        <b-button-group class="w-100" size="lg">
+            <b-button
+                type="button"
+                class="w-100"
+                variant="outline-dark"
+                @click.stop.prevent="actionScanCode"
+                squared>Scan code</b-button>
+            <b-button
+                type="button"
+                class="w-100"
+                variant="outline-dark"
+                @click.stop.prevent="actionCatalog"
+                squared>Catalog</b-button>
+        </b-button-group>
+
         <!-- Buy modal -->
         <b-modal
             id="game-buy-modal"
@@ -297,6 +312,14 @@ export default {
         this.$bvModal.show('game-details-modal');
     },
 
+    actionScanCode() {
+        alert('not yet implemented');
+    },
+
+    actionCatalog() {
+        alert('not yet implemented');
+    },
+
     /**
      * Whether a cell should be shown as subtle.
      */
@@ -416,7 +439,7 @@ export default {
 
 .game-grid {
     display: grid;
-    margin: 0 auto 2rem auto;
+    margin: 0 auto;
     padding: var(--grid-space);
     grid-template-columns: repeat(var(--grid-row-cells), 1fr);
     grid-template-rows: repeat(var(--grid-row-cells), 1fr);
@@ -500,14 +523,6 @@ export default {
     left: 0;
     bottom: -5px;
 }
-
-// Patch to fix inactive mode button staying highlighted on mobile
-.btn-outline-dark:not(.disabled):not(.active):active,
-.btn-outline-dark:not(.disabled):not(.active):hover {
-    background: transparent;
-    color: #343a40;
-    border-color: #343a40;
-}
 </style>
 
 <style>
@@ -517,5 +532,12 @@ body {
 
 .game-grid {
     background: #dab382;
+}
+
+/* Patch to fix inactive mode button staying highlighted on mobile */
+.tabs .btn-outline-dark:not(.disabled):not(.active):hover {
+    background: transparent !important;
+    color: #343a40 !important;
+    border-color: #343a40 !important;
 }
 </style>
