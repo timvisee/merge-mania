@@ -102,12 +102,24 @@
             centered
             no-fade
         >
-            <div>
-                <b-button @click.stop.prevent="doBuy(selected, '101.0')">Tree</b-button>
-            </div>
-
-            <div>
-                <b-button @click.stop.prevent="doBuy(selected, '102.0')">Chicken</b-button>
+            <div class="item-list">
+                <div v-for="item in game.getBuyableItems()" class="item">
+                    <img :src="'/sprites/' + item.sprite"
+                        :title="item.name"
+                        :alt="item.name"
+                        @click.stop.prevent="doBuy(selected, item.ref)"
+                        draggable="false"
+                    />
+                    <div class="overlay">
+                        <!-- TODO: better price rendering -->
+                        <div v-if="item.buy[0].item" class="sw">
+                            {{ item.buy[0].item }}x{{ item.buy[0].quantity }}
+                        </div>
+                        <div v-else class="sw">
+                            {{ item.buy[0] }}
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <template #modal-footer="{ cancel }">
@@ -118,6 +130,7 @@
         </b-modal>
 
         <!-- Details modal -->
+        <!-- TODO: instantiate new modal on show, use item config instead of reference -->
         <b-modal
             id="game-details-modal"
             title="Item details"
@@ -126,18 +139,40 @@
             no-fade
         >
             <div v-if="selectedCell" class="text-center">
-                <img :src="'/sprites/' + selectedCell.sprite"
-                    :title="selectedCell.name"
-                    :alt="selectedCell.name"
-                    draggable="false"
-                />
-                <table>
+                <div class="item-list">
+                    <div
+                        v-for="(item, index) in game.getDownUpgradeItems(selectedCell.ref)"
+                        class="item"
+                        v-bind:class="{ highlight: item.ref == selectedCell.ref }"
+                    >
+                        <img v-if="game.isDiscovered(item.ref, selectedCell.ref)"
+                            :src="'/sprites/' + item.sprite"
+                            :title="item.name"
+                            :alt="item.name"
+                            draggable="false"
+                        />
+                        <img v-else
+                            src="/sprites/white-question-mark.png"
+                            title="Undiscovered item"
+                            alt="Undiscovered item"
+                            draggable="false"
+                        />
+                        <div class="overlay">
+                            <div class="sw">
+                                #{{ index + 1 }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="simple-table">
                     <tr><td>Name:</td><td>{{ selectedCell.name }}</td></tr>
                     <tr><td>Tier:</td><td>{{ selectedCell.tier }}</td></tr>
                     <tr v-if="selectedCell.label"><td>Label:</td><td>{{ selectedCell.label }}</td></tr>
-                    <tr v-if="selectedCell.drop_interval"><td>Production interval:</td><td>1 / {{ selectedCell.drop_interval }} ticks</td></tr>
+                    <tr v-if="selectedCell.drop_interval"><td>Production interval:</td><td><span class="subtle">1 / </span>{{ selectedCell.drop_interval }} ticks</td></tr>
+                    <!-- TODO: render drops -->
+                    <tr v-if="selectedCell.drop_interval"><td>Drops:</td><td><span class="subtle">?</span></td></tr>
                     <tr><td>Sell price:</td><td>{{ selectedCell.sell }}</td></tr>
-                    <tr><td>Merge:</td><td>{{ selectedCell.mergeable ? 'Yes' : 'No' }}</td></tr>
                 </table>
             </div>
 
@@ -352,6 +387,10 @@ export default {
 </script>
 
 <style scoped>
+span.subtle {
+    color: gray;
+}
+
 .tabs {
     overflow-x: auto;
 }
@@ -417,7 +456,7 @@ export default {
     padding: var(--grid-space);
     box-sizing: content-box;
 
-    border: brown dashed 1px;
+    border: gray dashed 1px;
     border-radius: 0.15em;
     text-align: center;
 }
@@ -478,6 +517,71 @@ export default {
     left: 0;
     bottom: -5px;
 }
+
+.item-list {
+    margin: 0 auto 2em auto;
+    display: flex;
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.item-list .item {
+    /* TODO: responsive padding */
+    padding:6px;
+    border: gray dashed 1px;
+    border-radius: 0.15em;
+}
+
+.item-list .item.highlight {
+    background: #eb983c;
+}
+
+.item-list .item img {
+    width: 64px;
+    aspect-ratio: 1;
+}
+
+.item-list .item .overlay {
+    position: relative;
+}
+
+.item-list .item .overlay div {
+    font-weight: 900;
+    font-size: 0.9em;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
+}
+
+.item-list .item .overlay .sw {
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+}
+
+.simple-table {
+    width: 100%;
+}
+
+.simple-table tr {
+    border-bottom: 1px solid lightgray;
+}
+
+.simple-table tr:first-child {
+    border-top: 1px solid lightgray;
+}
+
+.simple-table tr td {
+    width: 50%;
+    padding: 0.2em 0.5em;
+    text-align: left;
+}
+
+.simple-table tr td:first-child {
+    font-weight: bold;
+    text-align: right;
+}
 </style>
 
 <style>
@@ -490,7 +594,8 @@ body {
 }
 
 /* Patch to fix inactive mode button staying highlighted on mobile */
-.tabs .btn-outline-dark:not(.disabled):not(.active):hover {
+.tabs .btn-outline-dark:not(.disabled):not(.active):hover,
+.tabs .btn-outline-dark:not(.disabled):not(.active):active {
     background: transparent !important;
     color: #343a40 !important;
     border-color: #343a40 !important;

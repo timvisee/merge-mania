@@ -137,7 +137,7 @@ async fn send_initial(state: SharedState, client_id: usize) {
     // TODO: - game state
 
     // Send item configuration
-    let msg = MsgSendKind::ConfigItems(state.config.items.values().cloned().collect());
+    let msg = MsgSendKind::ConfigItems(state.config.items.clone());
     send_to_client(&state, client_id, &msg.into());
 
     // Find client team ID

@@ -70,6 +70,7 @@ pub struct ConfigItem {
     pub drops: Vec<ConfigDrop>,
 
     /// Sprite file path.
+    #[serde(rename = "sprite", alias = "sprite_path")]
     pub sprite_path: String,
 }
 

@@ -74,7 +74,6 @@ export default {
 
             case 'config_items':
                 this.game.items = data.data;
-                console.log(this.game.items);
                 break;
 
             default:

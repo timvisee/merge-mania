@@ -5,10 +5,13 @@
 pub mod action;
 pub mod types;
 
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::config::ConfigItem;
+use crate::types::ItemRef;
 pub use action::*;
 pub use types::*;
 
@@ -48,7 +51,7 @@ pub enum MsgSendKind {
     Ping,
 
     /// Game item configuration.
-    ConfigItems(Vec<ConfigItem>),
+    ConfigItems(HashMap<ItemRef, ConfigItem>),
 
     /// Inventory state for current client team.
     Inventory(ClientInventory),
