@@ -9,7 +9,7 @@ pub enum Amount {
     Money(u64),
 
     /// An item with quantity.
-    Item(ItemRef, u32),
+    Item { item: ItemRef, quantity: u32 },
 }
 
 /// Item reference.

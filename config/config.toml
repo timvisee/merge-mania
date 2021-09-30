@@ -1,15 +1,21 @@
+# Game configuration
+
 [game]
 # Milliseconds per tick
 tick_millis = 1000
 
 # Reset game state when starting server
-reset = true
+reset = false
 
 
+
+# Team defaults
 
 [defaults]
 money = 10
 energy = 5
+
+# Default inventory items by reference
 inventory = [
     "1.0",
     "1.0",
@@ -18,6 +24,8 @@ inventory = [
 ]
 
 
+
+# Teams
 
 [[teams]]
 id = 1
@@ -55,17 +63,43 @@ name = "Team 7"
 password = "team7"
 
 
-
+# Item configuration example:
+#
 # [[items]]
+#
+# # Unique item reference
 # id = "1.0"
+#
+# # Optional: mergeable into item reference
 # merge = "1.1"
+#
+# # Item display name
 # name = "Apple"
+#
+# # Item tier name
 # tier = "Fruit"
+#
+# # Optional: item label, overlayed on client
 # label = "Label"
-# buy = []
+#
+# # Optional: costs to buy item
+# buy = [
+#     # Pay money
+#     123,
+#     # Pay an item
+#     { item = "2.4", quantity = 1 },
+# ]
+#
+# # Sell price
 # sell = 1
+#
+# # Path to sprite to show on client
 # sprite_path = "red-apple.png"
+#
+# # Optional: drop interval in number of ticks
 # drop_interval = 60
+#
+# # Optional: list of items that may be dropped
 # drops = [
 #     { item = "1.0", chance = 0.90 },
 #     { item = "1.1", chance = 0.10 },
@@ -413,7 +447,7 @@ merge = "101.1"
 name = "Fruit tree 1"
 tier = "Fruit tree"
 label = "1"
-buy = 5
+buy = [5]
 sell = 3
 drop_interval = 60
 drops = [
@@ -509,7 +543,7 @@ sprite_path = "deciduous-tree.png"
 ref = "101.6"
 name = "Fruit tree 7"
 tier = "Fruit tree"
-label = "7"
+label = "Max"
 sell = 192
 drop_interval = 24
 drops = [
@@ -531,8 +565,9 @@ merge = "102.1"
 name = "Chicken 1"
 tier = "Chicken"
 label = "1"
-# TODO: buy cost [["2.4", 1]]
-buy = 1
+buy = [
+    { item = "2.4", quantity = 1 },
+]
 sell = 79
 drop_interval = 60
 drops = [
@@ -598,7 +633,7 @@ sprite_path = "chicken.png"
 ref = "102.4"
 name = "Chicken 5"
 tier = "Chicken"
-label = "5"
+label = "Max"
 sell = 1464
 drop_interval = 24
 drops = [

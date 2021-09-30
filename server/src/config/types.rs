@@ -57,7 +57,7 @@ pub struct ConfigItem {
     pub label: Option<String>,
 
     /// Optional: if buyable, buy cost
-    pub buy: Option<u64>,
+    pub buy: Option<Vec<Amount>>,
 
     /// Sell price.
     pub sell: u64,
