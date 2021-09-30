@@ -47,11 +47,11 @@ pub struct ConfigItem {
     /// Optional: merge into item ID.
     pub merge: Option<ItemRef>,
 
-    /// Tier display name.
-    pub tier: String,
-
     /// Item display name.
     pub name: String,
+
+    /// Tier display name.
+    pub tier: String,
 
     /// Optional: label to render on client.
     pub label: Option<String>,

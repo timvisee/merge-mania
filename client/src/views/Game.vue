@@ -51,40 +51,28 @@
 
         <!-- Inventory grid -->
         <div class="game-grid">
-            <div v-for="(cell, index) in game.inventory.grid.items"
+            <div v-for="(cell, index) in game.inventory.items"
                 class="cell"
                 @click.stop="toggleSelect(index)"
-                v-bind:class="{ select: selected == index, item: cell, factory: cell && cell.Factory, subtle: isSubtle(index) }"
+                v-bind:class="{ select: selected == index, item: cell, factory: cell && cell.drop_interval, subtle: isSubtle(index) }"
             >
-                <div v-if="cell && cell.Product">
-                    <div v-if="mode == 'sell'" class="overlay">
-                        <div v-if="cell.Product.sell_price" class="nw">
-                            {{ cell.Product.sell_price }}
+                <div v-if="cell">
+                    <div class="overlay">
+                        <div v-if="mode == 'details' && cell.drop_interval" class="ne">
+                            {{ cell.drop_interval }}t
+                        </div>
+                        <div v-if="mode == 'sell' && cell.sell" class="nw">
+                            {{ cell.sell }}
                         </div>
                     </div>
-                    <img :src="'/sprites/' + cell.Product.sprite"
-                        :title="cell.Product.name"
-                        :alt="cell.Product.name"
+                    <img :src="'/sprites/' + cell.sprite"
+                        :title="cell.name"
+                        :alt="cell.name"
                         draggable="false"
                     />
-                </div>
-                <div v-if="cell && cell.Factory">
-                    <div class="overlay">
-                        <div v-if="mode == 'details'" class="ne">
-                            {{ cell.Factory.interval }}t
-                        </div>
-                        <div v-if="mode == 'sell' && cell.Factory.sell_price" class="nw">
-                            {{ cell.Factory.sell_price }}
-                        </div>
-                    </div>
-                    <img :src="'/sprites/' + cell.Factory.sprite"
-                        :title="cell.Factory.name"
-                        :alt="cell.Factory.name"
-                        draggable="false"
-                    />
-                    <div class="overlay">
+                    <div v-if="cell.label" class="overlay">
                         <div class="sw">
-                            {{ cell.Factory.level + 1 }}
+                            {{ cell.label }}
                         </div>
                     </div>
                 </div>
@@ -109,7 +97,7 @@
         <!-- Buy modal -->
         <b-modal
             id="game-buy-modal"
-            title="Buy factory"
+            title="Buy item"
             @hidden="selected = null"
             centered
             no-fade
@@ -137,34 +125,19 @@
             centered
             no-fade
         >
-            <div v-if="selectedCell && selectedCell.Product" class="text-center">
-                <img :src="'/sprites/' + selectedCell.Product.sprite"
-                    :title="selectedCell.Product.name"
-                    :alt="selectedCell.Product.name"
+            <div v-if="selectedCell" class="text-center">
+                <img :src="'/sprites/' + selectedCell.sprite"
+                    :title="selectedCell.name"
+                    :alt="selectedCell.name"
                     draggable="false"
                 />
                 <table>
-                    <tr><td>Type:</td><td>Product</td></tr>
-                    <tr><td>Name:</td><td>{{ selectedCell.Product.name }}</td></tr>
-                    <tr><td>Tier:</td><td>{{ selectedCell.Product.tier }}</td></tr>
-                    <tr><td>Level:</td><td>{{ selectedCell.Product.level + 1 }}</td></tr>
-                    <tr><td>Sell price:</td><td>{{ selectedCell.Product.sell_price }}</td></tr>
-                </table>
-            </div>
-
-            <div v-if="selectedCell && selectedCell.Factory" class="text-center">
-                <img :src="'/sprites/' + selectedCell.Factory.sprite"
-                    :title="selectedCell.Factory.name"
-                    :alt="selectedCell.Factory.name"
-                    draggable="false"
-                />
-                <table>
-                    <tr><td>Type:</td><td>Factory</td></tr>
-                    <tr><td>Name:</td><td>{{ selectedCell.Factory.name }}</td></tr>
-                    <tr><td>Tier:</td><td>{{ selectedCell.Factory.tier }}</td></tr>
-                    <tr><td>Level:</td><td>{{ selectedCell.Factory.level + 1 }}</td></tr>
-                    <tr><td>Production interval:</td><td>1 / {{ selectedCell.Factory.interval }} ticks</td></tr>
-                    <tr><td>Sell price:</td><td>{{ selectedCell.Factory.sell_price }}</td></tr>
+                    <tr><td>Name:</td><td>{{ selectedCell.name }}</td></tr>
+                    <tr><td>Tier:</td><td>{{ selectedCell.tier }}</td></tr>
+                    <tr v-if="selectedCell.label"><td>Label:</td><td>{{ selectedCell.label }}</td></tr>
+                    <tr v-if="selectedCell.drop_interval"><td>Production interval:</td><td>1 / {{ selectedCell.drop_interval }} ticks</td></tr>
+                    <tr><td>Sell price:</td><td>{{ selectedCell.sell }}</td></tr>
+                    <tr><td>Mergeable:</td><td>{{ selectedCell.mergeable ? 'Yes' : 'No' }}</td></tr>
                 </table>
             </div>
 
@@ -264,7 +237,7 @@ export default {
         });
 
         // Reset selection, clear cell for instant feedback
-        this.$game.inventory.grid.items[index] = null;
+        this.$game.inventory.items[index] = null;
         this.selected = null;
     },
 
@@ -298,7 +271,7 @@ export default {
         });
 
         // Reset selection, clear cell for instant feedback
-        this.$game.inventory.grid.items[index] = null;
+        this.$game.inventory.items[index] = null;
         this.selected = null;
     },
 
@@ -308,7 +281,7 @@ export default {
             return;
 
         // Show details modal
-        this.selectedCell = this.$game.inventory.grid.items[index];
+        this.selectedCell = this.$game.inventory.items[index];
         this.$bvModal.show('game-details-modal');
     },
 
@@ -331,8 +304,7 @@ export default {
                     return true;
 
                 // Must have mergeable state
-                let a = this.game.inventory.grid.items[index];
-                if((a.Product && !a.Product.can_upgrade) || (a.Factory && !a.Factory.can_upgrade))
+                if(!this.game.inventory.items[index].mergeable)
                     return true;
 
                 // A cell with an item must be selected
@@ -355,7 +327,7 @@ export default {
      * Check whether a cell by index has an item.
      */
     hasItem(index) {
-        return index !== null && !!this.game.inventory.grid.items[index];
+        return index !== null && !!this.game.inventory.items[index];
     },
 
     /**
@@ -369,35 +341,11 @@ export default {
         if(!this.hasItem(index) || !this.hasItem(other))
             return false;
 
-        let a = this.game.inventory.grid.items[other];
-        let b = this.game.inventory.grid.items[index];
+        let a = this.game.inventory.items[other];
+        let b = this.game.inventory.items[index];
 
-        // Must have mergeable state
-        if((a.Product && !a.Product.can_upgrade) || (a.Factory && !a.Factory.can_upgrade))
-            return false;
-
-        return this.isEqualItemType(a, b);
-    },
-
-    /**
-     * Check whether two cells have equal tier and level.
-     */
-    isEqualItemType(a, b) {
-        if(a == null || b == null)
-            return false;
-
-        // Must both be products or factories
-        if(a.Product && b.Product) {
-            a = a.Product;
-            b = b.Product;
-        } else if(a.Factory && b.Factory) {
-            a = a.Factory;
-            b = b.Factory;
-        } else
-            return false;
-
-        // Tier and level must equal
-        return a.tier == b.tier && a.level == b.level;
+        // Must be mergeable, must have same ID
+        return a.mergeable && a.ref == b.ref;
     },
   }
 };

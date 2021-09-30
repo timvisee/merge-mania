@@ -30,11 +30,11 @@ pub struct ClientItem {
     #[serde(rename = "ref")]
     pub id: ItemRef,
 
-    /// Tier display name.
-    pub tier: String,
-
     /// Item display name.
     pub name: String,
+
+    /// Tier display name.
+    pub tier: String,
 
     /// Optional: label to render on client.
     pub label: Option<String>,
@@ -48,8 +48,8 @@ pub struct ClientItem {
     /// Sprite file path.
     pub sprite: String,
 
-    /// Whether this item can be upgraded.
-    pub can_upgrade: bool,
+    /// Whether this item is mergeable.
+    pub mergeable: bool,
 }
 
 impl ClientItem {
@@ -63,7 +63,7 @@ impl ClientItem {
             sell: config.sell,
             drop_interval: config.drop_interval.clone(),
             sprite: config.sprite_path.clone(),
-            can_upgrade: game.can_upgrade(),
+            mergeable: game.can_upgrade(),
         })
     }
 }
@@ -73,6 +73,8 @@ impl ClientItem {
 pub struct ClientInventory {
     money: u64,
     energy: u64,
+
+    #[serde(flatten)]
     grid: ClientInventoryGrid,
 }
 
