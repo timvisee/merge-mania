@@ -169,9 +169,24 @@
                     <tr><td>Name:</td><td>{{ selectedCell.name }}</td></tr>
                     <tr><td>Tier:</td><td>{{ selectedCell.tier }}</td></tr>
                     <tr v-if="selectedCell.label"><td>Label:</td><td>{{ selectedCell.label }}</td></tr>
-                    <tr v-if="selectedCell.drop_interval"><td>Production interval:</td><td><span class="subtle">1 / </span>{{ selectedCell.drop_interval }} ticks</td></tr>
-                    <!-- TODO: render drops -->
-                    <tr v-if="selectedCell.drop_interval"><td>Drops:</td><td><span class="subtle">?</span></td></tr>
+                    <tr v-if="selectedCell.drop_interval"><td>Production speed:</td><td><span class="subtle">1 / </span>{{ selectedCell.drop_interval }} ticks</td></tr>
+                    <tr v-if="selectedCell.drop_interval">
+                        <td>Drops:</td>
+                        <td>
+                            <ul class="drops-list">
+                                <li v-for="drop in game.items[selectedCell.ref].drops">
+                                    <img :src="'/sprites/' + game.items[drop.item].sprite"
+                                        :title="game.items[drop.item].name"
+                                        :alt="game.items[drop.item].name"
+                                        draggable="false"
+                                        class="item tiny"
+                                    />
+                                    {{ game.items[drop.item].name }}
+                                    <span class="subtle">{{ parseFloat(drop.chance * 100).toPrecision(2) }}%</span>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
                     <tr><td>Sell price:</td><td>{{ selectedCell.sell }}</td></tr>
                 </table>
             </div>
@@ -518,6 +533,15 @@ span.subtle {
     bottom: -5px;
 }
 
+img.item.tiny {
+    width: 1.35em;
+    height: 1.35em;
+    display: inline;
+    text-align: text-top;
+    border: gray dashed 1px;
+    border-radius: 0.15em;
+}
+
 .item-list {
     margin: 0 auto 2em auto;
     display: flex;
@@ -558,6 +582,12 @@ span.subtle {
     position: absolute;
     left: 0;
     bottom: -5px;
+}
+
+ul.drops-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .simple-table {
