@@ -4,10 +4,7 @@ use rand::prelude::*;
 use serde::{Deserialize, Serialize};
 
 use super::Update;
-use crate::config::{
-    Config, ConfigFactory, ConfigFactoryTier, ConfigItem, ConfigItemNew, ConfigProduct,
-    ConfigProductTier, ConfigTeam,
-};
+use crate::config::{Config, ConfigItem, ConfigTeam};
 use crate::types::ItemRef;
 use crate::util::{i_to_xy, xy_to_i};
 
@@ -53,7 +50,7 @@ impl Update for GameTeam {
 
 /// Game item.
 #[derive(Serialize, Deserialize, Debug)]
-pub struct GameItemNew {
+pub struct GameItem {
     /// Item ID.
     pub id: ItemRef,
 
@@ -64,14 +61,14 @@ pub struct GameItemNew {
     queue: VecDeque<ItemRef>,
 
     #[serde(skip)]
-    pub config: Option<ConfigItemNew>,
+    pub config: Option<ConfigItem>,
 }
 
-impl GameItemNew {
+impl GameItem {
     /// Construct item from configuration.
     ///
     /// Current game `tick` must be given.
-    pub fn from_config(tick: u64, item: ConfigItemNew) -> Self {
+    pub fn from_config(tick: u64, item: ConfigItem) -> Self {
         Self {
             id: item.id.clone(),
             tick: item.drop_interval.map(|t| t + tick),
@@ -153,7 +150,7 @@ impl GameItemNew {
     }
 }
 
-impl Update for GameItemNew {
+impl Update for GameItem {
     fn update(&mut self, config: &Config, tick: u64) -> bool {
         // Do nothing if there's no tick, or if we didn't reach it yet
         if !self.tick.map(|t| t < tick).unwrap_or(false) {
@@ -173,307 +170,6 @@ impl Update for GameItemNew {
             Some(item_ref) => item_ref,
             None => return false,
         };
-        self.push_queue_drop(item)
-    }
-}
-
-/// Inventory item.
-#[derive(Serialize, Deserialize, Debug)]
-pub enum GameItem {
-    Product(GameProduct),
-    Factory(GameFactory),
-}
-
-impl GameItem {
-    pub fn from_config(tick: u64, item: ConfigItem) -> Self {
-        match item {
-            ConfigItem::Product(tier, item, level) => {
-                GameItem::Product(GameProduct::from_config(tier, level))
-            }
-            ConfigItem::Factory(tier, item, level) => {
-                GameItem::Factory(GameFactory::from_config(tick, tier, level))
-            }
-        }
-    }
-
-    /// Get sell amounts for item.
-    // TODO: return amounts here, instead of just money
-    pub fn sell_amounts(&self) -> Option<u64> {
-        match self {
-            GameItem::Product(product) => Some(product.config_item.as_ref()?.cost),
-            GameItem::Factory(factory) => {
-                crate::client::types::amount_only_money(&factory.config_item.as_ref()?.cost_sell)
-            }
-        }
-    }
-
-    /// Attemp to upgrade 1 level.
-    ///
-    /// Returns true if something changed, false if failed.
-    #[must_use]
-    pub fn upgrade(&mut self, config: &Config) -> bool {
-        match self {
-            GameItem::Product(product) => product.upgrade(config),
-            GameItem::Factory(factory) => factory.upgrade(config),
-        }
-    }
-
-    /// Prepare configuration.
-    fn prepare_config(&mut self, config: &Config) -> Result<(), ()> {
-        match self {
-            GameItem::Product(product) => product.fetch_config(config),
-            GameItem::Factory(factory) => factory.fetch_config(config),
-        }
-    }
-}
-
-impl Update for GameItem {
-    fn update(&mut self, config: &Config, tick: u64) -> bool {
-        match self {
-            GameItem::Product(_) => false,
-            GameItem::Factory(factory) => factory.update(config, tick),
-        }
-    }
-}
-
-/// Inventory product.
-#[derive(Serialize, Deserialize, Debug)]
-pub struct GameProduct {
-    pub tier: u32,
-    pub level: u16,
-
-    #[serde(skip)]
-    pub config_tier: Option<ConfigProductTier>,
-    #[serde(skip)]
-    pub config_item: Option<ConfigProduct>,
-}
-
-impl GameProduct {
-    /// Construct from config.
-    // TODO: return None for invalid level and no config item
-    pub fn from_config(tier: ConfigProductTier, level: u16) -> Self {
-        Self {
-            tier: tier.id,
-            level,
-            config_item: tier.level(level).cloned(),
-            config_tier: Some(tier),
-        }
-    }
-
-    /// Attemp to upgrade 1 level.
-    ///
-    /// Returns true if something changed, false if failed.
-    #[must_use]
-    pub fn upgrade(&mut self, config: &Config) -> bool {
-        // We must have config
-        if self.fetch_config(config).is_err() {
-            return false;
-        }
-
-        // We must be able to upgrade
-        if !self.can_upgrade() {
-            return false;
-        }
-
-        // Increase level, update config
-        self.level += 1;
-        self.config_tier.take();
-        self.fetch_config(config);
-        true
-    }
-
-    /// Check whether we can upgrade.
-    ///
-    /// Checks whether there is a next level.
-    pub fn can_upgrade(&self) -> bool {
-        // TODO: we must have the config
-
-        self.config_tier.as_ref().unwrap().max_level() > self.level
-    }
-
-    /// Fetch config types if not set.
-    fn fetch_config(&mut self, config: &Config) -> Result<(), ()> {
-        // Skip if already set
-        if self.config_tier.is_some() && self.config_item.is_some() {
-            return Ok(());
-        }
-
-        // Find config models
-        let reference = self.reference();
-        match config.find_item(&reference).ok_or(())? {
-            ConfigItem::Product(tier, item, _) => {
-                self.config_tier.replace(tier);
-                self.config_item.replace(item);
-                Ok(())
-            }
-            _ => {
-                warn!("Failed to resolve for product config: {:?}", reference);
-                Err(())
-            }
-        }
-    }
-
-    /// Get `ItemRef` for current product.
-    fn reference(&self) -> ItemRef {
-        ItemRef::from(self.tier, self.level)
-    }
-}
-
-/// Inventory factory.
-#[derive(Serialize, Deserialize, Debug)]
-pub struct GameFactory {
-    /// Current tier ID.
-    pub tier: u32,
-
-    /// Current level.
-    pub level: u16,
-
-    /// Next drop tick.
-    tick: u64,
-
-    /// Item drop queue.
-    // TODO: also serialize this
-    #[serde(skip)]
-    queue: VecDeque<GameItem>,
-
-    #[serde(skip)]
-    pub config_tier: Option<ConfigFactoryTier>,
-    #[serde(skip)]
-    pub config_item: Option<ConfigFactory>,
-}
-
-impl GameFactory {
-    /// Construct from config.
-    // TODO: return None for invalid level and no config item!
-    pub fn from_config(tick: u64, factory: ConfigFactoryTier, level: u16) -> Self {
-        Self {
-            tier: factory.id,
-            level,
-            tick: tick + factory.level(level).as_ref().unwrap().time as u64,
-            queue: VecDeque::default(),
-            config_item: factory.level(level).cloned(),
-            config_tier: Some(factory.clone()),
-        }
-    }
-
-    /// Attemp to upgrade 1 level.
-    ///
-    /// Returns true if something changed, false if failed.
-    #[must_use]
-    pub fn upgrade(&mut self, config: &Config) -> bool {
-        // We must have config
-        if self.fetch_config(config).is_err() {
-            return false;
-        }
-
-        // We must be able to upgrade
-        let reference = self.reference();
-        if !self.can_upgrade() {
-            return false;
-        }
-
-        // Increase level, update config
-        self.level += 1;
-        self.config_tier.take();
-        self.fetch_config(config);
-        true
-    }
-
-    /// Check whether we can upgrade.
-    ///
-    /// Checks whether there is a next level.
-    pub fn can_upgrade(&self) -> bool {
-        // TODO: we must have the config
-
-        self.config_tier.as_ref().unwrap().max_level() > self.level
-    }
-
-    /// Fetch config types if not set.
-    fn fetch_config(&mut self, config: &Config) -> Result<(), ()> {
-        // Skip if already set
-        if self.config_tier.is_some() && self.config_item.is_some() {
-            return Ok(());
-        }
-
-        // Find config models
-        let reference = self.reference();
-        match config.find_item(&reference).ok_or(())? {
-            ConfigItem::Factory(tier, item, _) => {
-                self.config_tier.replace(tier);
-                self.config_item.replace(item);
-                Ok(())
-            }
-            _ => {
-                warn!("Failed to resolve for factory config: {:?}", reference);
-                Err(())
-            }
-        }
-    }
-
-    /// Get `ItemRef` for current product.
-    fn reference(&self) -> ItemRef {
-        ItemRef::from(self.tier, self.level)
-    }
-
-    /// Attempt to add an item to the queue if there is sufficient queue space.
-    ///
-    /// Returns `false` if the item wasn't queued because there was no space.
-    #[must_use]
-    fn push_queue_drop(&mut self, item: GameItem) -> bool {
-        if self.is_queue_space() {
-            trace!("Add drop to factory queue");
-            self.queue.push_back(item);
-            return true;
-        }
-
-        false
-    }
-
-    /// Pop an item from the drop queue if there is any.
-    #[must_use]
-    fn pop_queue_drop(&mut self) -> Option<GameItem> {
-        self.queue.pop_front()
-    }
-
-    /// Check whether there is space in the item drop queue.
-    fn is_queue_space(&self) -> bool {
-        self.queue.len() < FACTORY_QUEUE_SIZE
-    }
-}
-
-impl Update for GameFactory {
-    fn update(&mut self, config: &Config, tick: u64) -> bool {
-        // We must have config
-        if self.fetch_config(config).is_err() {
-            return false;
-        }
-
-        // Do nothing if we didn't reach the tick
-        // TODO: catch up to missed ticks
-        if self.tick > tick {
-            return false;
-        }
-
-        // Update tick to next
-        self.tick = tick + self.config_item.as_ref().unwrap().time as u64;
-
-        // Select config item to drop
-        let item = match self.config_item.as_ref().unwrap().random_drop() {
-            Some(item_ref) => item_ref,
-            None => return false,
-        };
-
-        // Find config model
-        let item = match config.find_item(&item) {
-            Some(item) => item,
-            None => {
-                warn!("Failed to resolve for factory drop: {:?}", item);
-                return false;
-            }
-        };
-
-        // Transpose into game item, add to queue
-        let item = GameItem::from_config(tick, item);
         self.push_queue_drop(item)
     }
 }
@@ -508,7 +204,7 @@ impl Update for GameInventory {
 /// An inventory grid.
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GameInventoryGrid {
-    pub items: Vec<Option<GameItemNew>>,
+    pub items: Vec<Option<GameItem>>,
 }
 
 impl GameInventoryGrid {
@@ -520,15 +216,15 @@ impl GameInventoryGrid {
 
         // Get config items from refs
         // TODO: remove type from vec
-        let mut config_items: Vec<crate::config::ConfigItemNew> = Vec::with_capacity(refs.len());
+        let mut config_items: Vec<crate::config::ConfigItem> = Vec::with_capacity(refs.len());
         for item_ref in refs {
             config_items.push(config.item(&item_ref)?.clone());
         }
 
         // Transpose config into game items
-        let mut items: Vec<Option<GameItemNew>> = config_items
+        let mut items: Vec<Option<GameItem>> = config_items
             .into_iter()
-            .map(|i| Some(GameItemNew::from_config(tick, i)))
+            .map(|i| Some(GameItem::from_config(tick, i)))
             .collect();
 
         // Give list correct length
@@ -545,14 +241,14 @@ impl GameInventoryGrid {
     /// Get item at grid position.
     ///
     /// Is `None` if cell is empty.
-    pub fn get_at(&self, x: u32, y: u32) -> &Option<GameItemNew> {
+    pub fn get_at(&self, x: u32, y: u32) -> &Option<GameItem> {
         &self.items[xy_to_i(x, y)]
     }
 
     /// Get item at grid position.
     ///
     /// Is `None` if cell is empty.
-    pub fn get_at_mut(&mut self, x: u32, y: u32) -> &mut Option<GameItemNew> {
+    pub fn get_at_mut(&mut self, x: u32, y: u32) -> &mut Option<GameItem> {
         &mut self.items[xy_to_i(x, y)]
     }
 
@@ -560,7 +256,7 @@ impl GameInventoryGrid {
     ///
     /// Returns `false` if there was no space.
     #[must_use]
-    pub fn place_item(&mut self, item: GameItemNew) -> bool {
+    pub fn place_item(&mut self, item: GameItem) -> bool {
         match self.find_free_cell() {
             Some(coord) => {
                 *self.get_at_mut(coord.0, coord.1) = Some(item);
@@ -641,7 +337,7 @@ impl GameInventoryGrid {
             };
 
             // Transpose into game item, place it
-            let item = GameItemNew::from_config(tick, item.clone());
+            let item = GameItem::from_config(tick, item.clone());
             if !self.place_item(item) {
                 error!("Failed to place selected item, no inventory space");
             }

@@ -14,19 +14,23 @@ pub use types::*;
 #[derive(Deserialize, Debug)]
 #[serde(transparent)]
 pub struct ItemContainer {
-    items: Vec<ConfigItemNew>,
+    items: Vec<ConfigItem>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
+    /// Game settings.
     pub game: ConfigGame,
+
+    /// Teams.
     pub teams: Vec<ConfigTeam>,
-    pub products: ConfigProducts,
-    pub factories: ConfigFactories,
+
+    /// Team defaults.
     pub defaults: ConfigDefaults,
 
+    /// Game items.
     #[serde(deserialize_with = "vec_to_map")]
-    pub items: HashMap<ItemRef, ConfigItemNew>,
+    pub items: HashMap<ItemRef, ConfigItem>,
 }
 
 impl Config {
@@ -38,62 +42,9 @@ impl Config {
     /// Get item by reference.
     ///
     /// Returns `None` if it doesn't exist.
-    pub fn item(&self, item_ref: &ItemRef) -> Option<&ConfigItemNew> {
+    pub fn item(&self, item_ref: &ItemRef) -> Option<&ConfigItem> {
         self.items.get(item_ref)
     }
-
-    /// Find an item by reference.
-    ///
-    /// Returns a configuration product or factory.
-    // TODO: cache results by `item_ref`
-    // TODO: return arc/ref
-    pub fn find_item(&self, item_ref: &ItemRef) -> Option<ConfigItem> {
-        let (tier, level) = item_ref.tier_level()?;
-
-        // Find product
-        if let Some(tier) = self.find_product_tier(tier) {
-            return tier
-                .level(level)
-                .cloned()
-                .map(|p| ConfigItem::Product(tier.clone(), p, level));
-        }
-
-        // Find factory
-        if let Some(tier) = self.find_factory_tier(tier) {
-            return tier
-                .level(level)
-                .cloned()
-                .map(|f| ConfigItem::Factory(tier.clone(), f, level));
-        }
-
-        None
-    }
-
-    /// Find product tier configuration by tier ID.
-    fn find_product_tier(&self, tier: u32) -> Option<&ConfigProductTier> {
-        self.products.tiers.iter().find(|t| t.id == tier)
-    }
-
-    /// Find factory tier configuration by tier ID.
-    fn find_factory_tier(&self, tier: u32) -> Option<&ConfigFactoryTier> {
-        self.factories.tiers.iter().find(|t| t.id == tier)
-    }
-}
-
-/// A config product or factory tier.
-#[derive(Debug)]
-pub enum ConfigTierItem {
-    Product(ConfigProductTier),
-    Factory(ConfigFactoryTier),
-}
-
-/// A config product or factory item.
-///
-/// Contains both tier and product.
-#[derive(Debug)]
-pub enum ConfigItem {
-    Product(ConfigProductTier, ConfigProduct, u16),
-    Factory(ConfigFactoryTier, ConfigFactory, u16),
 }
 
 /// Load config from disk.
@@ -118,10 +69,10 @@ pub fn load() -> Result<Config, ()> {
 }
 
 /// Deserialize a `Vec` into a `HashMap` by key.
-fn vec_to_map<'de, D>(d: D) -> Result<HashMap<ItemRef, ConfigItemNew>, D::Error>
+fn vec_to_map<'de, D>(d: D) -> Result<HashMap<ItemRef, ConfigItem>, D::Error>
 where
     D: Deserializer<'de>,
 {
-    let items: Vec<ConfigItemNew> = Vec::deserialize(d)?;
+    let items: Vec<ConfigItem> = Vec::deserialize(d)?;
     Ok(items.into_iter().map(|i| (i.id.clone(), i)).collect())
 }
