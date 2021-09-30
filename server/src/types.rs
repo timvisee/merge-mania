@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 /// An amount of money or items.
 // TODO: find better name for this
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum Amount {
     /// Money amount.

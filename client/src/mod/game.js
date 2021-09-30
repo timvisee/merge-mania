@@ -9,6 +9,9 @@ export default {
     // Current inventory.
     inventory: null,
 
+    // Game configuration items.
+    items: null,
+
     // Game socket manager.
     socket: null,
 

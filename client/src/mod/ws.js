@@ -61,12 +61,25 @@ export default {
      * Invoked when a message is received over the websocket.
      */
     onMessage(event) {
-        console.log(`[ws] Received msg: ${event.data.substring(0, 32)}...`);
+        // console.log(`[ws] Received msg: ${event.data.substring(0, 32)}...`);
 
         // TODO: handle all incoming messages here
         let data = JSON.parse(event.data);
-        this.game.inventory = data.data;
-        this.game.ready = true;
+
+        switch(data.kind) {
+            case 'inventory':
+                this.game.inventory = data.data;
+                this.game.ready = true;
+                break;
+
+            case 'config_items':
+                this.game.items = data.data;
+                console.log(this.game.items);
+                break;
+
+            default:
+                console.log("[ws] Unhandled message kind: " + data.kind);
+        }
     },
 
     /**

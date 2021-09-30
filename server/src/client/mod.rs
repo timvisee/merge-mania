@@ -8,6 +8,7 @@ pub mod types;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+use crate::config::ConfigItem;
 pub use action::*;
 pub use types::*;
 
@@ -45,6 +46,9 @@ impl From<MsgRecvKind> for MsgRecv {
 pub enum MsgSendKind {
     /// Ping request.
     Ping,
+
+    /// Game item configuration.
+    ConfigItems(Vec<ConfigItem>),
 
     /// Inventory state for current client team.
     Inventory(ClientInventory),

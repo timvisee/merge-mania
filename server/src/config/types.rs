@@ -1,5 +1,5 @@
 use rand::Rng;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::config::Config;
 use crate::types::{Amount, ItemRef};
@@ -37,8 +37,8 @@ pub struct ConfigDefaults {
 }
 
 /// Game item configuration.
-// TODO: do not allow clone
-#[derive(Deserialize, Debug, Clone)]
+// TODO: do not clone
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ConfigItem {
     /// Unique item ID.
     #[serde(rename = "ref")]
@@ -106,7 +106,7 @@ impl ConfigItem {
     }
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ConfigDrop {
     /// Item to drop.
     pub item: ItemRef,
