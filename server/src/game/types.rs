@@ -323,7 +323,7 @@ impl GameInventoryGrid {
 
         // Place all items
         // TODO: when factory is placed ensure tick setting is correct
-        for item in items {
+        for item in &items {
             // Resolve item from config
             let item = match config.item(&item) {
                 Some(item) => item,
@@ -343,7 +343,7 @@ impl GameInventoryGrid {
             }
         }
 
-        true
+        !items.is_empty()
     }
 
     /// Attach configuration.
@@ -360,19 +360,15 @@ impl GameInventoryGrid {
 
 impl Update for GameInventoryGrid {
     fn update(&mut self, config: &Config, tick: u64) -> bool {
+        // Update items, drop updated state
         for item in self.items.iter_mut() {
-            match item {
-                Some(item) => {
-                    item.update(config, tick);
-                }
-                None => {}
+            if let Some(item) = item {
+                item.update(config, tick);
             }
         }
 
         // Place queued factory items onto field
-        let changed = self.place_queue_items(config, tick);
-
-        changed
+        self.place_queue_items(config, tick)
     }
 }
 
