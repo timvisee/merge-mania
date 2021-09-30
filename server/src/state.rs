@@ -17,8 +17,19 @@ pub struct State {
 impl State {
     /// Construct new state.
     pub fn new(config: Config) -> Self {
-        let mut game = Game::default();
-        game.add_team(&config, 1);
+        // Load game
+        let mut game = if config.game.reset {
+            info!("Resetting game state according to configuration");
+            Game::default()
+        } else {
+            Game::load(&config).expect("failed to load game state")
+        };
+
+        // Add team if it doesn't exist yet
+        // TODO: don't do this, load on demand!
+        if game.teams.is_empty() {
+            game.add_team(&config, 1);
+        }
 
         State {
             config,

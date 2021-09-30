@@ -18,6 +18,10 @@ pub(crate) mod util;
 pub(crate) mod web;
 pub(crate) mod ws;
 
+use std::pin::Pin;
+
+use futures::future::Future;
+
 use state::{SharedState, State};
 
 /// Web server host.
@@ -31,6 +35,15 @@ pub const INV_WIDTH: u16 = 8;
 
 /// Inventory slot count.
 pub const INV_SIZE: u16 = INV_WIDTH.pow(2);
+
+/// Sessions file path.
+pub const SESSIONS_SAVE_PATH: &str = "save.sessions.json";
+
+/// Game file path.
+pub const GAME_SAVE_PATH: &str = "save.game.json";
+
+/// Game autosave interval.
+pub const GAME_SAVE_INTERVAL_SEC: u64 = 60;
 
 /// Main entrypoint.
 fn main() {
@@ -46,10 +59,20 @@ fn main() {
         .unwrap()
         .block_on(async {
             let server = crate::web::server(state.clone());
-            let game_loop = crate::game::run(state);
+            let game_loop = crate::game::run(state.clone());
+            let quit_signal = quit_signal();
 
-            // Run server and game loop
-            futures::future::select(Box::pin(server), Box::pin(game_loop)).await;
+            type FutureType = Pin<Box<dyn Future<Output = ()>>>;
+            let server: FutureType = Box::pin(server);
+            let game_loop: FutureType = Box::pin(game_loop);
+            let quit_signal: FutureType = Box::pin(quit_signal);
+
+            futures::future::select_all([server, game_loop, quit_signal]).await;
+
+            // Save game state before we quit
+            if let Err(err) = state.game.save() {
+                error!("Failed to save game state before quitting, this will lead to data loss");
+            }
         })
 }
 
@@ -62,4 +85,10 @@ fn state() -> SharedState {
     state.game.running = true;
 
     state.shared()
+}
+
+/// Quit signal handler.
+async fn quit_signal() {
+    tokio::signal::ctrl_c().await;
+    info!("Received quit signal");
 }

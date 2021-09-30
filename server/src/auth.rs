@@ -11,9 +11,6 @@ use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc;
 use warp::filters::ws::{Message, WebSocket};
 
-/// Sessions file path.
-const SESSIONS_PATH: &str = "save.sessions.toml";
-
 /// Session token length.
 const TOKEN_LENGTH: usize = 64;
 
@@ -92,18 +89,20 @@ impl SessionManager {
     /// Load sessions from file.
     pub fn load() -> Result<Self, ()> {
         // Load default if file doesn't exist
-        let path = PathBuf::from(SESSIONS_PATH);
+        let path = PathBuf::from(crate::SESSIONS_SAVE_PATH);
         if !path.is_file() {
             info!("No sessions file, starting fresh");
             return Ok(Self::new());
         }
 
         // Load data from file
-        debug!("Loading sessions from file");
+        info!("Loading sessions from file");
+        trace!("Reading sessions file...");
         let data = fs::read(path).expect("failed to read sessions file");
 
         // Deserialize
-        match toml::from_slice(data.as_slice()) {
+        trace!("Deserializing sessions data...");
+        match serde_json::from_slice(data.as_slice()) {
             Ok(state) => Ok(state),
             Err(err) => {
                 error!(
@@ -117,8 +116,11 @@ impl SessionManager {
 
     /// Save sessions to file.
     pub fn save(&self) -> Result<(), ()> {
-        debug!("saving sessions to file");
-        let data = match toml::to_vec(self) {
+        info!("Saving sessions to file");
+
+        // Serialize sessions
+        trace!("Serializing sessions...");
+        let data = match serde_json::to_vec(self) {
             Ok(data) => data,
             Err(err) => {
                 error!(
@@ -129,7 +131,9 @@ impl SessionManager {
             }
         };
 
-        match fs::write(SESSIONS_PATH, data.as_slice()) {
+        // Write to file
+        trace!("Writing sessions to file...");
+        match fs::write(crate::SESSIONS_SAVE_PATH, data.as_slice()) {
             Ok(result) => Ok(result),
             Err(err) => {
                 error!("Failed to save sessions to file: {}", err);

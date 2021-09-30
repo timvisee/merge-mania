@@ -3,7 +3,7 @@
 tick_millis = 1000
 
 # Reset game state when starting server
-reset = true
+reset = false
 
 [[teams]]
 id = 1

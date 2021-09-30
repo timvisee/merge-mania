@@ -1,10 +1,12 @@
 pub mod types;
 
+use std::fs;
+use std::path::PathBuf;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Mutex, RwLock};
 
 use rand::Rng;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use tokio::time::{self, Duration};
 
 use crate::client::{ClientInventory, MsgSendKind};
@@ -14,8 +16,15 @@ use crate::util::{i_to_xy, xy_to_i};
 use crate::ws;
 pub use types::*;
 
-/// A simple game loop.
+/// Run game.
 pub(crate) async fn run(state: SharedState) {
+    let game = game_loop(state.clone());
+    let save = save_loop(state);
+    futures::future::select(Box::pin(game), Box::pin(save)).await;
+}
+
+/// Game logic loop.
+pub(crate) async fn game_loop(state: SharedState) {
     let mut interval = time::interval(Duration::from_millis(state.config.game.tick_millis));
 
     loop {
@@ -30,9 +39,24 @@ pub(crate) async fn run(state: SharedState) {
     }
 }
 
+/// Game autosave loop.
+pub(crate) async fn save_loop(state: SharedState) {
+    let mut interval = time::interval(Duration::from_secs(crate::GAME_SAVE_INTERVAL_SEC));
+
+    loop {
+        // Wait for tick
+        interval.tick().await;
+
+        // Save game state
+        if let Err(err) = state.game.save() {
+            error!("Failed to autosave game state");
+        }
+    }
+}
+
 /// Represents runnable game state.
 // TODO: when loading (deserializing) game, make sure all config properties get attached!
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Default)]
 pub struct Game {
     /// Whether the game is running.
     pub running: bool,
@@ -41,7 +65,7 @@ pub struct Game {
     tick: AtomicUsize,
 
     /// Team state.
-    teams: Vec<RwLock<GameTeam>>,
+    pub teams: Vec<RwLock<GameTeam>>,
 }
 
 impl Game {
@@ -190,6 +214,81 @@ impl Game {
         let inventory = ClientInventory::from_game(&team.inventory)
             .expect("failed to transpose game to client inventory");
         Some(inventory)
+    }
+
+    /// Load game state from file.
+    pub fn load(config: &Config) -> Result<Self, ()> {
+        // Load default if file doesn't exist
+        let path = PathBuf::from(crate::GAME_SAVE_PATH);
+        if !path.is_file() {
+            info!("No game state file, starting fresh");
+            return Ok(Self::default());
+        }
+
+        // Load data from file
+        info!("Loading game state from file");
+        trace!("Reading game state file...");
+        let data = fs::read(path).expect("failed to read game state file");
+
+        // Deserialize
+        trace!("Deserializing game state data...");
+        let mut game: Self = match serde_json::from_slice(data.as_slice()) {
+            Ok(state) => state,
+            Err(err) => {
+                error!(
+                    "Failed to load game state from file, couldn't deserialize: {}",
+                    err
+                );
+                return Err(());
+            }
+        };
+
+        // Prepare configuration in game items
+        debug!("Attaching game item configuration models...");
+        if let Err(err) = game.prepare_config(config) {
+            error!("Failed to link configuration to game objects, config might have changed?",);
+            return Err(());
+        }
+        Ok(game)
+    }
+
+    /// Save game state to file.
+    pub fn save(&self) -> Result<(), ()> {
+        info!("Saving game state to file");
+
+        // Serialize state
+        trace!("Serializing game state...");
+        let data = if cfg!(debug_assertions) {
+            serde_json::to_vec_pretty(self)
+        } else {
+            serde_json::to_vec(self)
+        };
+        let data = match data {
+            Ok(data) => data,
+            Err(err) => {
+                error!("Failed to save game to file, couldn't serialize: {}", err);
+                return Err(());
+            }
+        };
+
+        // Write to file
+        trace!("Writing game state to file...");
+        match fs::write(crate::GAME_SAVE_PATH, data.as_slice()) {
+            Ok(result) => Ok(result),
+            Err(err) => {
+                error!("Failed to save game state to file: {}", err);
+                Err(())
+            }
+        }
+    }
+
+    /// Prepare configuration.
+    pub fn prepare_config(&mut self, config: &Config) -> Result<(), ()> {
+        for team in self.teams.iter() {
+            let mut team = team.write().unwrap();
+            team.prepare_config(config)?;
+        }
+        Ok(())
     }
 }
 

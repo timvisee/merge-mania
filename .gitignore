@@ -5,4 +5,4 @@ target/
 .env
 
 # Merge Mania save data
-save.*.toml
+save.*.json

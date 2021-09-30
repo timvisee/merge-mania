@@ -37,6 +37,12 @@ impl GameTeam {
             config: config.team(id).cloned(),
         }
     }
+
+    /// Prepare configuration.
+    pub fn prepare_config(&mut self, config: &Config) -> Result<(), ()> {
+        self.config = Some(config.team(self.id).cloned().ok_or(())?);
+        self.inventory.grid.prepare_config(config)
+    }
 }
 
 impl Update for GameTeam {
@@ -83,6 +89,14 @@ impl GameItem {
         match self {
             GameItem::Product(product) => product.upgrade(config),
             GameItem::Factory(factory) => factory.upgrade(config),
+        }
+    }
+
+    /// Prepare configuration.
+    fn prepare_config(&mut self, config: &Config) -> Result<(), ()> {
+        match self {
+            GameItem::Product(product) => product.fetch_config(config),
+            GameItem::Factory(factory) => factory.fetch_config(config),
         }
     }
 }
@@ -501,6 +515,17 @@ impl GameInventoryGrid {
         }
 
         true
+    }
+
+    /// Prepare configuration.
+    fn prepare_config(&mut self, config: &Config) -> Result<(), ()> {
+        for item in self.items.iter_mut() {
+            match item {
+                Some(item) => item.prepare_config(config)?,
+                None => {}
+            }
+        }
+        Ok(())
     }
 }
 
