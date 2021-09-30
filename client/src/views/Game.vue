@@ -54,7 +54,7 @@
             <div v-for="(cell, index) in game.inventory.items"
                 class="cell"
                 @click.stop="toggleSelect(index)"
-                v-bind:class="{ select: selected == index, item: cell, factory: cell && cell.drop_interval, subtle: isSubtle(index) }"
+                v-bind:class="{ select: selected == index, item: cell, factory: cell && cell.drop_interval, subtle: isSubtle(index), plus: !cell && mode == 'buy' }"
             >
                 <div v-if="cell">
                     <div class="overlay">
@@ -428,6 +428,13 @@ export default {
 
 .game-grid .cell.select {
     background: #bbb;
+}
+
+.game-grid .cell.plus {
+    background-image: url(/sprites/cell-plus.png);
+    background-clip: content-box;
+    background-position: center;
+    background-size: cover;
 }
 
 .game-grid .cell.select.item {
