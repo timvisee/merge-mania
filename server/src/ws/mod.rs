@@ -257,7 +257,7 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
     // TODO: resolve item
 
     // Resolve item from config
-    let item = match state.config.find_item(&action.item) {
+    let item = match state.config.item(&action.item) {
         Some(item) => item,
         None => return,
     };
@@ -265,7 +265,7 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
     // Do buy, get inventory
     let mut inventory = match state
         .game
-        .team_buy(team_id, &state.config, action.cell, item)
+        .team_buy(team_id, &state.config, action.cell, item.clone())
     {
         Some(inv) => inv,
         None => return,

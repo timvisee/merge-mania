@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use tokio::time::{self, Duration};
 
 use crate::client::{ClientInventory, MsgSendKind};
-use crate::config::{Config, ConfigFactoryTier, ConfigItem};
+use crate::config::{Config, ConfigFactoryTier, ConfigItem, ConfigItemNew};
 use crate::state::SharedState;
 use crate::util::{i_to_xy, xy_to_i};
 use crate::ws;
@@ -161,7 +161,7 @@ impl Game {
         team_id: u32,
         config: &Config,
         cell: u8,
-        item: ConfigItem,
+        item: ConfigItemNew,
     ) -> Option<ClientInventory> {
         let mut team = self
             .teams
@@ -180,7 +180,7 @@ impl Game {
             return None;
         }
 
-        *cell = Some(GameItem::from_config(self.tick(), item));
+        *cell = Some(GameItemNew::from_config(self.tick(), item));
 
         let inventory = ClientInventory::from_game(&team.inventory)
             .expect("failed to transpose game to client inventory");
@@ -202,12 +202,7 @@ impl Game {
         let mut cell = &mut team.inventory.grid.items[cell as usize];
 
         match cell.take() {
-            Some(item) => {
-                // TODO: give proper money to user
-                if let Some(money) = item.sell_amounts() {
-                    team.inventory.money += money;
-                }
-            }
+            Some(item) => team.inventory.money += item.config.as_ref().unwrap().sell,
             None => return None,
         }
 
@@ -245,7 +240,7 @@ impl Game {
 
         // Prepare configuration in game items
         debug!("Attaching game item configuration models...");
-        if let Err(err) = game.prepare_config(config) {
+        if let Err(err) = game.attach_config(config) {
             error!("Failed to link configuration to game objects, config might have changed?",);
             return Err(());
         }
@@ -282,11 +277,11 @@ impl Game {
         }
     }
 
-    /// Prepare configuration.
-    pub fn prepare_config(&mut self, config: &Config) -> Result<(), ()> {
+    /// Attach configuration.
+    pub fn attach_config(&mut self, config: &Config) -> Result<(), ()> {
         for team in self.teams.iter() {
             let mut team = team.write().unwrap();
-            team.prepare_config(config)?;
+            team.attach_config(config)?;
         }
         Ok(())
     }

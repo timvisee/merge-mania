@@ -39,9 +39,9 @@ impl GameTeam {
     }
 
     /// Prepare configuration.
-    pub fn prepare_config(&mut self, config: &Config) -> Result<(), ()> {
+    pub fn attach_config(&mut self, config: &Config) -> Result<(), ()> {
         self.config = Some(config.team(self.id).cloned().ok_or(())?);
-        self.inventory.grid.prepare_config(config)
+        self.inventory.grid.attach_config(config)
     }
 }
 
@@ -508,7 +508,7 @@ impl Update for GameInventory {
 /// An inventory grid.
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GameInventoryGrid {
-    pub items: Vec<Option<GameItem>>,
+    pub items: Vec<Option<GameItemNew>>,
 }
 
 impl GameInventoryGrid {
@@ -519,15 +519,16 @@ impl GameInventoryGrid {
         let refs = &config.defaults.inventory;
 
         // Get config items from refs
-        let mut config_items: Vec<crate::config::ConfigItem> = Vec::with_capacity(refs.len());
+        // TODO: remove type from vec
+        let mut config_items: Vec<crate::config::ConfigItemNew> = Vec::with_capacity(refs.len());
         for item_ref in refs {
-            config_items.push(config.find_item(&item_ref)?);
+            config_items.push(config.item(&item_ref)?.clone());
         }
 
         // Transpose config into game items
-        let mut items: Vec<Option<GameItem>> = config_items
+        let mut items: Vec<Option<GameItemNew>> = config_items
             .into_iter()
-            .map(|i| Some(GameItem::from_config(tick, i)))
+            .map(|i| Some(GameItemNew::from_config(tick, i)))
             .collect();
 
         // Give list correct length
@@ -544,14 +545,14 @@ impl GameInventoryGrid {
     /// Get item at grid position.
     ///
     /// Is `None` if cell is empty.
-    pub fn get_at(&self, x: u32, y: u32) -> &Option<GameItem> {
+    pub fn get_at(&self, x: u32, y: u32) -> &Option<GameItemNew> {
         &self.items[xy_to_i(x, y)]
     }
 
     /// Get item at grid position.
     ///
     /// Is `None` if cell is empty.
-    pub fn get_at_mut(&mut self, x: u32, y: u32) -> &mut Option<GameItem> {
+    pub fn get_at_mut(&mut self, x: u32, y: u32) -> &mut Option<GameItemNew> {
         &mut self.items[xy_to_i(x, y)]
     }
 
@@ -559,7 +560,7 @@ impl GameInventoryGrid {
     ///
     /// Returns `false` if there was no space.
     #[must_use]
-    pub fn place_item(&mut self, item: GameItem) -> bool {
+    pub fn place_item(&mut self, item: GameItemNew) -> bool {
         match self.find_free_cell() {
             Some(coord) => {
                 *self.get_at_mut(coord.0, coord.1) = Some(item);
@@ -599,55 +600,61 @@ impl GameInventoryGrid {
     }
 
     /// Place factory queue items if there is space.
-    fn place_queue_items(&mut self) -> bool {
-        // There must be space
+    fn place_queue_items(&mut self, config: &Config, tick: u64) -> bool {
+        // Get number of free grid cells, there must be space
         let max = self.count_free_cells();
         if max <= 0 {
             return false;
         }
 
         // Obtain list of items to place
-        let mut items: Vec<GameItem> = Vec::with_capacity(max);
+        let mut items: Vec<ItemRef> = Vec::with_capacity(max);
         for item in self.items.iter_mut() {
-            match item {
-                Some(GameItem::Factory(factory)) => {
-                    while items.len() < max {
-                        match factory.pop_queue_drop() {
-                            Some(item) => items.push(item),
-                            None => break,
-                        }
-                    }
-
-                    // Stop outer loop if we reached max
-                    if items.len() >= max {
-                        break;
+            if let Some(item) = item {
+                while items.len() < max {
+                    match item.pop_queue_drop() {
+                        Some(item) => items.push(item),
+                        None => break,
                     }
                 }
-                _ => {}
             }
-        }
 
-        // We're done if we got no items
-        if items.is_empty() {
-            return false;
+            // Stop outer loop if we reached max
+            if items.len() >= max {
+                break;
+            }
         }
 
         // Place all items
         // TODO: when factory is placed ensure tick setting is correct
         for item in items {
+            // Resolve item from config
+            let item = match config.item(&item) {
+                Some(item) => item,
+                None => {
+                    warn!(
+                        "Failed to place queued item, item ref does not resolve: {:?}",
+                        item
+                    );
+                    continue;
+                }
+            };
+
+            // Transpose into game item, place it
+            let item = GameItemNew::from_config(tick, item.clone());
             if !self.place_item(item) {
-                error!("failed to place selected item, no inventory space");
+                error!("Failed to place selected item, no inventory space");
             }
         }
 
         true
     }
 
-    /// Prepare configuration.
-    fn prepare_config(&mut self, config: &Config) -> Result<(), ()> {
+    /// Attach configuration.
+    fn attach_config(&mut self, config: &Config) -> Result<(), ()> {
         for item in self.items.iter_mut() {
             match item {
-                Some(item) => item.prepare_config(config)?,
+                Some(item) => item.attach_config(config)?,
                 None => {}
             }
         }
@@ -667,7 +674,7 @@ impl Update for GameInventoryGrid {
         }
 
         // Place queued factory items onto field
-        let changed = self.place_queue_items();
+        let changed = self.place_queue_items(config, tick);
 
         changed
     }

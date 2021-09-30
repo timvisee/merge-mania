@@ -167,7 +167,7 @@ impl ClientInventory {
 /// An inventory grid.
 #[derive(Serialize, Debug)]
 pub struct ClientInventoryGrid {
-    items: Vec<Option<ClientItem>>,
+    items: Vec<Option<ClientItemNew>>,
 }
 
 impl ClientInventoryGrid {
@@ -176,7 +176,7 @@ impl ClientInventoryGrid {
 
         for item in &game.items {
             items.push(match item {
-                Some(item) => Some(ClientItem::from_game(item)?),
+                Some(item) => Some(ClientItemNew::from_game(item)?),
                 None => None,
             });
         }
