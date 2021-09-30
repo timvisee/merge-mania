@@ -31,7 +31,7 @@
                 class="w-100"
                 variant="outline-dark"
                 squared
-                @click.prevent="toggleMode('buy')"
+                @click.prevent="showBuy()"
                 :pressed="mode == 'buy'">Buy</b-button>
             <b-button
                 type="button"
@@ -54,7 +54,7 @@
             <div v-for="(cell, index) in game.inventory.items"
                 class="cell"
                 @click.stop="toggleSelect(index)"
-                v-bind:class="{ select: selected == index, item: cell, factory: cell && cell.drop_interval, subtle: isSubtle(index), plus: !cell && mode == 'buy' }"
+                v-bind:class="{ select: selected == index, item: cell, factory: cell && cell.drop_interval, subtle: isSubtle(index), plus: !cell && mode == 'buy' && buyItem }"
             >
                 <div v-if="cell">
                     <div class="overlay">
@@ -98,16 +98,18 @@
         <b-modal
             id="game-buy-modal"
             title="Buy item"
-            @hidden="selected = null"
             centered
             no-fade
         >
             <div class="item-list">
-                <div v-for="item in game.getBuyableItems()" class="item">
+                <div
+                    v-for="item in game.getBuyableItems()"
+                    class="item"
+                    @click.stop.prevent="selectBuyItem(item)"
+                >
                     <img :src="'/sprites/' + item.sprite"
                         :title="item.name"
                         :alt="item.name"
-                        @click.stop.prevent="doBuy(selected, item.ref)"
                         draggable="false"
                     />
                     <div class="overlay">
@@ -213,6 +215,7 @@ export default {
       mode: null,
       selected: null,
       selectedCell: null,
+      buyItem: null,
     };
   },
   created() {
@@ -291,22 +294,33 @@ export default {
         this.selected = null;
     },
 
-    actionBuy(index) {
-        // Cell must be empty
-        if(this.hasItem(index))
-            return;
+    // Show buy item selection dialog.
+    showBuy() {
+        // We'll enable buy mode again after selecting a buy item
+        this.mode = null;
 
         // Show buy modal
         this.$bvModal.show('game-buy-modal');
     },
 
-    doBuy(index, item) {
+    // Select an buy item.
+    selectBuyItem(item) {
+        // Hide dialog
         this.$bvModal.hide('game-buy-modal');
+
+        this.mode = 'buy';
+        this.buyItem = item;
+    },
+
+    actionBuy(index) {
+        // Cell must be empty
+        if(this.hasItem(index))
+            return;
 
         // Send buy action
         this.$game.socket.send('action_buy', {
             cell: index,
-            item,
+            item: this.buyItem.ref,
         });
     },
 
