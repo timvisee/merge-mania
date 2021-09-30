@@ -13,3 +13,8 @@ pub fn i_to_xy(i: usize) -> (u32, u32) {
         i as u32 / crate::INV_WIDTH as u32,
     )
 }
+
+/// Produces `1.0`.
+pub const fn one() -> f64 {
+    1.0
+}

@@ -137,7 +137,7 @@
                     <tr v-if="selectedCell.label"><td>Label:</td><td>{{ selectedCell.label }}</td></tr>
                     <tr v-if="selectedCell.drop_interval"><td>Production interval:</td><td>1 / {{ selectedCell.drop_interval }} ticks</td></tr>
                     <tr><td>Sell price:</td><td>{{ selectedCell.sell }}</td></tr>
-                    <tr><td>Mergeable:</td><td>{{ selectedCell.mergeable ? 'Yes' : 'No' }}</td></tr>
+                    <tr><td>Merge:</td><td>{{ selectedCell.mergeable ? 'Yes' : 'No' }}</td></tr>
                 </table>
             </div>
 

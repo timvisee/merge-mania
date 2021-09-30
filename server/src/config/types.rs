@@ -3,7 +3,7 @@ use serde::Deserialize;
 
 use crate::config::Config;
 use crate::types::{Amount, ItemRef};
-use crate::util::{i_to_xy, xy_to_i};
+use crate::util::{i_to_xy, one, xy_to_i};
 
 /// Game configuration.
 #[derive(Deserialize, Debug, Clone)]
@@ -112,6 +112,7 @@ pub struct ConfigDrop {
     pub item: ItemRef,
 
     /// Chance float.
+    #[serde(default = "one")]
     pub chance: f64,
 }
 
