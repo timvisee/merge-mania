@@ -5,6 +5,20 @@ tick_millis = 1000
 # Reset game state when starting server
 reset = true
 
+
+
+[defaults]
+money = 10
+energy = 5
+inventory = [
+    "1.0",
+    "1.0",
+    "1.0",
+    "101.0",
+]
+
+
+
 [[teams]]
 id = 1
 name = "Team 1"
@@ -40,11 +54,14 @@ id = 7
 name = "Team 7"
 password = "team7"
 
+
+
 # [[items]]
 # id = "1.0"
 # merge = "1.1"
-# tier = "Fruit"
 # name = "Apple"
+# tier = "Fruit"
+# label = "Label"
 # buy = []
 # sell = 1
 # sprite_path = "red-apple.png"
@@ -54,186 +71,541 @@ password = "team7"
 #     { item = "1.1", chance = 0.10 },
 # ]
 
+
+
+# Fruit products
+
 [[items]]
 ref = "1.0"
 merge = "1.1"
-tier = "Fruit"
 name = "Apple"
-label = "FIRST"
-# buy = []
+tier = "Fruit"
 sell = 1
 sprite_path = "red-apple.png"
-drop_interval = 3
-drops = [
-    { item = "1.1", chance = 0.95 },
-    { item = "1.1", chance = 0.04 },
-    { item = "1.1", chance = 0.01 },
-]
 
 [[items]]
 ref = "1.1"
-tier = "Fruit"
+merge = "1.2"
 name = "Banana"
+tier = "Fruit"
 sell = 3
 sprite_path = "banana.png"
 
-[[products.tiers]]
-id = 1
-name = "Fruit"
-products = [
-    { name = "Apple", cost = 1, sprite_path = "red-apple.png" },
-    { name = "Banana", cost = 3, sprite_path = "banana.png" },
-    { name = "Pineapple", cost = 8, sprite_path = "pineapple.png" },
-    { name = "Cherries", cost = 19, sprite_path = "cherries.png" },
-    { name = "Strawberry", cost = 43, sprite_path = "strawberry.png" },
-    { name = "Watermelon", cost = 94, sprite_path = "watermelon.png" },
-    { name = "Grape", cost = 201, sprite_path = "grapes.png" },
-    { name = "Lemon", cost = 423, sprite_path = "lemon.png" },
-    { name = "Tangerine", cost = 880, sprite_path = "tangerine.png" },
-    { name = "Pear", cost = 1815, sprite_path = "pear.png" },
-    { name = "Peach", cost = 3719, sprite_path = "peach.png" },
-    { name = "Mango", cost = 7582, sprite_path = "mango.png" },
-    { name = "Blueberries", cost = 15397, sprite_path = "blueberries.png" },
-]
+[[items]]
+ref = "1.2"
+merge = "1.3"
+name = "Pineapple"
+tier = "Fruit"
+sell = 8
+sprite_path = "pineapple.png"
 
-[[products.tiers]]
-id = 2
-name = "Vegetable"
-products = [
-    { name = "Tomato", cost = 15, sprite_path = "tomato.png" },
-    { name = "Cucumber", cost = 31, sprite_path = "cucumber.png" },
-    { name = "Onion", cost = 64, sprite_path = "onion.png" },
-    { name = "Carrot", cost = 131, sprite_path = "carrot.png" },
-    { name = "Eggplant", cost = 267, sprite_path = "eggplant.png" },
-    { name = "Bell Pepper", cost = 542, sprite_path = "bell-pepper.png" },
-    { name = "Potato", cost = 1097, sprite_path = "potato.png" },
-    { name = "Corn", cost = 2215, sprite_path = "ear-of-corn.png" },
-    { name = "Broccoli", cost = 4464, sprite_path = "broccoli.png" },
-    { name = "Garlic", cost = 8983, sprite_path = "garlic.png" },
-    { name = "Mushroom", cost = 18055, sprite_path = "mushroom.png" },
-]
+[[items]]
+ref = "1.3"
+merge = "1.4"
+name = "Cherries"
+tier = "Fruit"
+sell = 19
+sprite_path = "cherries.png"
 
-[[products.tiers]]
-id = 3
+[[items]]
+ref = "1.4"
+merge = "1.5"
+name = "Strawberry"
+tier = "Fruit"
+sell = 43
+sprite_path = "strawberry.png"
+
+[[items]]
+ref = "1.5"
+merge = "1.6"
+name = "Watermelon"
+tier = "Fruit"
+sell = 94
+sprite_path = "watermelon.png"
+
+[[items]]
+ref = "1.6"
+merge = "1.7"
+name = "Grape"
+tier = "Fruit"
+sell = 201
+sprite_path = "grapes.png"
+
+[[items]]
+ref = "1.7"
+merge = "1.8"
+name = "Lemon"
+tier = "Fruit"
+sell = 423
+sprite_path = "lemon.png"
+
+[[items]]
+ref = "1.8"
+merge = "1.9"
+name = "Tangerine"
+tier = "Fruit"
+sell = 880
+sprite_path = "tangerine.png"
+
+[[items]]
+ref = "1.9"
+merge = "1.10"
+name = "Pear"
+tier = "Fruit"
+sell = 1815
+sprite_path = "pear.png"
+
+[[items]]
+ref = "1.10"
+merge = "1.11"
+name = "Peach"
+tier = "Fruit"
+sell = 3719
+sprite_path = "peach.png"
+
+[[items]]
+ref = "1.11"
+merge = "1.12"
+name = "Mango"
+tier = "Fruit"
+sell = 7582
+sprite_path = "mango.png"
+
+[[items]]
+ref = "1.12"
+name = "Blueberries"
+tier = "Fruit"
+sell = 15397
+sprite_path = "blueberries.png"
+
+
+
+# Vegetables products
+
+[[items]]
+ref = "2.0"
+merge = "2.1"
+name = "Tomato"
+tier = "Vegetable"
+sell = 15
+sprite_path = "tomato.png"
+
+[[items]]
+ref = "2.1"
+merge = "2.2"
+name = "Cucumber"
+tier = "Vegetable"
+sell = 31
+sprite_path = "cucumber.png"
+
+[[items]]
+ref = "2.2"
+merge = "2.3"
+name = "Onion"
+tier = "Vegetable"
+sell = 64
+sprite_path = "onion.png"
+
+[[items]]
+ref = "2.3"
+merge = "2.4"
+name = "Carrot"
+tier = "Vegetable"
+sell = 131
+sprite_path = "carrot.png"
+
+[[items]]
+ref = "2.4"
+merge = "2.5"
+name = "Eggplant"
+tier = "Vegetable"
+sell = 267
+sprite_path = "eggplant.png"
+
+[[items]]
+ref = "2.5"
+merge = "2.6"
+name = "Bell Pepper"
+tier = "Vegetable"
+sell = 542
+sprite_path = "bell-pepper.png"
+
+[[items]]
+ref = "2.6"
+merge = "2.7"
+name = "Potato"
+tier = "Vegetable"
+sell = 1097
+sprite_path = "potato.png"
+
+[[items]]
+ref = "2.7"
+merge = "2.8"
+name = "Corn"
+tier = "Vegetable"
+sell = 2215
+sprite_path = "ear-of-corn.png"
+
+[[items]]
+ref = "2.8"
+merge = "2.9"
+name = "Broccoli"
+tier = "Vegetable"
+sell = 4464
+sprite_path = "broccoli.png"
+
+[[items]]
+ref = "2.9"
+merge = "2.10"
+name = "Garlic"
+tier = "Vegetable"
+sell = 8983
+sprite_path = "garlic.png"
+
+[[items]]
+ref = "2.10"
+name = "Mushroom"
+tier = "Vegetable"
+sell = 18055
+sprite_path = "mushroom.png"
+
+
+
+# Bread products
+
+[[items]]
+ref = "3.0"
+merge = "3.1"
 name = "Bread"
-products = [
-    { name = "Bread", cost = 225, sprite_path = "bread.png" },
-    { name = "Croissant", cost = 451, sprite_path = "croissant.png" },
-    { name = "Baguette", cost = 904, sprite_path = "baguette-bread.png" },
-    { name = "Flatbread", cost = 1809, sprite_path = "flatbread.png" },
-    { name = "Pretzel", cost = 3621, sprite_path = "pretzel.png" },
-    { name = "Bagel", cost = 7247, sprite_path = "bagel.png" },
-    { name = "Pancake", cost = 14502, sprite_path = "pancakes.png" },
-    { name = "Waffle", cost = 29017, sprite_path = "waffle.png" },
-    { name = "Fortune Cookie", cost = 58055, sprite_path = "fortune-cookie.png" },
-]
+tier = "Bread"
+sell = 225
+sprite_path = "bread.png"
 
-[[products.tiers]]
-id = 4
-name = "Birds"
-products = [
-    { name = "Egg", cost = 3375, sprite_path = "egg.png" },
-    { name = "Baby Chick", cost = 6751, sprite_path = "baby-chick.png" },
-    { name = "Duck", cost = 13504, sprite_path = "duck.png" },
-    { name = "Swan", cost = 27011, sprite_path = "swan.png" },
-    { name = "Owl", cost = 54027, sprite_path = "owl.png" },
-    { name = "Peacock", cost = 108062, sprite_path = "peacock.png" },
-    { name = "Eagle", cost = 216137, sprite_path = "eagle.png" },
-]
+[[items]]
+ref = "3.1"
+merge = "3.2"
+name = "Croissant"
+tier = "Bread"
+sell = 451
+sprite_path = "croissant.png"
 
-[[factories.tiers]]
-id = 101
-name = "Fruit factory"
-levels = [
-    { name = "Fruit fac lvl 1", cost_buy = [5], cost_sell = [3], time = 60, drops = [
-        { item = "1.0", chance = 0.95 },
-        { item = "1.1", chance = 0.04 },
-        { item = "2.0", chance = 0.01 },
-    ], sprite_path = "deciduous-tree.png" },
-    { name = "Fruit fac lvl 2", cost_sell = [6], time = 54, drops = [
-        { item = "1.0", chance = 0.90 },
-        { item = "1.1", chance = 0.06 },
-        { item = "1.2", chance = 0.01 },
-        { item = "2.0", chance = 0.03 },
-    ], sprite_path = "deciduous-tree.png" },
-    { name = "Fruit fac lvl 3", cost_sell = [12], time = 48, drops = [
-        { item = "1.0", chance = 0.77 },
-        { item = "1.1", chance = 0.16 },
-        { item = "1.2", chance = 0.02 },
-        { item = "2.0", chance = 0.05 },
-    ], sprite_path = "deciduous-tree.png" },
-    { name = "Fruit fac lvl 4", cost_sell = [24], time = 42, drops = [
-        { item = "1.0", chance = 0.62 },
-        { item = "1.1", chance = 0.28 },
-        { item = "1.2", chance = 0.03 },
-        { item = "2.0", chance = 0.07 },
-    ], sprite_path = "deciduous-tree.png" },
-    { name = "Fruit fac lvl 5", cost_sell = [48], time = 36, drops = [
-        { item = "1.0", chance = 0.33 },
-        { item = "1.1", chance = 0.50 },
-        { item = "1.2", chance = 0.05 },
-        { item = "1.3", chance = 0.01 },
-        { item = "2.0", chance = 0.10 },
-    ], sprite_path = "deciduous-tree.png" },
-    { name = "Fruit fac lvl 6", cost_sell = [96], time = 30, drops = [
-        { item = "1.1", chance = 0.72 },
-        { item = "1.2", chance = 0.08 },
-        { item = "1.3", chance = 0.03 },
-        { item = "2.0", chance = 0.16 },
-        { item = "2.1", chance = 0.01 },
-    ], sprite_path = "deciduous-tree.png" },
-    { name = "Fruit fac lvl 7", cost_sell = [192], time = 24, drops = [
-        { item = "1.1", chance = 0.59 },
-        { item = "1.2", chance = 0.13 },
-        { item = "1.3", chance = 0.05 },
-        { item = "2.0", chance = 0.20 },
-        { item = "2.1", chance = 0.03 },
-    ], sprite_path = "deciduous-tree.png" },
-]
+[[items]]
+ref = "3.2"
+merge = "3.3"
+name = "Baguette"
+tier = "Bread"
+sell = 904
+sprite_path = "baguette-bread.png"
 
-[[factories.tiers]]
-id = 102
-name = "Bread factory"
-levels = [
-    { name = "Bread fac lvl 1", cost_buy = [["2.4", 1]], cost_sell = [79], time = 60, drops = [
-        { item = "3.0", chance = 0.95 },
-        { item = "3.1", chance = 0.04 },
-        { item = "4.0", chance = 0.01 },
-    ], sprite_path = "chicken.png" },
-    { name = "Bread fac lvl 2", cost_sell = [158], time = 51, drops = [
-        { item = "3.0", chance = 0.87 },
-        { item = "3.1", chance = 0.09 },
-        { item = "3.2", chance = 0.01 },
-        { item = "4.0", chance = 0.03 },
-    ], sprite_path = "chicken.png" },
-    { name = "Bread fac lvl 3", cost_sell = [316], time = 42, drops = [
-        { item = "3.0", chance = 0.54 },
-        { item = "3.1", chance = 0.32 },
-        { item = "3.2", chance = 0.05 },
-        { item = "3.3", chance = 0.01 },
-        { item = "4.0", chance = 0.07 },
-        { item = "4.1", chance = 0.01 },
-    ], sprite_path = "chicken.png" },
-    { name = "Bread fac lvl 4", cost_sell = [732], time = 33, drops = [
-        { item = "3.0", chance = 0.28 },
-        { item = "3.1", chance = 0.50 },
-        { item = "3.2", chance = 0.07 },
-        { item = "3.3", chance = 0.03 },
-        { item = "4.0", chance = 0.10 },
-        { item = "4.1", chance = 0.02 },
-    ], sprite_path = "chicken.png" },
-    { name = "Bread fac lvl 5", cost_sell = [1464], time = 24, drops = [
-        { item = "3.1", chance = 0.42 },
-        { item = "3.2", chance = 0.18 },
-        { item = "3.3", chance = 0.13 },
-        { item = "4.0", chance = 0.22 },
-        { item = "4.1", chance = 0.05 },
-    ], sprite_path = "chicken.png" },
-]
+[[items]]
+ref = "3.3"
+merge = "3.4"
+name = "Flatbread"
+tier = "Bread"
+sell = 1809
+sprite_path = "flatbread.png"
 
-[defaults]
-money = 10
-energy = 5
-inventory = [
-    "1.0",
+[[items]]
+ref = "3.4"
+merge = "3.5"
+name = "Pretzel"
+tier = "Bread"
+sell = 3621
+sprite_path = "pretzel.png"
+
+[[items]]
+ref = "3.5"
+merge = "3.6"
+name = "Bagel"
+tier = "Bread"
+sell = 7247
+sprite_path = "bagel.png"
+
+[[items]]
+ref = "3.6"
+merge = "3.7"
+name = "Pancake"
+tier = "Bread"
+sell = 14502
+sprite_path = "pancakes.png"
+
+[[items]]
+ref = "3.7"
+merge = "3.8"
+name = "Waffle"
+tier = "Bread"
+sell = 29017
+sprite_path = "waffle.png"
+
+[[items]]
+ref = "3.8"
+name = "Fortune Cookie"
+tier = "Bread"
+sell = 58055
+sprite_path = "fortune-cookie.png"
+
+
+
+# Birds products
+
+[[items]]
+ref = "4.0"
+merge = "4.1"
+name = "Egg"
+tier = "Bird"
+sell = 3375
+sprite_path = "egg.png"
+
+[[items]]
+ref = "4.1"
+merge = "4.2"
+name = "Baby Chick"
+tier = "Bird"
+sell = 6751
+sprite_path = "baby-chick.png"
+
+[[items]]
+ref = "4.2"
+merge = "4.3"
+name = "Duck"
+tier = "Bird"
+sell = 13504
+sprite_path = "duck.png"
+
+[[items]]
+ref = "4.3"
+merge = "4.4"
+name = "Swan"
+tier = "Bird"
+sell = 27011
+sprite_path = "swan.png"
+
+[[items]]
+ref = "4.4"
+merge = "4.5"
+name = "Owl"
+tier = "Bird"
+sell = 54027
+sprite_path = "owl.png"
+
+[[items]]
+ref = "4.5"
+merge = "4.6"
+name = "Peacock"
+tier = "Bird"
+sell = 108062
+sprite_path = "peacock.png"
+
+[[items]]
+ref = "4.6"
+name = "Eagle"
+tier = "Bird"
+sell = 216137
+sprite_path = "eagle.png"
+
+
+
+# Fruit tree factory
+
+[[items]]
+ref = "101.0"
+merge = "101.1"
+name = "Fruit tree 1"
+tier = "Fruit tree"
+label = "1"
+buy = 5
+sell = 3
+drop_interval = 60
+drops = [
+    { item = "1.0", chance = 0.95 },
+    { item = "1.1", chance = 0.04 },
+    { item = "2.0", chance = 0.01 },
 ]
+sprite_path = "deciduous-tree.png"
+
+[[items]]
+ref = "101.1"
+merge = "101.2"
+name = "Fruit tree 2"
+tier = "Fruit tree"
+label = "2"
+sell = 6
+drop_interval = 54
+drops = [
+    { item = "1.0", chance = 0.90 },
+    { item = "1.1", chance = 0.06 },
+    { item = "1.2", chance = 0.01 },
+    { item = "2.0", chance = 0.03 },
+]
+sprite_path = "deciduous-tree.png"
+
+[[items]]
+ref = "101.2"
+merge = "101.3"
+name = "Fruit tree 3"
+tier = "Fruit tree"
+label = "3"
+sell = 12
+drop_interval = 48
+drops = [
+    { item = "1.0", chance = 0.77 },
+    { item = "1.1", chance = 0.16 },
+    { item = "1.2", chance = 0.02 },
+    { item = "2.0", chance = 0.05 },
+]
+sprite_path = "deciduous-tree.png"
+
+[[items]]
+ref = "101.3"
+merge = "101.4"
+name = "Fruit tree 4"
+tier = "Fruit tree"
+label = "4"
+sell = 24
+drop_interval = 42
+drops = [
+    { item = "1.0", chance = 0.62 },
+    { item = "1.1", chance = 0.28 },
+    { item = "1.2", chance = 0.03 },
+    { item = "2.0", chance = 0.07 },
+]
+sprite_path = "deciduous-tree.png"
+
+[[items]]
+ref = "101.4"
+merge = "101.5"
+name = "Fruit tree 5"
+tier = "Fruit tree"
+label = "5"
+sell = 48
+drop_interval = 36
+drops = [
+    { item = "1.0", chance = 0.33 },
+    { item = "1.1", chance = 0.50 },
+    { item = "1.2", chance = 0.05 },
+    { item = "1.3", chance = 0.01 },
+    { item = "2.0", chance = 0.10 },
+]
+sprite_path = "deciduous-tree.png"
+
+[[items]]
+ref = "101.5"
+merge = "101.6"
+name = "Fruit tree 6"
+tier = "Fruit tree"
+label = "6"
+sell = 96
+drop_interval = 30
+drops = [
+    { item = "1.1", chance = 0.72 },
+    { item = "1.2", chance = 0.08 },
+    { item = "1.3", chance = 0.03 },
+    { item = "2.0", chance = 0.16 },
+    { item = "2.1", chance = 0.01 },
+]
+sprite_path = "deciduous-tree.png"
+
+[[items]]
+ref = "101.6"
+name = "Fruit tree 7"
+tier = "Fruit tree"
+label = "7"
+sell = 192
+drop_interval = 24
+drops = [
+    { item = "1.1", chance = 0.59 },
+    { item = "1.2", chance = 0.13 },
+    { item = "1.3", chance = 0.05 },
+    { item = "2.0", chance = 0.20 },
+    { item = "2.1", chance = 0.03 },
+]
+sprite_path = "deciduous-tree.png"
+
+
+
+# Chicken factory
+
+[[items]]
+ref = "102.0"
+merge = "102.1"
+name = "Chicken 1"
+tier = "Chicken"
+label = "1"
+# TODO: buy cost [["2.4", 1]]
+buy = 1
+sell = 79
+drop_interval = 60
+drops = [
+    { item = "3.0", chance = 0.95 },
+    { item = "3.1", chance = 0.04 },
+    { item = "4.0", chance = 0.01 },
+]
+sprite_path = "chicken.png"
+
+[[items]]
+ref = "102.1"
+merge = "102.2"
+name = "Chicken 2"
+tier = "Chicken"
+label = "2"
+sell = 158
+drop_interval = 51
+drops = [
+    { item = "3.0", chance = 0.87 },
+    { item = "3.1", chance = 0.09 },
+    { item = "3.2", chance = 0.01 },
+    { item = "4.0", chance = 0.03 },
+]
+sprite_path = "chicken.png"
+
+[[items]]
+ref = "102.2"
+merge = "102.3"
+name = "Chicken 3"
+tier = "Chicken"
+label = "3"
+sell = 316
+drop_interval = 42
+drops = [
+    { item = "3.0", chance = 0.54 },
+    { item = "3.1", chance = 0.32 },
+    { item = "3.2", chance = 0.05 },
+    { item = "3.3", chance = 0.01 },
+    { item = "4.0", chance = 0.07 },
+    { item = "4.1", chance = 0.01 },
+]
+sprite_path = "chicken.png"
+
+[[items]]
+ref = "102.3"
+merge = "102.4"
+name = "Chicken 4"
+tier = "Chicken"
+label = "4"
+sell = 732
+drop_interval = 33
+drops = [
+    { item = "3.0", chance = 0.28 },
+    { item = "3.1", chance = 0.50 },
+    { item = "3.2", chance = 0.07 },
+    { item = "3.3", chance = 0.03 },
+    { item = "4.0", chance = 0.10 },
+    { item = "4.1", chance = 0.02 },
+]
+sprite_path = "chicken.png"
+
+[[items]]
+ref = "102.4"
+name = "Chicken 5"
+tier = "Chicken"
+label = "5"
+sell = 1464
+drop_interval = 24
+drops = [
+    { item = "3.1", chance = 0.42 },
+    { item = "3.2", chance = 0.18 },
+    { item = "3.3", chance = 0.13 },
+    { item = "4.0", chance = 0.22 },
+    { item = "4.1", chance = 0.05 },
+]
+sprite_path = "chicken.png"
