@@ -3,7 +3,7 @@
 tick_millis = 1000
 
 # Reset game state when starting server
-reset = false
+reset = true
 
 [[teams]]
 id = 1
@@ -39,6 +39,43 @@ password = "team6"
 id = 7
 name = "Team 7"
 password = "team7"
+
+# [[items]]
+# id = "1.0"
+# merge = "1.1"
+# tier = "Fruit"
+# name = "Apple"
+# buy = []
+# sell = 1
+# sprite_path = "red-apple.png"
+# drop_interval = 60
+# drops = [
+#     { item = "1.0", chance = 0.90 },
+#     { item = "1.1", chance = 0.10 },
+# ]
+
+[[items]]
+ref = "1.0"
+merge = "1.1"
+tier = "Fruit"
+name = "Apple"
+label = "FIRST"
+# buy = []
+sell = 1
+sprite_path = "red-apple.png"
+drop_interval = 3
+drops = [
+    { item = "1.1", chance = 0.95 },
+    { item = "1.1", chance = 0.04 },
+    { item = "1.1", chance = 0.01 },
+]
+
+[[items]]
+ref = "1.1"
+tier = "Fruit"
+name = "Banana"
+sell = 3
+sprite_path = "banana.png"
 
 [[products.tiers]]
 id = 1
@@ -199,7 +236,4 @@ money = 10
 energy = 5
 inventory = [
     "1.0",
-    "1.0",
-    "1.0",
-    "101.0",
 ]

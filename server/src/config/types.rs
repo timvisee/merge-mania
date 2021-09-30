@@ -23,6 +23,76 @@ pub struct ConfigTeam {
     pub password: String,
 }
 
+/// Game item configuration.
+// TODO: do not allow clone
+#[derive(Deserialize, Debug, Clone)]
+pub struct ConfigItemNew {
+    /// Unique item ID.
+    #[serde(rename = "ref")]
+    pub id: ItemRef,
+
+    /// Optional: merge into item ID.
+    pub merge: Option<ItemRef>,
+
+    /// Tier display name.
+    pub tier: String,
+
+    /// Item display name.
+    pub name: String,
+
+    /// Optional: label to render on client.
+    pub label: Option<String>,
+
+    /// Optional: if buyable, buy cost
+    pub buy: Option<u64>,
+
+    /// Sell price.
+    pub sell: u64,
+
+    /// Optional: drop item after number of ticks.
+    pub drop_interval: Option<u64>,
+
+    /// Optional: possible drops.
+    #[serde(default)]
+    pub drops: Vec<ConfigFactoryDrop>,
+
+    /// Sprite file path.
+    pub sprite_path: String,
+}
+
+impl ConfigItemNew {
+    /// Validate correctness.
+    pub fn validate(&self, config: &Config) -> Result<(), ()> {
+        // TODO: validate item is correct
+        // TODO: - unique ID
+        // TODO: - merge ID okay
+        // TODO: - no empty tier name / name / label
+        // TODO: - no drop interval for no drops
+        // TODO: - any drops if drop interval is convered
+        // TODO: - drop item IDs
+        // TODO: - sprite path must exist
+        Ok(())
+    }
+
+    /// Select a random drop.
+    ///
+    /// This takes chance configuration into account.
+    pub fn random_drop(&self) -> Option<ItemRef> {
+        let mut rng = rand::thread_rng();
+        let total = self.drops.iter().map(|d| d.chance).sum::<f64>();
+        let mut value = rng.gen::<f64>();
+
+        self.drops
+            .iter()
+            .skip_while(move |d| {
+                value -= d.chance;
+                value >= 0.0
+            })
+            .next()
+            .map(|d| d.item.clone())
+    }
+}
+
 #[derive(Deserialize, Debug)]
 pub struct ConfigProducts {
     pub tiers: Vec<ConfigProductTier>,
@@ -119,6 +189,7 @@ impl ConfigFactory {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct ConfigFactoryDrop {
+    /// Item to drop.
     pub item: ItemRef,
 
     /// Chance float.

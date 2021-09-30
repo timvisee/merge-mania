@@ -5,8 +5,8 @@ use serde::{Deserialize, Serialize};
 
 use super::Update;
 use crate::config::{
-    Config, ConfigFactory, ConfigFactoryTier, ConfigItem, ConfigProduct, ConfigProductTier,
-    ConfigTeam,
+    Config, ConfigFactory, ConfigFactoryTier, ConfigItem, ConfigItemNew, ConfigProduct,
+    ConfigProductTier, ConfigTeam,
 };
 use crate::types::ItemRef;
 use crate::util::{i_to_xy, xy_to_i};
@@ -29,7 +29,7 @@ pub struct GameTeam {
 
 impl GameTeam {
     /// Construct a new team.
-    pub fn new(tick: usize, config: &Config, id: u32) -> Self {
+    pub fn new(tick: u64, config: &Config, id: u32) -> Self {
         Self {
             id,
             inventory: GameInventory::from_config(tick, config)
@@ -46,8 +46,134 @@ impl GameTeam {
 }
 
 impl Update for GameTeam {
-    fn update(&mut self, config: &Config, tick: usize) -> bool {
+    fn update(&mut self, config: &Config, tick: u64) -> bool {
         self.inventory.update(config, tick)
+    }
+}
+
+/// Game item.
+#[derive(Serialize, Deserialize, Debug)]
+pub struct GameItemNew {
+    /// Item ID.
+    pub id: ItemRef,
+
+    /// Next drop tick.
+    tick: Option<u64>,
+
+    /// Item drop queue.
+    queue: VecDeque<ItemRef>,
+
+    #[serde(skip)]
+    pub config: Option<ConfigItemNew>,
+}
+
+impl GameItemNew {
+    /// Construct item from configuration.
+    ///
+    /// Current game `tick` must be given.
+    pub fn from_config(tick: u64, item: ConfigItemNew) -> Self {
+        Self {
+            id: item.id.clone(),
+            tick: item.drop_interval.map(|t| t + tick),
+            queue: Default::default(),
+            config: Some(item),
+        }
+    }
+
+    /// Attach configuration to this item.
+    fn attach_config(&mut self, config: &Config) -> Result<(), ()> {
+        match config.item(&self.id) {
+            Some(config) => {
+                self.config = Some(config.clone());
+                Ok(())
+            }
+            None => {
+                warn!("Failed to resolve config for item: {:?}", self.id);
+                Err(())
+            }
+        }
+    }
+
+    /// Check whether this is upgradable (mergeable).
+    pub fn can_upgrade(&self) -> bool {
+        self.config.as_ref().unwrap().merge.is_some()
+    }
+
+    /// Attempt to upgrade (merge) a level.
+    ///
+    /// Returns true on success, if something has changed, false otherwise.
+    #[must_use]
+    pub fn upgrade(&mut self, config: &Config) -> bool {
+        // Ensure we can upgrade
+        if !self.can_upgrade() {
+            return false;
+        }
+
+        // Find upgraded config item
+        let upgrade_id = match &self.config.as_ref().unwrap().merge {
+            Some(id) => id,
+            None => return false,
+        };
+        let item = match config.item(upgrade_id) {
+            Some(item) => item,
+            None => {
+                warn!(
+                    "Failed to resolve config for item upgrade: {:?}",
+                    upgrade_id
+                );
+                return false;
+            }
+        };
+
+        // TODO: update ticks!
+        // TODO: what to do with the queue?
+
+        self.id = item.id.clone();
+        self.config = Some(item.clone());
+        true
+    }
+
+    /// Attempt to add an item to the queue if there is sufficient queue space.
+    ///
+    /// Returns `false` if the item wasn't queued because there was no space.
+    #[must_use]
+    fn push_queue_drop(&mut self, item: ItemRef) -> bool {
+        if self.queue.len() < FACTORY_QUEUE_SIZE {
+            trace!("Add drop to factory queue: {:?}", item);
+            self.queue.push_back(item);
+            return true;
+        }
+        false
+    }
+
+    /// Pop an item from the drop queue if there is any.
+    #[must_use]
+    fn pop_queue_drop(&mut self) -> Option<ItemRef> {
+        self.queue.pop_front()
+    }
+}
+
+impl Update for GameItemNew {
+    fn update(&mut self, config: &Config, tick: u64) -> bool {
+        // Do nothing if there's no tick, or if we didn't reach it yet
+        if !self.tick.map(|t| t < tick).unwrap_or(false) {
+            return false;
+        }
+
+        // Update tick to next
+        self.tick = self
+            .config
+            .as_ref()
+            .unwrap()
+            .drop_interval
+            .map(|t| tick + t);
+
+        // Select config item to drop
+        let item = match self.config.as_ref().unwrap().random_drop() {
+            Some(item_ref) => item_ref,
+            None => return false,
+        };
+        self.push_queue_drop(item)
     }
 }
 
@@ -59,7 +185,7 @@ pub enum GameItem {
 }
 
 impl GameItem {
-    pub fn from_config(tick: usize, item: ConfigItem) -> Self {
+    pub fn from_config(tick: u64, item: ConfigItem) -> Self {
         match item {
             ConfigItem::Product(tier, item, level) => {
                 GameItem::Product(GameProduct::from_config(tier, level))
@@ -102,7 +228,7 @@ impl GameItem {
 }
 
 impl Update for GameItem {
-    fn update(&mut self, config: &Config, tick: usize) -> bool {
+    fn update(&mut self, config: &Config, tick: u64) -> bool {
         match self {
             GameItem::Product(_) => false,
             GameItem::Factory(factory) => factory.update(config, tick),
@@ -203,7 +329,7 @@ pub struct GameFactory {
     pub level: u16,
 
     /// Next drop tick.
-    tick: usize,
+    tick: u64,
 
     /// Item drop queue.
     // TODO: also serialize this
@@ -219,11 +345,11 @@ pub struct GameFactory {
 impl GameFactory {
     /// Construct from config.
     // TODO: return None for invalid level and no config item!
-    pub fn from_config(tick: usize, factory: ConfigFactoryTier, level: u16) -> Self {
+    pub fn from_config(tick: u64, factory: ConfigFactoryTier, level: u16) -> Self {
         Self {
             tier: factory.id,
             level,
-            tick: tick + factory.level(level).as_ref().unwrap().time as usize,
+            tick: tick + factory.level(level).as_ref().unwrap().time as u64,
             queue: VecDeque::default(),
             config_item: factory.level(level).cloned(),
             config_tier: Some(factory.clone()),
@@ -316,7 +442,7 @@ impl GameFactory {
 }
 
 impl Update for GameFactory {
-    fn update(&mut self, config: &Config, tick: usize) -> bool {
+    fn update(&mut self, config: &Config, tick: u64) -> bool {
         // We must have config
         if self.fetch_config(config).is_err() {
             return false;
@@ -329,7 +455,7 @@ impl Update for GameFactory {
         }
 
         // Update tick to next
-        self.tick = tick + self.config_item.as_ref().unwrap().time as usize;
+        self.tick = tick + self.config_item.as_ref().unwrap().time as u64;
 
         // Select config item to drop
         let item = match self.config_item.as_ref().unwrap().random_drop() {
@@ -364,7 +490,7 @@ impl GameInventory {
     /// Get a default inventory from configuration.
     ///
     /// Returns `None` on failure.
-    pub fn from_config(tick: usize, config: &Config) -> Option<Self> {
+    pub fn from_config(tick: u64, config: &Config) -> Option<Self> {
         Some(Self {
             money: config.defaults.money,
             energy: config.defaults.energy,
@@ -374,7 +500,7 @@ impl GameInventory {
 }
 
 impl Update for GameInventory {
-    fn update(&mut self, config: &Config, tick: usize) -> bool {
+    fn update(&mut self, config: &Config, tick: u64) -> bool {
         self.grid.update(config, tick)
     }
 }
@@ -389,7 +515,7 @@ impl GameInventoryGrid {
     /// Get a default inventory from configuration.
     ///
     /// Returns `None` on failure.
-    pub fn from_config(tick: usize, config: &Config) -> Option<Self> {
+    pub fn from_config(tick: u64, config: &Config) -> Option<Self> {
         let refs = &config.defaults.inventory;
 
         // Get config items from refs
@@ -530,7 +656,7 @@ impl GameInventoryGrid {
 }
 
 impl Update for GameInventoryGrid {
-    fn update(&mut self, config: &Config, tick: usize) -> bool {
+    fn update(&mut self, config: &Config, tick: u64) -> bool {
         for item in self.items.iter_mut() {
             match item {
                 Some(item) => {

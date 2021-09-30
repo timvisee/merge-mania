@@ -25,6 +25,51 @@ impl ClientTeam {
     }
 }
 
+/// Game item.
+#[derive(Serialize, Debug)]
+pub struct ClientItemNew {
+    /// Item ID.
+    #[serde(rename = "ref")]
+    pub id: ItemRef,
+
+    /// Tier display name.
+    pub tier: String,
+
+    /// Item display name.
+    pub name: String,
+
+    /// Optional: label to render on client.
+    pub label: Option<String>,
+
+    /// Sell price.
+    pub sell: u64,
+
+    /// Optional: drop item after number of ticks.
+    pub drop_interval: Option<u64>,
+
+    /// Sprite file path.
+    pub sprite: String,
+
+    /// Whether this item can be upgraded.
+    pub can_upgrade: bool,
+}
+
+impl ClientItemNew {
+    pub fn from_game(game: &GameItemNew) -> Result<Self, ()> {
+        let config = game.config.as_ref().unwrap();
+        Ok(Self {
+            id: game.id.clone(),
+            tier: config.tier.clone(),
+            name: config.name.clone(),
+            label: config.label.clone(),
+            sell: config.sell,
+            drop_interval: config.drop_interval.clone(),
+            sprite: config.sprite_path.clone(),
+            can_upgrade: game.can_upgrade(),
+        })
+    }
+}
+
 /// Inventory item.
 #[derive(Serialize, Debug)]
 pub enum ClientItem {

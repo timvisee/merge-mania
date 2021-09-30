@@ -1,4 +1,4 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 /// An amount of money or items.
 // TODO: find better name for this
@@ -14,7 +14,7 @@ pub enum Amount {
 
 /// Item reference.
 // TODO: don't use string, use integer properties instead
-#[derive(Deserialize, Debug, Clone, Hash)]
+#[derive(Serialize, Deserialize, Debug, Clone, Hash, PartialEq, Eq)]
 pub struct ItemRef(String);
 
 impl ItemRef {

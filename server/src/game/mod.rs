@@ -2,7 +2,7 @@ pub mod types;
 
 use std::fs;
 use std::path::PathBuf;
-use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Mutex, RwLock};
 
 use rand::Rng;
@@ -62,7 +62,7 @@ pub struct Game {
     pub running: bool,
 
     /// Current game tick.
-    tick: AtomicUsize,
+    tick: AtomicU64,
 
     /// Team state.
     pub teams: Vec<RwLock<GameTeam>>,
@@ -78,7 +78,7 @@ impl Game {
     }
 
     /// Get current game tick.
-    pub fn tick(&self) -> usize {
+    pub fn tick(&self) -> u64 {
         self.tick.load(Ordering::Relaxed)
     }
 
@@ -86,7 +86,7 @@ impl Game {
     ///
     /// This should be invoked from a game loop.
     /// Calls `update` on the full game state afterwards.
-    pub fn process_ticks(&self, state: &SharedState, ticks: usize) {
+    pub fn process_ticks(&self, state: &SharedState, ticks: u64) {
         trace!("Processing game tick");
 
         // Increase tick by 1
@@ -296,7 +296,7 @@ pub trait Update {
     /// Update this state upto the given tick.
     ///
     /// Return `true` if internally changed.
-    fn update(&mut self, config: &Config, tick: usize) -> bool;
+    fn update(&mut self, config: &Config, tick: u64) -> bool;
 }
 
 /// Broadcast current inventory state to team clients.
