@@ -6,10 +6,13 @@ use serde::{Deserialize, Serialize};
 #[serde(untagged)]
 pub enum Amount {
     /// Money amount.
-    Money(u64),
+    Money { money: u64 },
+
+    /// Energy amount.
+    Energy { energy: u64 },
 
     /// An item with quantity.
-    Item { item: ItemRef, quantity: u32 },
+    Item { item: ItemRef, quantity: u8 },
 }
 
 /// Item reference.

@@ -19,6 +19,7 @@ energy = 5
 inventory = [
     "1.0",
     "1.0",
+    "1.0",
     "101.0",
 ]
 
@@ -84,7 +85,9 @@ password = "team7"
 # # Optional: costs to buy item
 # buy = [
 #     # Pay money
-#     123,
+#     { money = 123 },
+#     # Pay energy
+#     { energy = 123 },
 #     # Pay an item
 #     { item = "2.4", quantity = 1 },
 # ]
@@ -446,7 +449,10 @@ merge = "101.1"
 name = "Fruit tree 1"
 tier = "Fruit tree"
 label = "1"
-buy = [5]
+buy = [
+    { money = 5 },
+    { energy = 1 },
+]
 sell = 3
 drop_interval = 60
 drops = [
@@ -566,6 +572,7 @@ tier = "Chicken"
 label = "1"
 buy = [
     { item = "2.4", quantity = 1 },
+    { energy = 1 },
 ]
 sell = 79
 drop_interval = 60
@@ -735,8 +742,9 @@ name = "Teacher 1"
 tier = "Nathematician"
 label = "1"
 buy = [
-    1000,
+    { money = 1000 },
     { item = "2.4", quantity = 1 },
+    { energy = 1 },
 ]
 sell = 1
 drop_interval = 300
@@ -865,7 +873,8 @@ name = "Full moon 1"
 tier = "Moons"
 label = "1"
 buy = [
-    10000,
+    { money = 10000 },
+    { energy = 1 },
 ]
 sell = 1
 drop_interval = 100
@@ -950,7 +959,10 @@ sprite_path = "ring.png"
 ref = "130.0"
 name = "Pick"
 tier = "Mining"
-buy = [10000]
+buy = [
+    { money = 10000 },
+    { energy = 1 },
+]
 sell = 9000
 drop_interval = 300
 drop_limit = 10

@@ -108,20 +108,3 @@ impl ClientInventoryGrid {
         Ok(Self { items })
     }
 }
-
-/// For given amounts, if all are money, get money sum.
-pub fn amount_only_money(amounts: &[Amount]) -> Option<u64> {
-    // All amounts must be money
-    if amounts.iter().all(|a| matches!(a, Amount::Money(_))) {
-        return Some(
-            amounts
-                .iter()
-                .map(|a| match a {
-                    Amount::Money(money) => money,
-                    _ => unreachable!(),
-                })
-                .sum(),
-        );
-    }
-    None
-}

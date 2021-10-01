@@ -494,7 +494,6 @@ span.subtle {
 
 .game-grid .cell.plus {
     background-image: url(/sprites/cell-plus.png);
-    background-clip: content-box;
     background-position: center;
     background-size: cover;
 }

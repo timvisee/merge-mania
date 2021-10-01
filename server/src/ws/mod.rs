@@ -222,7 +222,7 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
 }
 
 fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge) {
-    // TODO: log merge
+    debug!("Client {} invoked merge action", client_id);
 
     // Find client team ID
     let team_id = match state.clients.client_team_id(client_id) {
@@ -248,7 +248,7 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
 }
 
 fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
-    // TODO: log buy
+    debug!("Client {} invoked buy action", client_id);
 
     // Find client team ID
     let team_id = match state.clients.client_team_id(client_id) {
@@ -256,16 +256,26 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
         None => return,
     };
 
-    // TODO: ensure we can buy
-    // TODO: resolve item
-
     // Resolve item from config
     let item = match state.config.item(&action.item) {
         Some(item) => item,
         None => return,
     };
 
-    // Do buy, get inventory
+    // Get buy costs, cannot buy if no costs defined
+    let costs = match &item.buy {
+        Some(costs) => costs,
+        None => return,
+    };
+
+    // Pay amounts, send notification if not enough resources
+    if !state.game.team_pay(team_id, &state.config, costs) {
+        let msg = MsgSendKind::Toast(crate::lang::INSUFFICIENT_RESOURCES_TO_BUY.into());
+        send_to_client(&state, client_id, &msg.into());
+        return;
+    }
+
+    // Do buy, placing item in inventory, get inventory
     let mut inventory = match state
         .game
         .team_buy(team_id, &state.config, action.cell, item.clone())
@@ -280,7 +290,7 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
 }
 
 fn action_sell(state: &SharedState, client_id: usize, action: ClientActionSell) {
-    // TODO: log sell
+    debug!("Client {} invoked sell action", client_id);
 
     // Find client team ID
     let team_id = match state.clients.client_team_id(client_id) {

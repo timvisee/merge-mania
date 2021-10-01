@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use super::Update;
 use crate::config::{Config, ConfigItem, ConfigTeam};
-use crate::types::ItemRef;
+use crate::types::{Amount, ItemRef};
 use crate::util::{i_to_xy, xy_to_i};
 
 /// Maximum number of items in factory drop queue.
@@ -197,6 +197,45 @@ impl GameInventory {
             grid: GameInventoryGrid::from_config(tick, config)?,
         })
     }
+
+    /// Check whether the inventory contains the given amounts.
+    pub fn has_amounts(&self, amounts: &[Amount]) -> bool {
+        // TODO: fails if multiple amounts of same type are given, fix this!
+
+        amounts.iter().all(|amount| match amount {
+            Amount::Money { money } => self.money >= *money,
+            Amount::Energy { energy } => self.energy >= *energy,
+            Amount::Item { item, quantity } => self.grid.has_item_quantity(item, *quantity),
+        })
+    }
+
+    /// Remove the given amounts from the inventory.
+    ///
+    /// Returns `false` if the inventory doesn't have enough resources, in which case it isn't
+    /// modified.
+    pub fn remove_amounts(&mut self, amounts: &[Amount]) -> bool {
+        // User must have enough resources
+        if !self.has_amounts(amounts) {
+            return false;
+        }
+
+        // Remove all items from inventory
+        amounts.iter().for_each(|amount| match amount {
+            Amount::Money { money } => {
+                self.money -= money;
+            }
+            Amount::Energy { energy } => {
+                self.energy -= energy;
+            }
+            Amount::Item { item, quantity } => {
+                for _ in 0..*quantity {
+                    self.grid.remove_item(item);
+                }
+            }
+        });
+
+        true
+    }
 }
 
 impl Update for GameInventory {
@@ -242,6 +281,17 @@ impl GameInventoryGrid {
         Some(Self { items })
     }
 
+    /// Attach configuration.
+    fn attach_config(&mut self, config: &Config) -> Result<(), ()> {
+        for item in self.items.iter_mut() {
+            match item {
+                Some(item) => item.attach_config(config)?,
+                None => {}
+            }
+        }
+        Ok(())
+    }
+
     /// Get item at grid position.
     ///
     /// Is `None` if cell is empty.
@@ -266,6 +316,40 @@ impl GameInventoryGrid {
                 *self.get_at_mut(coord.0, coord.1) = Some(item);
                 true
             }
+            None => false,
+        }
+    }
+
+    /// Check whether the grid contains the given number of items.
+    pub fn has_item_quantity(&self, item: &ItemRef, quantity: u8) -> bool {
+        self.items
+            .iter()
+            .filter(|i| matches!(i, Some(i) if &i.id == item))
+            .take(quantity as usize)
+            .count()
+            >= quantity as usize
+    }
+
+    /// Remove an item from the grid.
+    ///
+    /// Returns `true` if succeeded.
+    pub fn remove_item(&mut self, item: &ItemRef) -> bool {
+        // TODO: use shared random source
+        let mut rng = rand::thread_rng();
+
+        // Find random cell index that holds this item
+        let index = self
+            .items
+            .iter()
+            .enumerate()
+            .cycle()
+            .skip(rng.gen_range(0..crate::INV_SIZE as usize))
+            .take(crate::INV_SIZE as usize)
+            .filter(|(_, i)| matches!(i, Some(i) if &i.id == item))
+            .map(|(i, _)| i)
+            .next();
+        match index {
+            Some(index) => self.items[index].take().is_some(),
             None => false,
         }
     }
@@ -348,17 +432,6 @@ impl GameInventoryGrid {
         }
 
         !items.is_empty()
-    }
-
-    /// Attach configuration.
-    fn attach_config(&mut self, config: &Config) -> Result<(), ()> {
-        for item in self.items.iter_mut() {
-            match item {
-                Some(item) => item.attach_config(config)?,
-                None => {}
-            }
-        }
-        Ok(())
     }
 }
 

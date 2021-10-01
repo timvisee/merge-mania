@@ -13,6 +13,7 @@ use tokio::time::{self, Duration};
 use crate::client::{ClientInventory, MsgSendKind};
 use crate::config::{Config, ConfigItem};
 use crate::state::SharedState;
+use crate::types::Amount;
 use crate::util::{i_to_xy, xy_to_i};
 use crate::ws;
 pub use types::*;
@@ -140,7 +141,7 @@ impl Game {
     ) -> Option<ClientInventory> {
         self.ensure_team(config, team_id);
         let teams = self.teams.read().unwrap();
-        let mut team = teams.get(&team_id)?.write().unwrap();
+        let mut team = teams.get(&team_id).unwrap().write().unwrap();
 
         // TODO: validate indices
         // TODO: ensure items are same type
@@ -159,6 +160,16 @@ impl Game {
         Some(inventory)
     }
 
+    /// Pay the given amounts.
+    pub fn team_pay(&self, team_id: u32, config: &Config, amounts: &[Amount]) -> bool {
+        self.ensure_team(config, team_id);
+        let teams = self.teams.read().unwrap();
+        let mut team = teams.get(&team_id).unwrap().write().unwrap();
+
+        // Remove inventory amounts
+        team.inventory.remove_amounts(amounts)
+    }
+
     /// Buy an item for a team.
     pub fn team_buy(
         &self,
@@ -169,7 +180,7 @@ impl Game {
     ) -> Option<ClientInventory> {
         self.ensure_team(config, team_id);
         let teams = self.teams.read().unwrap();
-        let mut team = teams.get(&team_id)?.write().unwrap();
+        let mut team = teams.get(&team_id).unwrap().write().unwrap();
 
         // TODO: validate indices
         // TODO: ensure user has costs, pay costs
@@ -192,7 +203,7 @@ impl Game {
     pub fn team_sell(&self, team_id: u32, config: &Config, cell: u8) -> Option<ClientInventory> {
         self.ensure_team(config, team_id);
         let teams = self.teams.read().unwrap();
-        let mut team = teams.get(&team_id)?.write().unwrap();
+        let mut team = teams.get(&team_id).unwrap().write().unwrap();
 
         // TODO: validate indices
 
