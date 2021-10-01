@@ -644,3 +644,279 @@ drops = [
     { item = "4.1", chance = 0.05 },
 ]
 sprite_path = "chicken.png"
+
+
+
+# Math / numbers
+
+[[items]]
+ref = "10.0"
+merge = "10.1"
+name = "One"
+tier = "Numbers"
+sell = 1
+sprite_path = "keycap-digit-one.png"
+
+[[items]]
+ref = "10.1"
+merge = "10.2"
+name = "Two"
+tier = "Numbers"
+sell = 1
+sprite_path = "keycap-digit-two.png"
+
+[[items]]
+ref = "10.2"
+merge = "10.3"
+name = "Three"
+tier = "Numbers"
+sell = 1
+sprite_path = "keycap-digit-three.png"
+
+[[items]]
+ref = "10.3"
+merge = "10.4"
+name = "Four"
+tier = "Numbers"
+sell = 1
+sprite_path = "keycap-digit-four.png"
+
+[[items]]
+ref = "10.4"
+merge = "10.5"
+name = "Five"
+tier = "Numbers"
+sell = 1
+sprite_path = "keycap-digit-five.png"
+
+[[items]]
+ref = "10.5"
+merge = "10.6"
+name = "Six"
+tier = "Numbers"
+sell = 1
+sprite_path = "keycap-digit-six.png"
+
+[[items]]
+ref = "10.6"
+merge = "10.7"
+name = "Seven"
+tier = "Numbers"
+sell = 1
+sprite_path = "keycap-digit-seven.png"
+
+[[items]]
+ref = "10.7"
+merge = "10.8"
+name = "Eight"
+tier = "Numbers"
+sell = 1
+sprite_path = "keycap-digit-eight.png"
+
+[[items]]
+ref = "10.8"
+merge = "10.9"
+name = "Nine"
+tier = "Numbers"
+sell = 1
+sprite_path = "keycap-digit-nine.png"
+
+[[items]]
+ref = "10.9"
+merge = "110.0"
+name = "Ten"
+tier = "Numbers"
+sell = 1
+sprite_path = "keycap-10.png"
+
+[[items]]
+ref = "110.0"
+merge = "110.1"
+name = "Teacher 1"
+tier = "Nathematician"
+label = "1"
+buy = [
+    1000,
+    { item = "2.4", quantity = 1 },
+]
+sell = 1
+drop_interval = 300
+drops = [
+    { item = "10.0", chance = 0.9 },
+    { item = "10.1", chance = 0.08 },
+    { item = "10.2", chance = 0.02 },
+]
+sprite_path = "man-teacher.png"
+
+[[items]]
+ref = "110.1"
+merge = "110.2"
+name = "Teacher 2"
+tier = "Nathematician"
+label = "2"
+sell = 1
+drop_interval = 250
+drops = [
+    { item = "10.2", chance = 0.9 },
+    { item = "10.3", chance = 0.08 },
+    { item = "10.4", chance = 0.02 },
+]
+sprite_path = "man-teacher.png"
+
+[[items]]
+ref = "110.2"
+merge = "110.3"
+name = "Teacher 4"
+tier = "Nathematician"
+label = "3"
+sell = 1
+drop_interval = 200
+drops = [
+    { item = "10.4", chance = 0.9 },
+    { item = "10.5", chance = 0.08 },
+    { item = "10.6", chance = 0.02 },
+]
+sprite_path = "man-teacher.png"
+
+[[items]]
+ref = "110.3"
+name = "Teacher 8"
+tier = "Nathematician"
+label = "Max"
+sell = 1
+drop_interval = 150
+drops = [
+    { item = "10.6", chance = 0.9 },
+    { item = "10.7", chance = 0.08 },
+    { item = "10.8", chance = 0.02 },
+]
+sprite_path = "man-teacher.png"
+
+
+
+# Moons
+
+[[items]]
+ref = "20.0"
+merge = "20.1"
+name = "Waxing Crescent"
+tier = "Moons"
+sell = 1
+sprite_path = "waxing-crescent-moon.png"
+
+[[items]]
+ref = "20.1"
+merge = "20.2"
+name = "First Quarter"
+tier = "Moons"
+sell = 1
+sprite_path = "first-quarter-moon.png"
+
+[[items]]
+ref = "20.2"
+merge = "20.2"
+name = "Waxing Gibbous"
+tier = "Moons"
+sell = 1
+sprite_path = "waxing-gibbous-moon.png"
+
+[[items]]
+ref = "20.3"
+merge = "20.4"
+name = "Full"
+tier = "Moons"
+sell = 1
+sprite_path = "full-moon.png"
+
+[[items]]
+ref = "20.4"
+merge = "20.5"
+name = "Waning Gibbous"
+tier = "Moons"
+sell = 1
+sprite_path = "waning-gibbous-moon.png"
+
+[[items]]
+ref = "20.5"
+merge = "20.6"
+name = "Last Quarter"
+tier = "Moons"
+sell = 1
+sprite_path = "last-quarter-moon.png"
+
+[[items]]
+ref = "20.6"
+merge = "20.7"
+name = "Waning Crescent"
+tier = "Moons"
+sell = 1
+sprite_path = "waning-crescent-moon.png"
+
+[[items]]
+ref = "20.7"
+name = "New"
+tier = "Moons"
+sell = 1
+sprite_path = "new-moon.png"
+
+[[items]]
+ref = "120.0"
+merge = "120.1"
+name = "Full moon 1"
+tier = "Moons"
+label = "1"
+buy = [
+    10000,
+]
+sell = 1
+drop_interval = 100
+drops = [
+    { item = "20.0", chance = 0.9 },
+    { item = "20.1", chance = 0.08 },
+    { item = "20.2", chance = 0.02 },
+]
+sprite_path = "full-moon-face.png"
+
+[[items]]
+ref = "120.1"
+merge = "120.2"
+name = "Full moon 2"
+tier = "Moons"
+label = "2"
+sell = 1
+drop_interval = 80
+drops = [
+    { item = "20.1", chance = 0.9 },
+    { item = "20.2", chance = 0.08 },
+    { item = "20.3", chance = 0.02 },
+]
+sprite_path = "full-moon-face.png"
+
+[[items]]
+ref = "120.2"
+merge = "120.3"
+name = "Full moon 3"
+tier = "Moons"
+label = "3"
+sell = 1
+drop_interval = 70
+drops = [
+    { item = "20.2", chance = 0.9 },
+    { item = "20.3", chance = 0.08 },
+    { item = "20.4", chance = 0.02 },
+]
+sprite_path = "full-moon-face.png"
+
+[[items]]
+ref = "120.3"
+name = "New moon"
+tier = "Moons"
+label = "Max"
+sell = 1
+drop_interval = 60
+drops = [
+    { item = "20.5", chance = 0.9 },
+    { item = "20.6", chance = 0.08 },
+    { item = "20.7", chance = 0.02 },
+]
+sprite_path = "new-moon-face.png"
