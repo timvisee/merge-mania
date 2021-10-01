@@ -95,25 +95,40 @@
             centered
             no-fade
         >
-            <div class="item-list">
+            <div class="buy-list">
                 <div
                     v-for="item in game.getBuyableItems()"
-                    class="item"
+                    class="entry"
                     @click.stop.prevent="selectBuyItem(item)"
                 >
-                    <img :src="'/sprites/' + item.sprite"
-                        :title="item.name"
-                        :alt="item.name"
-                        draggable="false"
-                    />
-                    <div class="overlay">
-                        <!-- TODO: better price rendering -->
-                        <div v-if="item.buy[0].item" class="sw">
-                            {{ item.buy[0].item }}x{{ item.buy[0].quantity }}
-                        </div>
-                        <div v-else class="sw">
-                            {{ item.buy[0] }}
-                        </div>
+                    <div class="item">
+                        <img :src="'/sprites/' + item.sprite"
+                            :title="item.name"
+                            :alt="item.name"
+                            draggable="false"
+                        />
+                    </div>
+
+                    <div class="details">
+                        <h1>{{ item.name }}</h1>
+
+                        Costs:
+                        <ul>
+                            <li v-if="item.buy" v-for="amount in Object.values(item.buy)">
+                                <span v-if="amount.money">{{ amount.money }} money</span>
+                                <span v-if="amount.energy">{{ amount.energy }} energy</span>
+                                <span v-if="amount.item">
+                                    <span v-if="amount.quantity > 1">{{ amount.quantity }}x }}</span>
+                                    <img :src="'/sprites/' + game.items[amount.item].sprite"
+                                        :title="game.items[amount.item].name"
+                                        :alt="game.items[amount.item].name"
+                                        draggable="false"
+                                        class="item tiny"
+                                    />
+                                    {{ game.items[amount.item].name }}
+                                </span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -135,7 +150,7 @@
             no-fade
         >
             <div v-if="selectedCell" class="text-center">
-                <div class="item-list">
+                <div class="tier-list">
                     <div
                         v-for="(item, index) in game.getDownUpgradeItems(selectedCell.ref)"
                         class="item"
@@ -540,16 +555,7 @@ span.subtle {
     bottom: -5px;
 }
 
-img.item.tiny {
-    width: 1.35em;
-    height: 1.35em;
-    display: inline;
-    text-align: text-top;
-    border: gray dashed 1px;
-    border-radius: 0.15em;
-}
-
-.item-list {
+.tier-list {
     margin: 0 auto 2em auto;
     display: flex;
     width: auto;
@@ -558,37 +564,85 @@ img.item.tiny {
     gap: 10px;
 }
 
-.item-list .item {
+.tier-list .item {
     /* TODO: responsive padding */
     padding:6px;
     border: gray dashed 1px;
     border-radius: 0.15em;
 }
 
-.item-list .item.highlight {
+.tier-list .item.highlight {
     background: #eb983c;
 }
 
-.item-list .item img {
+.tier-list .item img {
     width: 64px;
     aspect-ratio: 1;
 }
 
-.item-list .item .overlay {
+.tier-list .item .overlay {
     position: relative;
 }
 
-.item-list .item .overlay div {
+.tier-list .item .overlay div {
     font-weight: 900;
     font-size: 0.9em;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: white;
 }
 
-.item-list .item .overlay .sw {
+.tier-list .item .overlay .sw {
     position: absolute;
     left: 0;
     bottom: -5px;
+}
+
+.buy-list {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: 10px;
+}
+
+.buy-list .entry {
+    padding:6px;
+    border: gray dashed 1px;
+    border-radius: 0.15em;
+    display: flex;
+    align-content: stretch;
+    gap: 10px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.buy-list .entry > .item {
+    /* TODO: responsive padding */
+    padding:6px;
+    /* border: gray dashed 1px; */
+    border-radius: 0.15em;
+}
+
+.buy-list .entry > .item img {
+    width: 64px;
+    aspect-ratio: 1;
+}
+
+.buy-list .entry .details {
+    flex-grow: 1;
+    font-size: 0.8em;
+}
+
+.buy-list .entry .details h1 {
+    margin: 0 0 0.35em 0;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.buy-list .entry .details ul {
+    margin: 0;
+    padding: 0 0 0 1.5em;
 }
 
 ul.drops-list {
@@ -622,6 +676,16 @@ ul.drops-list {
 
 .toolbar {
     max-width: 70vh;
+}
+
+img.item.tiny {
+    width: 1.35em;
+    height: 1.35em;
+    display: inline;
+    text-align: text-top;
+    border: gray dashed 1px;
+    border-radius: 0.15em;
+    padding: 0.05em;
 }
 </style>
 
