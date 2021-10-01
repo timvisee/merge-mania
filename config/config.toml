@@ -920,3 +920,43 @@ drops = [
     { item = "20.7", chance = 0.02 },
 ]
 sprite_path = "new-moon-face.png"
+
+
+
+# Rocks diamonds
+
+[[items]]
+ref = "30.0"
+name = "Pet Rock"
+tier = "Useless"
+sell = 1
+sprite_path = "rock.png"
+
+[[items]]
+ref = "31.0"
+merge = "31.1"
+name = "Diamond"
+tier = "Gems"
+sell = 20000
+sprite_path = "gem-stone.png"
+
+[[items]]
+ref = "31.1"
+name = "Diamond Ring"
+tier = "Gems"
+sell = 50000
+sprite_path = "ring.png"
+
+[[items]]
+ref = "130.0"
+name = "Pick"
+tier = "Mining"
+buy = [10000]
+sell = 9000
+drop_interval = 300
+drop_limit = 10
+drops = [
+    { item = "30.0", chance = 0.9 },
+    { item = "31.0", chance = 0.1 },
+]
+sprite_path = "pick.png"
