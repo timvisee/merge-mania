@@ -359,11 +359,8 @@ export default {
     },
 
     actionScanCode() {
-        alert('not yet implemented');
-    },
-
-    actionCatalog() {
-        alert('not yet implemented');
+        // Send scan code action
+        this.$game.socket.send('action_scan_code', null);
     },
 
     /**

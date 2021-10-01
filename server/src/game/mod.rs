@@ -220,6 +220,24 @@ impl Game {
         Some(inventory)
     }
 
+    /// Scan a code for a team.
+    pub fn team_scan_code(&self, team_id: u32, config: &Config) -> Option<ClientInventory> {
+        self.ensure_team(config, team_id);
+        let teams = self.teams.read().unwrap();
+        let mut team = teams.get(&team_id).unwrap().write().unwrap();
+
+        // TODO: implement this!
+        warn!("Code scanning not yet implemented");
+
+        // Gain some money and energy for now
+        team.inventory.money += 10;
+        team.inventory.energy += 5;
+
+        let inventory = ClientInventory::from_game(&team.inventory)
+            .expect("failed to transpose game to client inventory");
+        Some(inventory)
+    }
+
     /// Load game state from file.
     pub fn load(config: &Config) -> Result<Self, ()> {
         // Load default if file doesn't exist

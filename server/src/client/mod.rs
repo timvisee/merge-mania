@@ -73,4 +73,7 @@ pub enum MsgRecvKind {
 
     /// Action: sell item at cell
     ActionSell(ClientActionSell),
+
+    /// Action: scan a code to gain energy.
+    ActionScanCode,
 }

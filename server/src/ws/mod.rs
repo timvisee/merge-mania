@@ -215,9 +215,7 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
         MsgRecvKind::ActionMerge(action) => action_merge(state, client_id, action),
         MsgRecvKind::ActionBuy(action) => action_buy(state, client_id, action),
         MsgRecvKind::ActionSell(action) => action_sell(state, client_id, action),
-        // _ => {
-        //     warn!("WS({}): unhandled client message: {:?}", client_id, msg);
-        // }
+        MsgRecvKind::ActionScanCode => action_scan_code(state, client_id),
     }
 }
 
@@ -307,6 +305,30 @@ fn action_sell(state: &SharedState, client_id: usize, action: ClientActionSell) 
     // Broadcast inventory state
     let msg = MsgSendKind::Inventory(inventory);
     send_to_team(&state, Some(client_id), team_id, &msg.into());
+}
+
+fn action_scan_code(state: &SharedState, client_id: usize) {
+    debug!("Client {} invoked scan code action", client_id);
+
+    // Find client team ID
+    let team_id = match state.clients.client_team_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // Run scan code action
+    let inventory = match state.game.team_scan_code(team_id, &state.config) {
+        Some(inventory) => inventory,
+        None => return,
+    };
+
+    // Broadcast inventory state
+    let msg = MsgSendKind::Inventory(inventory);
+    send_to_team(&state, Some(client_id), team_id, &msg.into());
+
+    // Send not yet implemented toast
+    let msg = MsgSendKind::Toast(crate::lang::NO_CODE_FREE_ENERGY.into());
+    send_to_client(&state, client_id, &msg.into());
 }
 
 /// Send message to client.
