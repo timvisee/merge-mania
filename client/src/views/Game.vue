@@ -18,7 +18,7 @@
             {{ game.inventory.money }}
         </h5>
 
-        <b-button-group class="tabs w-100" size="lg">
+        <b-button-group class="toolbar tabs w-100" size="lg">
             <b-button
                 type="button"
                 class="w-100"
@@ -79,19 +79,13 @@
             </div>
         </div>
 
-        <b-button-group class="w-100" size="lg">
+        <b-button-group class="toolbar w-100" size="lg">
             <b-button
                 type="button"
                 class="w-100"
                 variant="outline-dark"
                 @click.stop.prevent="actionScanCode"
                 squared>Scan code</b-button>
-            <b-button
-                type="button"
-                class="w-100"
-                variant="outline-dark"
-                @click.stop.prevent="actionCatalog"
-                squared>Catalog</b-button>
         </b-button-group>
 
         <!-- Buy modal -->
@@ -469,7 +463,7 @@ span.subtle {
     max-height: 70vh;
 
     border: black solid 1px;
-    box-sizing: content-box;
+    box-sizing: border-box;
     background: #eee;
 
     -webkit-user-select: none;
@@ -510,7 +504,7 @@ span.subtle {
 }
 
 .game-grid .cell.subtle {
-    opacity: 0.5;
+    opacity: 0.3;
 }
 
 .game-grid .cell img {
@@ -626,6 +620,10 @@ ul.drops-list {
     font-weight: bold;
     text-align: right;
 }
+
+.toolbar {
+    max-width: 70vh;
+}
 </style>
 
 <style>
@@ -638,8 +636,8 @@ body {
 }
 
 /* Patch to fix inactive mode button staying highlighted on mobile */
-.tabs .btn-outline-dark:not(.disabled):not(.active):hover,
-.tabs .btn-outline-dark:not(.disabled):not(.active):active {
+.toolbar.tabs .btn-outline-dark:not(.disabled):not(.active):hover,
+.toolbar.tabs .btn-outline-dark:not(.disabled):not(.active):active {
     background: transparent !important;
     color: #343a40 !important;
     border-color: #343a40 !important;
