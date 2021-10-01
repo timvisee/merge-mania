@@ -25,12 +25,6 @@ impl State {
             Game::load(&config).expect("failed to load game state")
         };
 
-        // Add team if it doesn't exist yet
-        // TODO: don't do this, load on demand!
-        if game.teams.is_empty() {
-            game.add_team(&config, 1);
-        }
-
         State {
             config,
             sessions: SessionManager::load().expect("failed to load session manager"),

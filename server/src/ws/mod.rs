@@ -147,7 +147,7 @@ async fn send_initial(state: SharedState, client_id: usize) {
     };
 
     // Get team client inventory
-    let inventory = match state.game.team_client_inventory(team_id) {
+    let inventory = match state.game.team_client_inventory(&state.config, team_id) {
         Some(inv) => inv,
         None => return,
     };

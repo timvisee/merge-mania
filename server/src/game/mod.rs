@@ -1,5 +1,6 @@
 pub mod types;
 
+use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -65,16 +66,25 @@ pub struct Game {
     tick: AtomicU64,
 
     /// Team state.
-    pub teams: Vec<RwLock<GameTeam>>,
+    // TODO: use better structure here, add team getter
+    pub teams: RwLock<HashMap<u32, RwLock<GameTeam>>>,
 }
 
 impl Game {
+    /// Make sure a given team is loaded, load it otherwise.
+    pub fn ensure_team(&self, config: &Config, team_id: u32) {
+        if !self.teams.read().unwrap().contains_key(&team_id) {
+            self.add_team(config, team_id);
+        }
+    }
+
     /// Add a new team.
-    pub fn add_team(&mut self, config: &Config, team_id: u32) {
-        // TODO: dynamically load team when data is requested
-        // TODO: ensure team isn't added multiple times
+    fn add_team(&self, config: &Config, team_id: u32) {
         let team = GameTeam::new(self.tick(), config, team_id);
-        self.teams.push(RwLock::new(team));
+        self.teams
+            .write()
+            .unwrap()
+            .insert(team_id, RwLock::new(team));
     }
 
     /// Get current game tick.
@@ -94,7 +104,7 @@ impl Game {
 
         // Update each team
         let mut changed = false;
-        for team in self.teams.iter() {
+        for team in self.teams.read().unwrap().values() {
             let mut team = team.write().unwrap();
             let team_changed = team.update(&state.config, tick);
 
@@ -111,13 +121,10 @@ impl Game {
     }
 
     /// Get the team client inventory.
-    pub fn team_client_inventory(&self, team_id: u32) -> Option<ClientInventory> {
-        let team = self
-            .teams
-            .iter()
-            .map(|t| t.read().unwrap())
-            .filter(|t| t.id == team_id)
-            .next()?;
+    pub fn team_client_inventory(&self, config: &Config, team_id: u32) -> Option<ClientInventory> {
+        self.ensure_team(config, team_id);
+        let teams = self.teams.read().unwrap();
+        let team = teams.get(&team_id)?.read().unwrap();
         let inventory = ClientInventory::from_game(&team.inventory)
             .expect("failed to transpose game to client inventory");
         Some(inventory)
@@ -131,12 +138,9 @@ impl Game {
         cell: u8,
         other: u8,
     ) -> Option<ClientInventory> {
-        let mut team = self
-            .teams
-            .iter()
-            .map(|t| t.write().unwrap())
-            .filter(|t| t.id == team_id)
-            .next()?;
+        self.ensure_team(config, team_id);
+        let teams = self.teams.read().unwrap();
+        let mut team = teams.get(&team_id)?.write().unwrap();
 
         // TODO: validate indices
         // TODO: ensure items are same type
@@ -163,12 +167,9 @@ impl Game {
         cell: u8,
         item: ConfigItem,
     ) -> Option<ClientInventory> {
-        let mut team = self
-            .teams
-            .iter()
-            .map(|t| t.write().unwrap())
-            .filter(|t| t.id == team_id)
-            .next()?;
+        self.ensure_team(config, team_id);
+        let teams = self.teams.read().unwrap();
+        let mut team = teams.get(&team_id)?.write().unwrap();
 
         // TODO: validate indices
         // TODO: ensure user has costs, pay costs
@@ -189,12 +190,9 @@ impl Game {
 
     /// Sell an item for a team.
     pub fn team_sell(&self, team_id: u32, config: &Config, cell: u8) -> Option<ClientInventory> {
-        let mut team = self
-            .teams
-            .iter()
-            .map(|t| t.write().unwrap())
-            .filter(|t| t.id == team_id)
-            .next()?;
+        self.ensure_team(config, team_id);
+        let teams = self.teams.read().unwrap();
+        let mut team = teams.get(&team_id)?.write().unwrap();
 
         // TODO: validate indices
 
@@ -279,7 +277,7 @@ impl Game {
 
     /// Attach configuration.
     pub fn attach_config(&mut self, config: &Config) -> Result<(), ()> {
-        for team in self.teams.iter() {
+        for team in self.teams.read().unwrap().values() {
             let mut team = team.write().unwrap();
             team.attach_config(config)?;
         }
