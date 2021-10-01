@@ -7,6 +7,9 @@ export default {
     // Game state.
     game: null,
 
+    // Vue context.
+    vueContext: null,
+
     /**
      * Start new connection.
      */
@@ -38,6 +41,13 @@ export default {
      * Send a message over the socket.
      */
     send(kind, data) {
+        // Socket must be active
+        if(this.socket === null) {
+            console.log('[ws] Failed to send message, socket is null');
+            return;
+        }
+
+        // Send message
         this.socket.send(JSON.stringify({
             status: 'ok',
             kind,
@@ -74,6 +84,16 @@ export default {
 
             case 'config_items':
                 this.game.items = data.data;
+                break;
+
+            case 'toast':
+                this.vueContext.$bvToast.toast(data.data, {
+                    title: 'Notification',
+                    autoHideDelay: 3000,
+                    variant: 'warning',
+                    solid: true,
+                    appendToast: false,
+                })
                 break;
 
             default:

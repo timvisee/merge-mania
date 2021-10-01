@@ -55,6 +55,9 @@ pub enum MsgSendKind {
 
     /// Inventory state for current client team.
     Inventory(ClientInventory),
+
+    /// Toast notification.
+    Toast(String),
 }
 
 /// Message kinds to receive from a client.

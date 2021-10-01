@@ -16,11 +16,12 @@ export default {
     socket: null,
 
     // Initialize.
-    init() {
+    init(vueContext) {
         this.ready = false;
 
         // TODO: construct fresh socket!
         this.socket = ws;
+        this.socket.vueContext = vueContext;
         this.socket.connect(this);
     },
 

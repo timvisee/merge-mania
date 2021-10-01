@@ -220,7 +220,7 @@ export default {
         .isAuth()
         .then((auth) => {
             if(auth)
-                this.$game.init();
+                this.$game.init(this);
             else
                 this.redirectToLogin();
         });
