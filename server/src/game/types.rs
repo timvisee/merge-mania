@@ -71,7 +71,7 @@ impl GameItem {
     pub fn from_config(tick: u64, item: ConfigItem) -> Self {
         Self {
             id: item.id.clone(),
-            tick: item.drop_interval.map(|t| t + tick),
+            tick: item.drop_interval.map(|t| tick + t),
             queue: Default::default(),
             config: Some(item),
         }
@@ -122,11 +122,15 @@ impl GameItem {
             }
         };
 
-        // TODO: update ticks!
         // TODO: what to do with the queue?
 
         self.id = item.id.clone();
         self.config = Some(item.clone());
+
+        // TODO: update ticks!
+        // TODO: set to current game tick to instantly drop, instead of 0!
+        self.tick = item.drop_interval.map(|_| 0);
+
         true
     }
 
