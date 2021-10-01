@@ -37,7 +37,8 @@ export default {
     // Returns array of items configurations.
     getBuyableItems() {
         return Object.values(this.items)
-            .filter(i => i.buy !== null && i.buy !== undefined);
+            .filter(i => i.buy !== null && i.buy !== undefined)
+            .sort((a, b) => parseInt(a.ref.split('.')[0]) - parseInt(b.ref.split('.')[0]));
     },
 
     /// Find the item before the given reference.

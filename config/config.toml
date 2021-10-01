@@ -446,7 +446,7 @@ sprite_path = "eagle.png"
 [[items]]
 ref = "101.0"
 merge = "101.1"
-name = "Fruit tree 1"
+name = "Fruit tree"
 tier = "Fruit tree"
 label = "1"
 buy = [
@@ -567,7 +567,7 @@ sprite_path = "deciduous-tree.png"
 [[items]]
 ref = "102.0"
 merge = "102.1"
-name = "Chicken 1"
+name = "Chicken"
 tier = "Chicken"
 label = "1"
 buy = [
@@ -738,7 +738,7 @@ sprite_path = "keycap-10.png"
 [[items]]
 ref = "110.0"
 merge = "110.1"
-name = "Teacher 1"
+name = "Teacher"
 tier = "Nathematician"
 label = "1"
 buy = [
@@ -869,7 +869,7 @@ sprite_path = "new-moon.png"
 [[items]]
 ref = "120.0"
 merge = "120.1"
-name = "Full moon 1"
+name = "Full moon"
 tier = "Moons"
 label = "1"
 buy = [
