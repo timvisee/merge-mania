@@ -65,6 +65,9 @@ pub struct ConfigItem {
     /// Optional: drop item after number of ticks.
     pub drop_interval: Option<u64>,
 
+    /// Optional: maximum number of drops before destruction.
+    pub drop_limit: Option<u32>,
+
     /// Optional: possible drops.
     #[serde(default)]
     pub drops: Vec<ConfigDrop>,

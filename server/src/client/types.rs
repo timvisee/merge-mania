@@ -45,6 +45,9 @@ pub struct ClientItem {
     /// Optional: drop item after number of ticks.
     pub drop_interval: Option<u64>,
 
+    /// Optional: maximum number of drops before destruction.
+    pub drop_limit: Option<u32>,
+
     /// Sprite file path.
     pub sprite: String,
 
@@ -62,6 +65,7 @@ impl ClientItem {
             label: config.label.clone(),
             sell: config.sell,
             drop_interval: config.drop_interval.clone(),
+            drop_limit: config.drop_limit.clone(),
             sprite: config.sprite_path.clone(),
             mergeable: game.can_upgrade(),
         })

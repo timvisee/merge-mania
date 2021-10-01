@@ -181,6 +181,7 @@
                     <tr><td>Tier:</td><td>{{ selectedCell.tier }}</td></tr>
                     <tr v-if="selectedCell.label"><td>Label:</td><td>{{ selectedCell.label }}</td></tr>
                     <tr v-if="selectedCell.drop_interval"><td>Production speed:</td><td><span class="subtle">1 / </span>{{ selectedCell.drop_interval }} ticks</td></tr>
+                    <tr v-if="selectedCell.drop_limit"><td>Drops:</td><td>{{ selectedCell.drop_limit}} <span class="subtle"> times</span></td></tr>
                     <tr v-if="selectedCell.drop_interval">
                         <td>Drops:</td>
                         <td>

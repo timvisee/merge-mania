@@ -101,6 +101,9 @@ password = "team7"
 # # Optional: drop interval in number of ticks
 # drop_interval = 60
 #
+# # Optional: destroy item after number of drops
+# drop_limit = 10
+#
 # # Optional: list of items that may be dropped
 # drops = [
 #     { item = "1.0", chance = 0.90 },
@@ -961,7 +964,7 @@ name = "Pick"
 tier = "Mining"
 buy = [
     { money = 10000 },
-    { energy = 1 },
+    { energy = 5 },
 ]
 sell = 9000
 drop_interval = 300

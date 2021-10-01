@@ -57,6 +57,9 @@ pub struct GameItem {
     /// Next drop tick.
     tick: Option<u64>,
 
+    /// Number of times left to drop.
+    drop_limit: Option<u32>,
+
     /// Item drop queue.
     queue: VecDeque<ItemRef>,
 
@@ -72,6 +75,7 @@ impl GameItem {
         Self {
             id: item.id.clone(),
             tick: item.drop_interval.map(|t| tick + t),
+            drop_limit: item.drop_limit.clone(),
             queue: Default::default(),
             config: Some(item),
         }
@@ -174,7 +178,16 @@ impl Update for GameItem {
             Some(item_ref) => item_ref,
             None => return false,
         };
-        self.push_queue_drop(item)
+        if !self.push_queue_drop(item) {
+            return false;
+        }
+
+        // Decrease drop limit
+        if let Some(limit) = self.drop_limit.as_mut() {
+            *limit -= 1;
+        }
+
+        true
     }
 }
 
@@ -433,6 +446,26 @@ impl GameInventoryGrid {
 
         !items.is_empty()
     }
+
+    /// Remove items that reached their drop limit.
+    fn remove_drop_limit_items(&mut self, config: &Config) -> bool {
+        let mut changed = false;
+        for item in &mut self.items {
+            match item {
+                Some(i) => match i.drop_limit {
+                    Some(limit) if limit <= 0 => {
+                        // This item reached it limit, remove it
+                        // TODO: do we need a special item remove routine?
+                        *item = None;
+                        changed = true;
+                    }
+                    _ => {}
+                },
+                None => {}
+            }
+        }
+        changed
+    }
 }
 
 impl Update for GameInventoryGrid {
@@ -445,7 +478,12 @@ impl Update for GameInventoryGrid {
         }
 
         // Place queued factory items onto field
-        self.place_queue_items(config, tick)
+        let mut changed = self.place_queue_items(config, tick);
+
+        // Remove items that reached their drop limit
+        changed = self.remove_drop_limit_items(config) || changed;
+
+        changed
     }
 }
 
