@@ -134,15 +134,19 @@ export default {
     // Game state may be come inconsistent, but we should receive the game state
     // from the server shortly which will fix this.
     premoveUpgrade(index) {
-        // Get the upgraded reference
+        // Get the upgrade item
         let ref = this.items[this.inventory.items[index].ref].merge;
-        if(ref === null || ref === undefined)
+        let item = this.items[ref];
+        if(item === null || item === undefined)
             return;
 
         // Place upgraded item, set temporary sync label
-        // TODO: remove sync label
-        this.premovePlace(index, ref);
+        this.inventory.items[index].ref = item.ref;
+        this.inventory.items[index].name = item.name;
+        this.inventory.items[index].tier = item.tier;
         this.inventory.items[index].label = 'sync';
+        // TODO: use this instead: this.inventory.items[index].label = item.label;
+        this.inventory.items[index].sprite = item.sprite;
     },
 
     // Premove the items at the given indices, swap them.
