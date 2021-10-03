@@ -131,6 +131,31 @@ impl Game {
         Some(inventory)
     }
 
+    /// Swap two items for a team.
+    pub fn team_swap(
+        &self,
+        team_id: u32,
+        config: &Config,
+        cell: u8,
+        other: u8,
+    ) -> Option<ClientInventory> {
+        self.ensure_team(config, team_id);
+        let teams = self.teams.read().unwrap();
+        let mut team = teams.get(&team_id).unwrap().write().unwrap();
+
+        // TODO: validate indices
+        // TODO: ensure first cell contains item
+
+        // Swap cells
+        let tmp = team.inventory.grid.items[cell as usize].take();
+        team.inventory.grid.items[cell as usize] = team.inventory.grid.items[other as usize].take();
+        team.inventory.grid.items[other as usize] = tmp;
+
+        let inventory = ClientInventory::from_game(&team.inventory)
+            .expect("failed to transpose game to client inventory");
+        Some(inventory)
+    }
+
     /// Merge two items for a team.
     pub fn team_merge(
         &self,

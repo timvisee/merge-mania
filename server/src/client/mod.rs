@@ -65,6 +65,9 @@ pub enum MsgSendKind {
 #[serde(tag = "kind", content = "data", rename_all = "snake_case")]
 pub enum MsgRecvKind {
     // TODO: kind for authentication token
+    /// Action: swap two cells
+    ActionSwap(ClientActionSwap),
+
     /// Action: merge two cells
     ActionMerge(ClientActionMerge),
 

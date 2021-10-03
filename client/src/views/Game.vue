@@ -262,10 +262,26 @@ export default {
      * Toggle selection of given cell index.
      */
     toggleSelect(index) {
-        // In merge mode, merge when selecting second one
-        if(this.selected !== null && index !== null && this.selected !== index && this.mode == 'merge' && this.canMerge(index)) {
-            this.actionMerge(this.selected, index);
-            return;
+        // When selecting second cell, merge or swap
+        if(this.selected !== null && index !== null && this.selected !== index) {
+            switch(this.mode) {
+                // Merge
+                case 'merge':
+                    if(this.canMerge(index)) {
+                        this.actionMerge(this.selected, index);
+                        return;
+                    }
+                    break;
+
+                // Swap
+                case null:
+                    if(this.hasItem(this.selected)) {
+                        this.actionSwap(this.selected, index);
+                        return;
+                    }
+
+                default:
+            }
         }
 
         // Update selected
@@ -287,6 +303,22 @@ export default {
         }
     },
 
+    actionSwap(index, otherIndex) {
+        // First index must be an item
+        if(!this.hasItem(index))
+            return;
+
+        // Send merge action
+        this.$game.socket.send('action_swap', {
+            cell: index,
+            other: otherIndex,
+        });
+
+        // Premove swap on client, clear selection
+        this.$game.premoveSwap(index, otherIndex);
+        this.selected = null;
+    },
+
     actionMerge(index, otherIndex) {
         // We must merge two items
         // TODO: do not allow to merge items of different types
@@ -299,8 +331,8 @@ export default {
             other: index,
         });
 
-        // Reset selection, clear cell for instant feedback
-        this.$game.inventory.items[index] = null;
+        // Premove remove and merge on client, clear selection
+        this.$game.premoveMerge(otherIndex, index);
         this.selected = null;
     },
 
@@ -332,6 +364,8 @@ export default {
             cell: index,
             item: this.buyItem.ref,
         });
+
+        // TODO: premove item into grid
     },
 
     actionSell(index) {
@@ -345,7 +379,7 @@ export default {
         });
 
         // Reset selection, clear cell for instant feedback
-        this.$game.inventory.items[index] = null;
+        this.$game.premoveRemove(index);
         this.selected = null;
     },
 

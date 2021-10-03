@@ -2,6 +2,13 @@ use serde::Deserialize;
 
 use crate::types::ItemRef;
 
+/// Client action: swap two cells.
+#[derive(Deserialize, Debug)]
+pub struct ClientActionSwap {
+    pub cell: u8,
+    pub other: u8,
+}
+
 /// Client action: merge two cells.
 #[derive(Deserialize, Debug)]
 pub struct ClientActionMerge {

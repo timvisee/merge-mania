@@ -12,8 +12,8 @@ use warp::Filter;
 
 use crate::auth::{generate_client_id, Client, Session};
 use crate::client::{
-    ClientActionBuy, ClientActionMerge, ClientActionSell, MsgRecv, MsgRecvKind, MsgSend,
-    MsgSendKind,
+    ClientActionBuy, ClientActionMerge, ClientActionSell, ClientActionSwap, MsgRecv, MsgRecvKind,
+    MsgSend, MsgSendKind,
 };
 use crate::state::SharedState;
 
@@ -212,11 +212,36 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
 
     // Handle specific message
     match msg {
+        MsgRecvKind::ActionSwap(action) => action_swap(state, client_id, action),
         MsgRecvKind::ActionMerge(action) => action_merge(state, client_id, action),
         MsgRecvKind::ActionBuy(action) => action_buy(state, client_id, action),
         MsgRecvKind::ActionSell(action) => action_sell(state, client_id, action),
         MsgRecvKind::ActionScanCode => action_scan_code(state, client_id),
     }
+}
+
+fn action_swap(state: &SharedState, client_id: usize, action: ClientActionSwap) {
+    debug!("Client {} invoked swap action", client_id);
+
+    // Find client team ID
+    let team_id = match state.clients.client_team_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // Do swap, get inventory
+    let mut inventory =
+        match state
+            .game
+            .team_swap(team_id, &state.config, action.cell, action.other)
+        {
+            Some(inv) => inv,
+            None => return,
+        };
+
+    // Broadcast inventory state
+    let msg = MsgSendKind::Inventory(inventory);
+    send_to_team(&state, Some(client_id), team_id, &msg.into());
 }
 
 fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge) {

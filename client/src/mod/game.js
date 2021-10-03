@@ -90,4 +90,53 @@ export default {
             return [merge_item].concat(after);
         return after;
     },
+
+    // Premove the item at the given index, remove it.
+    //
+    // Game state may be come inconsistent, but we should receive the game state
+    // from the server shortly which will fix this.
+    premoveRemove(index) {
+        this.inventory.items[index] = null;
+    },
+
+    // Premove the items at the given indices, merge other into index.
+    //
+    // Game state may be come inconsistent, but we should receive the game state
+    // from the server shortly which will fix this.
+    premoveMerge(index, otherIndex) {
+        this.premoveUpgrade(index);
+        this.premoveRemove(otherIndex);
+    },
+
+    // Premove the item at the given index, upgrade it a level.
+    //
+    // Game state may be come inconsistent, but we should receive the game state
+    // from the server shortly which will fix this.
+    premoveUpgrade(index) {
+        // Get the upgrade item
+        let ref = this.items[this.inventory.items[index].ref].merge;
+        if(ref === null || ref === undefined)
+            return;
+        let item = this.items[ref];
+        if(item === null || item === undefined)
+            return;
+
+        // Set upgraded values
+        this.inventory.items[index].ref = item.ref;
+        this.inventory.items[index].name = item.name;
+        this.inventory.items[index].tier = item.tier;
+        this.inventory.items[index].label = 'sync';
+        // TODO: use this instead: this.inventory.items[index].label = item.label;
+        this.inventory.items[index].sprite = item.sprite;
+    },
+
+    // Premove the items at the given indices, swap them.
+    //
+    // Game state may be come inconsistent, but we should receive the game state
+    // from the server shortly which will fix this.
+    premoveSwap(index, otherIndex) {
+        let tmp = this.inventory.items[index];
+        this.inventory.items[index] = this.inventory.items[otherIndex];
+        this.inventory.items[otherIndex] = tmp;
+    },
 };
