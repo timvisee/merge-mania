@@ -360,12 +360,15 @@ export default {
             return;
 
         // Send buy action
+        let ref = this.buyItem.ref;
         this.$game.socket.send('action_buy', {
             cell: index,
-            item: this.buyItem.ref,
+            item: ref,
         });
 
-        // TODO: premove item into grid
+        // Reset selection, premove placement for instant feedback
+        this.$game.premovePlace(index, ref);
+        this.selected = null;
     },
 
     actionSell(index) {

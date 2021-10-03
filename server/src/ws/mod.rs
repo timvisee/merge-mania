@@ -295,6 +295,14 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
     if !state.game.team_pay(team_id, &state.config, costs) {
         let msg = MsgSendKind::Toast(crate::lang::INSUFFICIENT_RESOURCES_TO_BUY.into());
         send_to_client(&state, client_id, &msg.into());
+
+        // Broadcast inventory state to reset client state
+        let inventory = state.game.team_client_inventory(&state.config, team_id);
+        if let Some(inventory) = inventory {
+            let msg = MsgSendKind::Inventory(inventory);
+            send_to_team(&state, Some(client_id), team_id, &msg.into());
+        }
+
         return;
     }
 

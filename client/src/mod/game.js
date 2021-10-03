@@ -108,26 +108,41 @@ export default {
         this.premoveRemove(otherIndex);
     },
 
+    /// Remove the item at the given index, place item with given reference.
+    premovePlace(index, ref) {
+        // Get the item
+        let item = this.items[ref];
+        if(item === null || item === undefined)
+            return;
+
+        // Instantiate item
+        this.inventory.items[index] = {
+            ref: item.ref,
+            name: item.name,
+            tier: item.tier,
+            label: item.label,
+            sell: item.sell,
+            drop_interval: item.drop_interval,
+            drop_limit: item.drop_limit,
+            sprite: item.sprite,
+            mergeable: item.merge !== null,
+        };
+    },
+
     // Premove the item at the given index, upgrade it a level.
     //
     // Game state may be come inconsistent, but we should receive the game state
     // from the server shortly which will fix this.
     premoveUpgrade(index) {
-        // Get the upgrade item
+        // Get the upgraded reference
         let ref = this.items[this.inventory.items[index].ref].merge;
         if(ref === null || ref === undefined)
             return;
-        let item = this.items[ref];
-        if(item === null || item === undefined)
-            return;
 
-        // Set upgraded values
-        this.inventory.items[index].ref = item.ref;
-        this.inventory.items[index].name = item.name;
-        this.inventory.items[index].tier = item.tier;
+        // Place upgraded item, set temporary sync label
+        // TODO: remove sync label
+        this.premovePlace(index, ref);
         this.inventory.items[index].label = 'sync';
-        // TODO: use this instead: this.inventory.items[index].label = item.label;
-        this.inventory.items[index].sprite = item.sprite;
     },
 
     // Premove the items at the given indices, swap them.
