@@ -536,6 +536,7 @@ span.subtle {
     border: gray dashed 1px;
     border-radius: 0.15em;
     text-align: center;
+    cursor: pointer;
 }
 
 .game-grid .cell.factory {
