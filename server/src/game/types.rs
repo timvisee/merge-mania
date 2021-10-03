@@ -447,13 +447,13 @@ impl GameInventoryGrid {
         !items.is_empty()
     }
 
-    /// Remove items that reached their drop limit.
+    /// Remove items that reached their drop limit, if their drop queue is cleared.
     fn remove_drop_limit_items(&mut self, config: &Config) -> bool {
         let mut changed = false;
         for item in &mut self.items {
             match item {
                 Some(i) => match i.drop_limit {
-                    Some(limit) if limit <= 0 => {
+                    Some(limit) if limit <= 0 && i.queue.is_empty() => {
                         // This item reached it limit, remove it
                         // TODO: do we need a special item remove routine?
                         *item = None;
