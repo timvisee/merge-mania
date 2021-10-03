@@ -479,11 +479,15 @@ span.subtle {
     box-sizing: border-box;
     background: #eee;
 
+    /* Disable selecting cells. */
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -o-user-select: none;
     user-select: none;
+
+    /* Disable double-tap to zoom on iPhone */
+    touch-action: manipulation;
 }
 
 .game-grid .cell {
