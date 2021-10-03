@@ -59,9 +59,28 @@ password = "team6"
 
 [[teams]]
 id = 7
-name = "Team 7"
+name = "team 7"
 password = "team7"
 
+[[teams]]
+id = 8
+name = "team 8"
+password = "team8"
+
+[[teams]]
+id = 9
+name = "team 9"
+password = "team9"
+
+[[teams]]
+id = 10
+name = "team 10"
+password = "team10"
+
+[[teams]]
+id = 11
+name = "team 11"
+password = "team11"
 
 # Item configuration example:
 #
@@ -663,7 +682,7 @@ ref = "10.0"
 merge = "10.1"
 name = "One"
 tier = "Numbers"
-sell = 1
+sell = 100
 sprite_path = "keycap-digit-one.png"
 
 [[items]]
@@ -671,7 +690,7 @@ ref = "10.1"
 merge = "10.2"
 name = "Two"
 tier = "Numbers"
-sell = 1
+sell = 200
 sprite_path = "keycap-digit-two.png"
 
 [[items]]
@@ -679,7 +698,7 @@ ref = "10.2"
 merge = "10.3"
 name = "Three"
 tier = "Numbers"
-sell = 1
+sell = 400
 sprite_path = "keycap-digit-three.png"
 
 [[items]]
@@ -687,7 +706,7 @@ ref = "10.3"
 merge = "10.4"
 name = "Four"
 tier = "Numbers"
-sell = 1
+sell = 800
 sprite_path = "keycap-digit-four.png"
 
 [[items]]
@@ -695,7 +714,7 @@ ref = "10.4"
 merge = "10.5"
 name = "Five"
 tier = "Numbers"
-sell = 1
+sell = 1600
 sprite_path = "keycap-digit-five.png"
 
 [[items]]
@@ -703,7 +722,7 @@ ref = "10.5"
 merge = "10.6"
 name = "Six"
 tier = "Numbers"
-sell = 1
+sell = 3200
 sprite_path = "keycap-digit-six.png"
 
 [[items]]
@@ -711,7 +730,7 @@ ref = "10.6"
 merge = "10.7"
 name = "Seven"
 tier = "Numbers"
-sell = 1
+sell = 6400
 sprite_path = "keycap-digit-seven.png"
 
 [[items]]
@@ -719,7 +738,7 @@ ref = "10.7"
 merge = "10.8"
 name = "Eight"
 tier = "Numbers"
-sell = 1
+sell = 12800
 sprite_path = "keycap-digit-eight.png"
 
 [[items]]
@@ -727,7 +746,7 @@ ref = "10.8"
 merge = "10.9"
 name = "Nine"
 tier = "Numbers"
-sell = 1
+sell = 25600
 sprite_path = "keycap-digit-nine.png"
 
 [[items]]
@@ -735,7 +754,7 @@ ref = "10.9"
 merge = "110.0"
 name = "Ten"
 tier = "Numbers"
-sell = 1
+sell = 51200
 sprite_path = "keycap-10.png"
 
 [[items]]
@@ -749,7 +768,7 @@ buy = [
     { item = "2.4", quantity = 1 },
     { energy = 1 },
 ]
-sell = 1
+sell = 1000
 drop_interval = 300
 drops = [
     { item = "10.0", chance = 0.9 },
@@ -764,7 +783,7 @@ merge = "110.2"
 name = "Teacher 2"
 tier = "Nathematician"
 label = "2"
-sell = 1
+sell = 2000
 drop_interval = 250
 drops = [
     { item = "10.2", chance = 0.9 },
@@ -779,7 +798,7 @@ merge = "110.3"
 name = "Teacher 4"
 tier = "Nathematician"
 label = "3"
-sell = 1
+sell = 4000
 drop_interval = 200
 drops = [
     { item = "10.4", chance = 0.9 },
@@ -793,7 +812,7 @@ ref = "110.3"
 name = "Teacher 8"
 tier = "Nathematician"
 label = "Max"
-sell = 1
+sell = 8000
 drop_interval = 150
 drops = [
     { item = "10.6", chance = 0.9 },
