@@ -12,15 +12,17 @@ reset = false
 # Team defaults
 
 [defaults]
-money = 10
-energy = 5
+money = 50
+energy = 25
 
 # Default inventory items by reference
 inventory = [
-    "1.0",
-    "1.0",
-    "1.0",
-    "101.0",
+    "10.0",
+    "11.0",
+    "11.0",
+    "11.0",
+    "11.0",
+    "11.0",
 ]
 
 
@@ -82,6 +84,8 @@ id = 11
 name = "team 11"
 password = "team11"
 
+
+
 # Item configuration example:
 #
 # [[items]]
@@ -125,349 +129,17 @@ password = "team11"
 #
 # # Optional: list of items that may be dropped
 # drops = [
-#     { item = "1.0", chance = 0.90 },
-#     { item = "1.1", chance = 0.10 },
+#     { item = "11.0", chance = 0.90 },
+#     { item = "11.1", chance = 0.10 },
 # ]
 
 
 
-# Fruit products
+# Fruit tree
 
 [[items]]
-ref = "1.0"
-merge = "1.1"
-name = "Apple"
-tier = "Fruit"
-sell = 1
-sprite_path = "red-apple.png"
-
-[[items]]
-ref = "1.1"
-merge = "1.2"
-name = "Banana"
-tier = "Fruit"
-sell = 3
-sprite_path = "banana.png"
-
-[[items]]
-ref = "1.2"
-merge = "1.3"
-name = "Pineapple"
-tier = "Fruit"
-sell = 8
-sprite_path = "pineapple.png"
-
-[[items]]
-ref = "1.3"
-merge = "1.4"
-name = "Cherries"
-tier = "Fruit"
-sell = 19
-sprite_path = "cherries.png"
-
-[[items]]
-ref = "1.4"
-merge = "1.5"
-name = "Strawberry"
-tier = "Fruit"
-sell = 43
-sprite_path = "strawberry.png"
-
-[[items]]
-ref = "1.5"
-merge = "1.6"
-name = "Watermelon"
-tier = "Fruit"
-sell = 94
-sprite_path = "watermelon.png"
-
-[[items]]
-ref = "1.6"
-merge = "1.7"
-name = "Grape"
-tier = "Fruit"
-sell = 201
-sprite_path = "grapes.png"
-
-[[items]]
-ref = "1.7"
-merge = "1.8"
-name = "Lemon"
-tier = "Fruit"
-sell = 423
-sprite_path = "lemon.png"
-
-[[items]]
-ref = "1.8"
-merge = "1.9"
-name = "Tangerine"
-tier = "Fruit"
-sell = 880
-sprite_path = "tangerine.png"
-
-[[items]]
-ref = "1.9"
-merge = "1.10"
-name = "Pear"
-tier = "Fruit"
-sell = 1815
-sprite_path = "pear.png"
-
-[[items]]
-ref = "1.10"
-merge = "1.11"
-name = "Peach"
-tier = "Fruit"
-sell = 3719
-sprite_path = "peach.png"
-
-[[items]]
-ref = "1.11"
-merge = "1.12"
-name = "Mango"
-tier = "Fruit"
-sell = 7582
-sprite_path = "mango.png"
-
-[[items]]
-ref = "1.12"
-name = "Blueberries"
-tier = "Fruit"
-sell = 15397
-sprite_path = "blueberries.png"
-
-
-
-# Vegetables products
-
-[[items]]
-ref = "2.0"
-merge = "2.1"
-name = "Tomato"
-tier = "Vegetable"
-sell = 15
-sprite_path = "tomato.png"
-
-[[items]]
-ref = "2.1"
-merge = "2.2"
-name = "Cucumber"
-tier = "Vegetable"
-sell = 31
-sprite_path = "cucumber.png"
-
-[[items]]
-ref = "2.2"
-merge = "2.3"
-name = "Onion"
-tier = "Vegetable"
-sell = 64
-sprite_path = "onion.png"
-
-[[items]]
-ref = "2.3"
-merge = "2.4"
-name = "Carrot"
-tier = "Vegetable"
-sell = 131
-sprite_path = "carrot.png"
-
-[[items]]
-ref = "2.4"
-merge = "2.5"
-name = "Eggplant"
-tier = "Vegetable"
-sell = 267
-sprite_path = "eggplant.png"
-
-[[items]]
-ref = "2.5"
-merge = "2.6"
-name = "Bell Pepper"
-tier = "Vegetable"
-sell = 542
-sprite_path = "bell-pepper.png"
-
-[[items]]
-ref = "2.6"
-merge = "2.7"
-name = "Potato"
-tier = "Vegetable"
-sell = 1097
-sprite_path = "potato.png"
-
-[[items]]
-ref = "2.7"
-merge = "2.8"
-name = "Corn"
-tier = "Vegetable"
-sell = 2215
-sprite_path = "ear-of-corn.png"
-
-[[items]]
-ref = "2.8"
-merge = "2.9"
-name = "Broccoli"
-tier = "Vegetable"
-sell = 4464
-sprite_path = "broccoli.png"
-
-[[items]]
-ref = "2.9"
-merge = "2.10"
-name = "Garlic"
-tier = "Vegetable"
-sell = 8983
-sprite_path = "garlic.png"
-
-[[items]]
-ref = "2.10"
-name = "Mushroom"
-tier = "Vegetable"
-sell = 18055
-sprite_path = "mushroom.png"
-
-
-
-# Bread products
-
-[[items]]
-ref = "3.0"
-merge = "3.1"
-name = "Bread"
-tier = "Bread"
-sell = 225
-sprite_path = "bread.png"
-
-[[items]]
-ref = "3.1"
-merge = "3.2"
-name = "Croissant"
-tier = "Bread"
-sell = 451
-sprite_path = "croissant.png"
-
-[[items]]
-ref = "3.2"
-merge = "3.3"
-name = "Baguette"
-tier = "Bread"
-sell = 904
-sprite_path = "baguette-bread.png"
-
-[[items]]
-ref = "3.3"
-merge = "3.4"
-name = "Flatbread"
-tier = "Bread"
-sell = 1809
-sprite_path = "flatbread.png"
-
-[[items]]
-ref = "3.4"
-merge = "3.5"
-name = "Pretzel"
-tier = "Bread"
-sell = 3621
-sprite_path = "pretzel.png"
-
-[[items]]
-ref = "3.5"
-merge = "3.6"
-name = "Bagel"
-tier = "Bread"
-sell = 7247
-sprite_path = "bagel.png"
-
-[[items]]
-ref = "3.6"
-merge = "3.7"
-name = "Pancake"
-tier = "Bread"
-sell = 14502
-sprite_path = "pancakes.png"
-
-[[items]]
-ref = "3.7"
-merge = "3.8"
-name = "Waffle"
-tier = "Bread"
-sell = 29017
-sprite_path = "waffle.png"
-
-[[items]]
-ref = "3.8"
-name = "Fortune Cookie"
-tier = "Bread"
-sell = 58055
-sprite_path = "fortune-cookie.png"
-
-
-
-# Birds products
-
-[[items]]
-ref = "4.0"
-merge = "4.1"
-name = "Egg"
-tier = "Bird"
-sell = 3375
-sprite_path = "egg.png"
-
-[[items]]
-ref = "4.1"
-merge = "4.2"
-name = "Baby Chick"
-tier = "Bird"
-sell = 6751
-sprite_path = "baby-chick.png"
-
-[[items]]
-ref = "4.2"
-merge = "4.3"
-name = "Duck"
-tier = "Bird"
-sell = 13504
-sprite_path = "duck.png"
-
-[[items]]
-ref = "4.3"
-merge = "4.4"
-name = "Swan"
-tier = "Bird"
-sell = 27011
-sprite_path = "swan.png"
-
-[[items]]
-ref = "4.4"
-merge = "4.5"
-name = "Owl"
-tier = "Bird"
-sell = 54027
-sprite_path = "owl.png"
-
-[[items]]
-ref = "4.5"
-merge = "4.6"
-name = "Peacock"
-tier = "Bird"
-sell = 108062
-sprite_path = "peacock.png"
-
-[[items]]
-ref = "4.6"
-name = "Eagle"
-tier = "Bird"
-sell = 216137
-sprite_path = "eagle.png"
-
-
-
-# Fruit tree factory
-
-[[items]]
-ref = "101.0"
-merge = "101.1"
+ref = "10.0"
+merge = "10.1"
 name = "Fruit tree"
 tier = "Fruit tree"
 label = "1"
@@ -478,346 +150,678 @@ buy = [
 sell = 3
 drop_interval = 60
 drops = [
-    { item = "1.0", chance = 0.95 },
-    { item = "1.1", chance = 0.04 },
-    { item = "2.0", chance = 0.01 },
+    { item = "11.0", chance = 0.95 },
+    { item = "11.1", chance = 0.04 },
+    { item = "12.0", chance = 0.01 },
 ]
 sprite_path = "deciduous-tree.png"
 
 [[items]]
-ref = "101.1"
-merge = "101.2"
+ref = "10.1"
+merge = "10.2"
 name = "Fruit tree 2"
 tier = "Fruit tree"
 label = "2"
 sell = 6
 drop_interval = 54
 drops = [
-    { item = "1.0", chance = 0.90 },
-    { item = "1.1", chance = 0.06 },
-    { item = "1.2", chance = 0.01 },
-    { item = "2.0", chance = 0.03 },
+    { item = "11.0", chance = 0.90 },
+    { item = "11.1", chance = 0.06 },
+    { item = "11.2", chance = 0.01 },
+    { item = "12.0", chance = 0.03 },
 ]
 sprite_path = "deciduous-tree.png"
 
 [[items]]
-ref = "101.2"
-merge = "101.3"
+ref = "10.2"
+merge = "10.3"
 name = "Fruit tree 3"
 tier = "Fruit tree"
 label = "3"
 sell = 12
 drop_interval = 48
 drops = [
-    { item = "1.0", chance = 0.77 },
-    { item = "1.1", chance = 0.16 },
-    { item = "1.2", chance = 0.02 },
-    { item = "2.0", chance = 0.05 },
+    { item = "11.0", chance = 0.77 },
+    { item = "11.1", chance = 0.16 },
+    { item = "11.2", chance = 0.02 },
+    { item = "12.0", chance = 0.05 },
 ]
 sprite_path = "deciduous-tree.png"
 
 [[items]]
-ref = "101.3"
-merge = "101.4"
+ref = "10.3"
+merge = "10.4"
 name = "Fruit tree 4"
 tier = "Fruit tree"
 label = "4"
 sell = 24
 drop_interval = 42
 drops = [
-    { item = "1.0", chance = 0.62 },
-    { item = "1.1", chance = 0.28 },
-    { item = "1.2", chance = 0.03 },
-    { item = "2.0", chance = 0.07 },
+    { item = "11.0", chance = 0.62 },
+    { item = "11.1", chance = 0.28 },
+    { item = "11.2", chance = 0.03 },
+    { item = "12.0", chance = 0.07 },
 ]
 sprite_path = "deciduous-tree.png"
 
 [[items]]
-ref = "101.4"
-merge = "101.5"
+ref = "10.4"
+merge = "10.5"
 name = "Fruit tree 5"
 tier = "Fruit tree"
 label = "5"
 sell = 48
 drop_interval = 36
 drops = [
-    { item = "1.0", chance = 0.33 },
-    { item = "1.1", chance = 0.50 },
-    { item = "1.2", chance = 0.05 },
-    { item = "1.3", chance = 0.01 },
-    { item = "2.0", chance = 0.10 },
+    { item = "11.0", chance = 0.33 },
+    { item = "11.1", chance = 0.50 },
+    { item = "11.2", chance = 0.05 },
+    { item = "11.3", chance = 0.01 },
+    { item = "12.0", chance = 0.10 },
 ]
 sprite_path = "deciduous-tree.png"
 
 [[items]]
-ref = "101.5"
-merge = "101.6"
+ref = "10.5"
+merge = "10.6"
 name = "Fruit tree 6"
 tier = "Fruit tree"
 label = "6"
 sell = 96
 drop_interval = 30
 drops = [
-    { item = "1.1", chance = 0.72 },
-    { item = "1.2", chance = 0.08 },
-    { item = "1.3", chance = 0.03 },
-    { item = "2.0", chance = 0.16 },
-    { item = "2.1", chance = 0.01 },
+    { item = "11.1", chance = 0.72 },
+    { item = "11.2", chance = 0.08 },
+    { item = "11.3", chance = 0.03 },
+    { item = "12.0", chance = 0.16 },
+    { item = "12.1", chance = 0.01 },
 ]
 sprite_path = "deciduous-tree.png"
 
 [[items]]
-ref = "101.6"
+ref = "10.6"
 name = "Fruit tree 7"
 tier = "Fruit tree"
 label = "Max"
 sell = 192
 drop_interval = 24
 drops = [
-    { item = "1.1", chance = 0.59 },
-    { item = "1.2", chance = 0.13 },
-    { item = "1.3", chance = 0.05 },
-    { item = "2.0", chance = 0.20 },
-    { item = "2.1", chance = 0.03 },
+    { item = "11.1", chance = 0.59 },
+    { item = "11.2", chance = 0.13 },
+    { item = "11.3", chance = 0.05 },
+    { item = "12.0", chance = 0.20 },
+    { item = "12.1", chance = 0.03 },
 ]
 sprite_path = "deciduous-tree.png"
+
+
+
+# Fruit
+
+[[items]]
+ref = "11.0"
+merge = "11.1"
+name = "Apple"
+tier = "Fruit"
+sell = 1
+sprite_path = "red-apple.png"
+
+[[items]]
+ref = "11.1"
+merge = "11.2"
+name = "Banana"
+tier = "Fruit"
+sell = 3
+sprite_path = "banana.png"
+
+[[items]]
+ref = "11.2"
+merge = "11.3"
+name = "Pineapple"
+tier = "Fruit"
+sell = 8
+sprite_path = "pineapple.png"
+
+[[items]]
+ref = "11.3"
+merge = "11.4"
+name = "Cherries"
+tier = "Fruit"
+sell = 19
+sprite_path = "cherries.png"
+
+[[items]]
+ref = "11.4"
+merge = "11.5"
+name = "Strawberry"
+tier = "Fruit"
+sell = 43
+sprite_path = "strawberry.png"
+
+[[items]]
+ref = "11.5"
+merge = "11.6"
+name = "Watermelon"
+tier = "Fruit"
+sell = 94
+sprite_path = "watermelon.png"
+
+[[items]]
+ref = "11.6"
+merge = "11.7"
+name = "Grape"
+tier = "Fruit"
+sell = 201
+sprite_path = "grapes.png"
+
+[[items]]
+ref = "11.7"
+merge = "11.8"
+name = "Lemon"
+tier = "Fruit"
+sell = 423
+sprite_path = "lemon.png"
+
+[[items]]
+ref = "11.8"
+merge = "11.9"
+name = "Tangerine"
+tier = "Fruit"
+sell = 880
+sprite_path = "tangerine.png"
+
+[[items]]
+ref = "11.9"
+merge = "11.10"
+name = "Pear"
+tier = "Fruit"
+sell = 1815
+sprite_path = "pear.png"
+
+[[items]]
+ref = "11.10"
+merge = "11.11"
+name = "Peach"
+tier = "Fruit"
+sell = 3719
+sprite_path = "peach.png"
+
+[[items]]
+ref = "11.11"
+merge = "11.12"
+name = "Mango"
+tier = "Fruit"
+sell = 7582
+sprite_path = "mango.png"
+
+[[items]]
+ref = "11.12"
+name = "Blueberries"
+tier = "Fruit"
+sell = 15397
+sprite_path = "blueberries.png"
+
+
+
+# Vegetables
+
+[[items]]
+ref = "12.0"
+merge = "12.1"
+name = "Tomato"
+tier = "Vegetable"
+sell = 15
+sprite_path = "tomato.png"
+
+[[items]]
+ref = "12.1"
+merge = "12.2"
+name = "Cucumber"
+tier = "Vegetable"
+sell = 31
+sprite_path = "cucumber.png"
+
+[[items]]
+ref = "12.2"
+merge = "12.3"
+name = "Onion"
+tier = "Vegetable"
+sell = 64
+sprite_path = "onion.png"
+
+[[items]]
+ref = "12.3"
+merge = "12.4"
+name = "Carrot"
+tier = "Vegetable"
+sell = 131
+sprite_path = "carrot.png"
+
+[[items]]
+ref = "12.4"
+merge = "12.5"
+name = "Eggplant"
+tier = "Vegetable"
+sell = 267
+sprite_path = "eggplant.png"
+
+[[items]]
+ref = "12.5"
+merge = "12.6"
+name = "Bell Pepper"
+tier = "Vegetable"
+sell = 542
+sprite_path = "bell-pepper.png"
+
+[[items]]
+ref = "12.6"
+merge = "12.7"
+name = "Potato"
+tier = "Vegetable"
+sell = 1097
+sprite_path = "potato.png"
+
+[[items]]
+ref = "12.7"
+merge = "12.8"
+name = "Corn"
+tier = "Vegetable"
+sell = 2215
+sprite_path = "ear-of-corn.png"
+
+[[items]]
+ref = "12.8"
+merge = "12.9"
+name = "Broccoli"
+tier = "Vegetable"
+sell = 4464
+sprite_path = "broccoli.png"
+
+[[items]]
+ref = "12.9"
+merge = "12.10"
+name = "Garlic"
+tier = "Vegetable"
+sell = 8983
+sprite_path = "garlic.png"
+
+[[items]]
+ref = "12.10"
+name = "Mushroom"
+tier = "Vegetable"
+sell = 18055
+sprite_path = "mushroom.png"
 
 
 
 # Chicken factory
 
 [[items]]
-ref = "102.0"
-merge = "102.1"
+ref = "40.0"
+merge = "40.1"
 name = "Chicken"
 tier = "Chicken"
 label = "1"
 buy = [
-    { item = "2.4", quantity = 1 },
+    { item = "12.4", quantity = 1 },
     { energy = 1 },
 ]
 sell = 79
 drop_interval = 60
 drops = [
-    { item = "3.0", chance = 0.95 },
-    { item = "3.1", chance = 0.04 },
-    { item = "4.0", chance = 0.01 },
+    { item = "31.0", chance = 0.95 },
+    { item = "31.1", chance = 0.04 },
+    { item = "41.0", chance = 0.01 },
 ]
 sprite_path = "chicken.png"
 
 [[items]]
-ref = "102.1"
-merge = "102.2"
+ref = "40.1"
+merge = "40.2"
 name = "Chicken 2"
 tier = "Chicken"
 label = "2"
 sell = 158
 drop_interval = 51
 drops = [
-    { item = "3.0", chance = 0.87 },
-    { item = "3.1", chance = 0.09 },
-    { item = "3.2", chance = 0.01 },
-    { item = "4.0", chance = 0.03 },
+    { item = "31.0", chance = 0.87 },
+    { item = "31.1", chance = 0.09 },
+    { item = "31.2", chance = 0.01 },
+    { item = "41.0", chance = 0.03 },
 ]
 sprite_path = "chicken.png"
 
 [[items]]
-ref = "102.2"
-merge = "102.3"
+ref = "40.2"
+merge = "40.3"
 name = "Chicken 3"
 tier = "Chicken"
 label = "3"
 sell = 316
 drop_interval = 42
 drops = [
-    { item = "3.0", chance = 0.54 },
-    { item = "3.1", chance = 0.32 },
-    { item = "3.2", chance = 0.05 },
-    { item = "3.3", chance = 0.01 },
-    { item = "4.0", chance = 0.07 },
-    { item = "4.1", chance = 0.01 },
+    { item = "31.0", chance = 0.54 },
+    { item = "31.1", chance = 0.32 },
+    { item = "31.2", chance = 0.05 },
+    { item = "31.3", chance = 0.01 },
+    { item = "41.0", chance = 0.07 },
+    { item = "41.1", chance = 0.01 },
 ]
 sprite_path = "chicken.png"
 
 [[items]]
-ref = "102.3"
-merge = "102.4"
+ref = "40.3"
+merge = "40.4"
 name = "Chicken 4"
 tier = "Chicken"
 label = "4"
 sell = 732
 drop_interval = 33
 drops = [
-    { item = "3.0", chance = 0.28 },
-    { item = "3.1", chance = 0.50 },
-    { item = "3.2", chance = 0.07 },
-    { item = "3.3", chance = 0.03 },
-    { item = "4.0", chance = 0.10 },
-    { item = "4.1", chance = 0.02 },
+    { item = "31.0", chance = 0.28 },
+    { item = "31.1", chance = 0.50 },
+    { item = "31.2", chance = 0.07 },
+    { item = "31.3", chance = 0.03 },
+    { item = "41.0", chance = 0.10 },
+    { item = "41.1", chance = 0.02 },
 ]
 sprite_path = "chicken.png"
 
 [[items]]
-ref = "102.4"
+ref = "40.4"
 name = "Chicken 5"
 tier = "Chicken"
 label = "Max"
 sell = 1464
 drop_interval = 24
 drops = [
-    { item = "3.1", chance = 0.42 },
-    { item = "3.2", chance = 0.18 },
-    { item = "3.3", chance = 0.13 },
-    { item = "4.0", chance = 0.22 },
-    { item = "4.1", chance = 0.05 },
+    { item = "31.1", chance = 0.42 },
+    { item = "31.2", chance = 0.18 },
+    { item = "31.3", chance = 0.13 },
+    { item = "41.0", chance = 0.22 },
+    { item = "41.1", chance = 0.05 },
 ]
 sprite_path = "chicken.png"
+
+
+
+# Bread products
+
+[[items]]
+ref = "31.0"
+merge = "31.1"
+name = "Bread"
+tier = "Bread"
+sell = 225
+sprite_path = "bread.png"
+
+[[items]]
+ref = "31.1"
+merge = "31.2"
+name = "Croissant"
+tier = "Bread"
+sell = 451
+sprite_path = "croissant.png"
+
+[[items]]
+ref = "31.2"
+merge = "31.3"
+name = "Baguette"
+tier = "Bread"
+sell = 904
+sprite_path = "baguette-bread.png"
+
+[[items]]
+ref = "31.3"
+merge = "31.4"
+name = "Flatbread"
+tier = "Bread"
+sell = 1809
+sprite_path = "flatbread.png"
+
+[[items]]
+ref = "31.4"
+merge = "31.5"
+name = "Pretzel"
+tier = "Bread"
+sell = 3621
+sprite_path = "pretzel.png"
+
+[[items]]
+ref = "31.5"
+merge = "31.6"
+name = "Bagel"
+tier = "Bread"
+sell = 7247
+sprite_path = "bagel.png"
+
+[[items]]
+ref = "31.6"
+merge = "31.7"
+name = "Pancake"
+tier = "Bread"
+sell = 14502
+sprite_path = "pancakes.png"
+
+[[items]]
+ref = "31.7"
+merge = "31.8"
+name = "Waffle"
+tier = "Bread"
+sell = 29017
+sprite_path = "waffle.png"
+
+[[items]]
+ref = "31.8"
+name = "Fortune Cookie"
+tier = "Bread"
+sell = 58055
+sprite_path = "fortune-cookie.png"
+
+
+
+# Birds products
+
+[[items]]
+ref = "41.0"
+merge = "41.1"
+name = "Egg"
+tier = "Bird"
+sell = 3375
+sprite_path = "egg.png"
+
+[[items]]
+ref = "41.1"
+merge = "41.2"
+name = "Baby Chick"
+tier = "Bird"
+sell = 6751
+sprite_path = "baby-chick.png"
+
+[[items]]
+ref = "41.2"
+merge = "41.3"
+name = "Duck"
+tier = "Bird"
+sell = 13504
+sprite_path = "duck.png"
+
+[[items]]
+ref = "41.3"
+merge = "41.4"
+name = "Swan"
+tier = "Bird"
+sell = 27011
+sprite_path = "swan.png"
+
+[[items]]
+ref = "41.4"
+merge = "41.5"
+name = "Owl"
+tier = "Bird"
+sell = 54027
+sprite_path = "owl.png"
+
+[[items]]
+ref = "41.5"
+merge = "41.6"
+name = "Peacock"
+tier = "Bird"
+sell = 108062
+sprite_path = "peacock.png"
+
+[[items]]
+ref = "41.6"
+name = "Eagle"
+tier = "Bird"
+sell = 216137
+sprite_path = "eagle.png"
 
 
 
 # Math / numbers
 
 [[items]]
-ref = "10.0"
-merge = "10.1"
+ref = "51.0"
+merge = "51.1"
 name = "One"
 tier = "Numbers"
 sell = 100
 sprite_path = "keycap-digit-one.png"
 
 [[items]]
-ref = "10.1"
-merge = "10.2"
+ref = "51.1"
+merge = "51.2"
 name = "Two"
 tier = "Numbers"
 sell = 200
 sprite_path = "keycap-digit-two.png"
 
 [[items]]
-ref = "10.2"
-merge = "10.3"
+ref = "51.2"
+merge = "51.3"
 name = "Three"
 tier = "Numbers"
 sell = 400
 sprite_path = "keycap-digit-three.png"
 
 [[items]]
-ref = "10.3"
-merge = "10.4"
+ref = "51.3"
+merge = "51.4"
 name = "Four"
 tier = "Numbers"
 sell = 800
 sprite_path = "keycap-digit-four.png"
 
 [[items]]
-ref = "10.4"
-merge = "10.5"
+ref = "51.4"
+merge = "51.5"
 name = "Five"
 tier = "Numbers"
 sell = 1600
 sprite_path = "keycap-digit-five.png"
 
 [[items]]
-ref = "10.5"
-merge = "10.6"
+ref = "51.5"
+merge = "51.6"
 name = "Six"
 tier = "Numbers"
 sell = 3200
 sprite_path = "keycap-digit-six.png"
 
 [[items]]
-ref = "10.6"
-merge = "10.7"
+ref = "51.6"
+merge = "51.7"
 name = "Seven"
 tier = "Numbers"
 sell = 6400
 sprite_path = "keycap-digit-seven.png"
 
 [[items]]
-ref = "10.7"
-merge = "10.8"
+ref = "51.7"
+merge = "51.8"
 name = "Eight"
 tier = "Numbers"
 sell = 12800
 sprite_path = "keycap-digit-eight.png"
 
 [[items]]
-ref = "10.8"
-merge = "10.9"
+ref = "51.8"
+merge = "51.9"
 name = "Nine"
 tier = "Numbers"
 sell = 25600
 sprite_path = "keycap-digit-nine.png"
 
 [[items]]
-ref = "10.9"
-merge = "110.0"
+ref = "51.9"
+merge = "50.0"
 name = "Ten"
 tier = "Numbers"
 sell = 51200
 sprite_path = "keycap-10.png"
 
 [[items]]
-ref = "110.0"
-merge = "110.1"
+ref = "50.0"
+merge = "50.1"
 name = "Teacher"
 tier = "Nathematician"
 label = "1"
 buy = [
     { money = 1000 },
-    { item = "2.4", quantity = 1 },
+    { item = "12.4", quantity = 1 },
     { energy = 1 },
 ]
 sell = 1000
 drop_interval = 300
 drops = [
-    { item = "10.0", chance = 0.9 },
-    { item = "10.1", chance = 0.08 },
-    { item = "10.2", chance = 0.02 },
+    { item = "51.0", chance = 0.9 },
+    { item = "51.1", chance = 0.08 },
+    { item = "51.2", chance = 0.02 },
 ]
 sprite_path = "man-teacher.png"
 
 [[items]]
-ref = "110.1"
-merge = "110.2"
+ref = "50.1"
+merge = "50.2"
 name = "Teacher 2"
 tier = "Nathematician"
 label = "2"
 sell = 2000
-drop_interval = 250
+drop_interval = 260
 drops = [
-    { item = "10.2", chance = 0.9 },
-    { item = "10.3", chance = 0.08 },
-    { item = "10.4", chance = 0.02 },
+    { item = "51.2", chance = 0.9 },
+    { item = "51.3", chance = 0.08 },
+    { item = "51.4", chance = 0.02 },
 ]
 sprite_path = "man-teacher.png"
 
 [[items]]
-ref = "110.2"
-merge = "110.3"
+ref = "50.2"
+merge = "50.3"
 name = "Teacher 4"
 tier = "Nathematician"
 label = "3"
 sell = 4000
-drop_interval = 200
+drop_interval = 220
 drops = [
-    { item = "10.4", chance = 0.9 },
-    { item = "10.5", chance = 0.08 },
-    { item = "10.6", chance = 0.02 },
+    { item = "51.4", chance = 0.9 },
+    { item = "51.5", chance = 0.08 },
+    { item = "51.6", chance = 0.02 },
 ]
 sprite_path = "man-teacher.png"
 
 [[items]]
-ref = "110.3"
+ref = "50.3"
 name = "Teacher 8"
 tier = "Nathematician"
 label = "Max"
 sell = 8000
-drop_interval = 150
+drop_interval = 180
 drops = [
-    { item = "10.6", chance = 0.9 },
-    { item = "10.7", chance = 0.08 },
-    { item = "10.8", chance = 0.02 },
+    { item = "51.6", chance = 0.9 },
+    { item = "51.7", chance = 0.08 },
+    { item = "51.8", chance = 0.02 },
 ]
 sprite_path = "man-teacher.png"
 
@@ -956,37 +960,37 @@ sprite_path = "new-moon-face.png"
 # Rocks diamonds
 
 [[items]]
-ref = "30.0"
+ref = "201.0"
 name = "Pet Rock"
 tier = "Useless"
 sell = 1
 sprite_path = "rock.png"
 
 [[items]]
-ref = "31.0"
-merge = "31.1"
+ref = "202.0"
+merge = "202.1"
 name = "Diamond"
 tier = "Gems"
 sell = 15000
 sprite_path = "gem-stone.png"
 
 [[items]]
-ref = "31.1"
-merge = "31.2"
+ref = "202.1"
+merge = "202.2"
 name = "Diamond Ring"
 tier = "Gems"
 sell = 35000
 sprite_path = "ring.png"
 
 [[items]]
-ref = "31.2"
+ref = "202.2"
 name = "Crown"
 tier = "Gems"
 sell = 75000
 sprite_path = "crown.png"
 
 [[items]]
-ref = "130.0"
+ref = "200.0"
 name = "Pick"
 tier = "Mining"
 buy = [
@@ -997,7 +1001,7 @@ sell = 500
 drop_interval = 180
 drop_limit = 10
 drops = [
-    { item = "30.0", chance = 0.85 },
-    { item = "31.0", chance = 0.15 },
+    { item = "201.0", chance = 0.85 },
+    { item = "202.0", chance = 0.15 },
 ]
 sprite_path = "pick.png"
