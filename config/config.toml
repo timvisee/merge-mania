@@ -1157,6 +1157,7 @@ sprite_path = "keycap-10.png"
 [[items]]
 ref = "60.0"
 # TODO: merge = "60.1"
+# TODO: update name
 name = "[TEST] Stadium"
 tier = "Stadium"
 label = "1"
@@ -1257,6 +1258,226 @@ tier = "Ball sports"
 # TODO: set price
 sell = 1
 sprite_path = "pool-8-ball.png"
+
+
+
+# Speaker
+
+[[items]]
+ref = "70.0"
+merge = "70.1"
+# TODO: update name
+name = "[TEST] Speaker Low Volume"
+tier = "Speakers"
+label = "1"
+buy = [
+    # TODO: buy price
+    { money = 1 },
+]
+# TODO: sell value
+sell = 1
+drop_interval = 60
+drops = [
+    # TODO: drop items
+    { item = "71.0", chance = 0.95 },
+    { item = "71.1", chance = 0.04 },
+]
+sprite_path = "speaker-low-volume.png"
+
+[[items]]
+ref = "70.1"
+merge = "70.2"
+name = "Speaker Medium Volume"
+tier = "Speakers"
+label = "2"
+# TODO: sell value
+sell = 1
+drop_interval = 51
+drops = [
+    # TODO: drop items
+    { item = "71.0", chance = 0.95 },
+    { item = "71.1", chance = 0.04 },
+]
+sprite_path = "speaker-medium-volume.png"
+
+[[items]]
+ref = "70.2"
+merge = "70.3"
+name = "Speaker High Volume"
+tier = "Speakers"
+label = "3"
+# TODO: sell value
+sell = 1
+drop_interval = 42
+drops = [
+    # TODO: drop items
+    { item = "71.0", chance = 0.95 },
+    { item = "71.1", chance = 0.04 },
+]
+sprite_path = "speaker-high-volume.png"
+
+[[items]]
+ref = "70.3"
+merge = "70.4"
+name = "Headphone"
+tier = "Speakers"
+label = "5"
+# TODO: sell value
+sell = 1
+drop_interval = 33
+drops = [
+    # TODO: drop items
+    { item = "71.0", chance = 0.95 },
+    { item = "71.1", chance = 0.04 },
+]
+sprite_path = "headphone.png"
+
+[[items]]
+ref = "70.4"
+name = "Radio"
+tier = "Speakers"
+label = "Max"
+# TODO: sell value
+sell = 1
+drop_interval = 24
+drops = [
+    # TODO: drop items
+    { item = "71.0", chance = 0.95 },
+    { item = "71.1", chance = 0.04 },
+]
+sprite_path = "radio.png"
+
+
+
+# Instruments
+
+[[items]]
+ref = "71.0"
+merge = "71.1"
+name = "Piano"
+tier = "Instruments"
+# TODO: set price
+sell = 1
+sprite_path = "musical-keyboard.png"
+
+[[items]]
+ref = "71.1"
+merge = "71.2"
+name = "Accordion"
+tier = "Instruments"
+# TODO: set price
+sell = 1
+sprite_path = "accordion.png"
+
+[[items]]
+ref = "71.2"
+merge = "71.3"
+name = "Drum"
+tier = "Instruments"
+# TODO: set price
+sell = 1
+sprite_path = "drum.png"
+
+[[items]]
+ref = "71.3"
+merge = "71.4"
+name = "Long Drum"
+tier = "Instruments"
+# TODO: set price
+sell = 1
+sprite_path = "long-drum.png"
+
+[[items]]
+ref = "71.4"
+merge = "71.5"
+name = "Guitar"
+tier = "Instruments"
+# TODO: set price
+sell = 1
+sprite_path = "guitar.png"
+
+[[items]]
+ref = "71.5"
+merge = "71.6"
+name = "Banjo"
+tier = "Instruments"
+# TODO: set price
+sell = 1
+sprite_path = "banjo.png"
+
+[[items]]
+ref = "71.6"
+merge = "71.7"
+name = "Violin"
+tier = "Instruments"
+# TODO: set price
+sell = 1
+sprite_path = "violin.png"
+
+[[items]]
+ref = "71.7"
+merge = "71.8"
+name = "Trumpet"
+tier = "Instruments"
+# TODO: set price
+sell = 1
+sprite_path = "trumpet.png"
+
+[[items]]
+ref = "71.8"
+name = "Saxophone"
+tier = "Instruments"
+# TODO: set price
+sell = 1
+sprite_path = "saxophone.png"
+
+
+
+# Music
+
+[[items]]
+ref = "72.0"
+merge = "72.1"
+name = "Music Note"
+tier = "Music"
+# TODO: set price
+sell = 1
+sprite_path = "musical-note.png"
+
+[[items]]
+ref = "72.1"
+merge = "72.2"
+name = "Music Notes"
+tier = "Music"
+# TODO: set price
+sell = 1
+sprite_path = "musical-notes.png"
+
+[[items]]
+ref = "72.2"
+merge = "72.3"
+name = "Music Score"
+tier = "Music"
+# TODO: set price
+sell = 1
+sprite_path = "musical-score.png"
+
+[[items]]
+ref = "72.3"
+merge = "72.4"
+name = "CD"
+tier = "Music"
+# TODO: set price
+sell = 1
+sprite_path = "optical-disk.png"
+
+[[items]]
+ref = "72.4"
+name = "DVD"
+tier = "Music"
+# TODO: set price
+sell = 1
+sprite_path = "dvd.png"
 
 
 
