@@ -318,6 +318,13 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
 
     // Send cell update
     send_to_team_cell(&state, client_id, team_id, &inventory, action.cell);
+
+    // Send team balances update
+    let msg = MsgSendKind::InventoryBalances {
+        money: inventory.money,
+        energy: inventory.energy,
+    };
+    send_to_team(&state, Some(client_id), team_id, &msg.into());
 }
 
 fn action_sell(state: &SharedState, client_id: usize, action: ClientActionSell) {
@@ -337,6 +344,13 @@ fn action_sell(state: &SharedState, client_id: usize, action: ClientActionSell) 
 
     // Send cell update
     send_to_team_cell(&state, client_id, team_id, &inventory, action.cell);
+
+    // Send team balances update
+    let msg = MsgSendKind::InventoryBalances {
+        money: inventory.money,
+        energy: inventory.energy,
+    };
+    send_to_team(&state, Some(client_id), team_id, &msg.into());
 }
 
 fn action_scan_code(state: &SharedState, client_id: usize) {
@@ -354,8 +368,11 @@ fn action_scan_code(state: &SharedState, client_id: usize) {
         None => return,
     };
 
-    // Broadcast inventory state
-    let msg = MsgSendKind::Inventory(inventory);
+    // Send team balances update
+    let msg = MsgSendKind::InventoryBalances {
+        money: inventory.money,
+        energy: inventory.energy,
+    };
     send_to_team(&state, Some(client_id), team_id, &msg.into());
 
     // Send not yet implemented toast

@@ -82,6 +82,11 @@ export default {
                 this.game.ready = true;
                 break;
 
+            case 'inventory_balances':
+                this.game.inventory.money = data.data.money;
+                this.game.inventory.energy = data.data.energy;
+                break;
+
             case 'inventory_cell':
                 let index = data.data.index;
                 this.game.setCell(index, data.data.item);
