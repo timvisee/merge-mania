@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use rand::prelude::*;
 use serde::Serialize;
 
@@ -80,6 +82,8 @@ pub struct ClientInventory {
 
     #[serde(flatten)]
     pub grid: ClientInventoryGrid,
+
+    pub discovered: HashSet<ItemRef>,
 }
 
 impl ClientInventory {
@@ -88,6 +92,7 @@ impl ClientInventory {
             money: game.money,
             energy: game.energy,
             grid: ClientInventoryGrid::from_game(&game.grid)?,
+            discovered: game.discovered.clone(),
         })
     }
 }

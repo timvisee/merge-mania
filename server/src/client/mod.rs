@@ -5,7 +5,7 @@
 pub mod action;
 pub mod types;
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -61,6 +61,9 @@ pub enum MsgSendKind {
 
     /// Inventory cell state for current client team.
     InventoryCell { index: u8, item: Option<ClientItem> },
+
+    /// Inventory discovered list update.
+    InventoryDiscovered(HashSet<ItemRef>),
 
     /// Toast notification.
     Toast(String),

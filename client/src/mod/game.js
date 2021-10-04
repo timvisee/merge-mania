@@ -45,10 +45,8 @@ export default {
     },
 
     // Check wheher the user discovered an item.
-    // TODO: implement this using discovered index
-    // TODO: remove currentRef
-    isDiscovered(ref, currentRef) {
-        return parseInt(ref.split('.')[1]) <= parseInt(currentRef.split('.')[1]);
+    isDiscovered(ref) {
+        return this.inventory.discovered.includes(ref);
     },
 
     // Get a list of items the user may buy.

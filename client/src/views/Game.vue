@@ -156,7 +156,7 @@
                         class="item"
                         v-bind:class="{ highlight: item.ref == selectedCell.ref }"
                     >
-                        <img v-if="game.isDiscovered(item.ref, selectedCell.ref)"
+                        <img v-if="selectedCell.ref == item.ref || game.isDiscovered(item.ref)"
                             :src="'/sprites/' + item.sprite"
                             :title="item.name"
                             :alt="item.name"

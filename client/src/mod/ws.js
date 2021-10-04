@@ -92,6 +92,10 @@ export default {
                 this.game.setCell(index, data.data.item);
                 break;
 
+            case 'inventory_discovered':
+                this.game.inventory.discovered = data.data;
+                break;
+
             case 'config_items':
                 this.game.items = data.data;
                 break;

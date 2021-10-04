@@ -42,8 +42,8 @@ impl GameTeam {
 
     /// Update game team.
     ///
-    /// Returns list of changed inventory cells.
-    pub fn update(&mut self, config: &Config, tick: u64) -> HashSet<u8> {
+    /// Returns list of changed inventory cells and `true` if a new item is discovered.
+    pub fn update(&mut self, config: &Config, tick: u64) -> (HashSet<u8>, bool) {
         self.inventory.update(config, tick)
     }
 }
@@ -200,6 +200,8 @@ pub struct GameInventory {
     pub money: u64,
     pub energy: u64,
     pub grid: GameInventoryGrid,
+    #[serde(default)]
+    pub discovered: HashSet<ItemRef>,
 }
 
 impl GameInventory {
@@ -211,14 +213,44 @@ impl GameInventory {
             money: config.defaults.money,
             energy: config.defaults.energy,
             grid: GameInventoryGrid::from_config(tick, config)?,
+            discovered: config.defaults.inventory.iter().cloned().collect(),
         })
     }
 
     /// Update game inventory.
     ///
-    /// Returns list of changed cells.
-    fn update(&mut self, config: &Config, tick: u64) -> HashSet<u8> {
-        self.grid.update(config, tick)
+    /// Returns list of changed cells and `true` if a new item is discovered.
+    fn update(&mut self, config: &Config, tick: u64) -> (HashSet<u8>, bool) {
+        // Update grid, collect changed cells and discovered items
+        let (changed, discovered) = self.grid.update(config, tick);
+
+        // Check wheher new items are discovered
+        let discovered = self.discover_items(discovered);
+
+        (changed, discovered)
+    }
+
+    /// Discover an item.
+    ///
+    /// Returns `true` if it is newly discovered.
+    pub fn discover_item(&mut self, item: ItemRef) -> bool {
+        // TODO: remove debug here
+        let discovered = self.discovered.insert(item.clone());
+        if discovered {
+            trace!("Team discovered new item: {:?}", item);
+        }
+        discovered
+    }
+
+    /// Discover a list of items.
+    ///
+    /// Returns `true` if any new item was discovered.
+    fn discover_items(&mut self, items: HashSet<ItemRef>) -> bool {
+        let mut discovered = false;
+        for item in items {
+            discovered = self.discover_item(item) || discovered;
+        }
+        discovered
     }
 
     /// Check whether the inventory contains the given amounts.
@@ -400,7 +432,7 @@ impl GameInventoryGrid {
     /// Update game inventory.
     ///
     /// Return list of changed cell indices.
-    pub fn update(&mut self, config: &Config, tick: u64) -> HashSet<u8> {
+    pub fn update(&mut self, config: &Config, tick: u64) -> (HashSet<u8>, HashSet<ItemRef>) {
         // Update items, drop updated state
         for item in self.items.iter_mut() {
             if let Some(item) = item {
@@ -409,20 +441,20 @@ impl GameInventoryGrid {
         }
 
         // Place queued factory items onto field
-        let mut changed = self.place_queue_items(config, tick);
+        let (mut changed, discovered) = self.place_queue_items(config, tick);
 
         // Remove items that reached their drop limit
         changed.extend(self.remove_drop_limit_items(config));
 
-        changed
+        (changed, discovered)
     }
 
     /// Place factory queue items if there is space.
-    fn place_queue_items(&mut self, config: &Config, tick: u64) -> HashSet<u8> {
+    fn place_queue_items(&mut self, config: &Config, tick: u64) -> (HashSet<u8>, HashSet<ItemRef>) {
         // Get number of free grid cells, there must be space
         let max = self.count_free_cells();
         if max <= 0 {
-            return HashSet::new();
+            return (HashSet::new(), HashSet::new());
         }
 
         // Obtain list of items to place
@@ -446,6 +478,7 @@ impl GameInventoryGrid {
         // Place all items
         // TODO: when factory is placed ensure tick setting is correct
         let mut changed = HashSet::new();
+        let mut discovered = HashSet::new();
         for item in &items {
             // Resolve item from config
             let item = match config.item(&item) {
@@ -460,10 +493,11 @@ impl GameInventoryGrid {
             };
 
             // Transpose into game item, place it
-            let item = GameItem::from_config(tick, item.clone());
-            match self.place_item(item) {
+            let game_item = GameItem::from_config(tick, item.clone());
+            match self.place_item(game_item) {
                 Some(index) => {
                     changed.insert(index);
+                    discovered.insert(item.id.clone());
                 }
                 None => {
                     error!("Failed to place selected item, no inventory space");
@@ -471,7 +505,7 @@ impl GameInventoryGrid {
             }
         }
 
-        changed
+        (changed, discovered)
     }
 
     /// Remove items that reached their drop limit, if their drop queue is cleared.

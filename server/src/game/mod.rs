@@ -110,8 +110,17 @@ impl Game {
         // Update each team
         for team in self.teams.read().unwrap().values() {
             let mut team = team.write().unwrap();
-            let changed = team.update(&state.config, tick);
+            let (changed, discovered) = team.update(&state.config, tick);
             broadcast_team_cell_changes(state, &team, changed);
+
+            // Send new inventory state if user discovered new items
+            if discovered {
+                debug!("Team discovered new drop, notifying client");
+                let inventory = ClientInventory::from_game(&team.inventory)
+                    .expect("failed to transpose game to client inventory");
+                let msg = MsgSendKind::InventoryDiscovered(inventory.discovered);
+                ws::send_to_team(&state, None, team.id, &msg.into());
+            }
         }
     }
 
@@ -195,13 +204,15 @@ impl Game {
     }
 
     /// Buy an item for a team.
+    ///
+    /// Returns updated inventory on success and `true` if a new item was discovered.
     pub fn team_buy(
         &self,
         team_id: u32,
         config: &Config,
         cell: u8,
         item: ConfigItem,
-    ) -> Option<ClientInventory> {
+    ) -> Option<(ClientInventory, bool)> {
         self.ensure_team(config, team_id);
         let teams = self.teams.read().unwrap();
         let mut team = teams.get(&team_id).unwrap().write().unwrap();
@@ -209,6 +220,7 @@ impl Game {
         // TODO: validate indices
         // TODO: ensure user has costs, pay costs
 
+        let item_id = item.id.clone();
         let mut cell = &mut team.inventory.grid.items[cell as usize];
 
         // Cell must be empty
@@ -218,9 +230,12 @@ impl Game {
 
         *cell = Some(GameItem::from_config(self.tick(), item));
 
+        // Check for new item discovery
+        let discovered = team.inventory.discover_item(item_id);
+
         let inventory = ClientInventory::from_game(&team.inventory)
             .expect("failed to transpose game to client inventory");
-        Some(inventory)
+        Some((inventory, discovered))
     }
 
     /// Sell an item for a team.
@@ -338,14 +353,13 @@ impl Game {
     }
 }
 
-/// Broadcast current inventory state to team clients.
+/// Broadcast cell changes to team.
+///
+/// This does some smart checks to figure out the best way of sending these changes.
 fn broadcast_team_cell_changes(state: &SharedState, team: &GameTeam, changed: HashSet<u8>) {
     // Send full inventory state when a lot of cells have changed
     if changed.len() >= INV_CHANGE_PARTIAL_THRESHOLD {
-        let inventory = ClientInventory::from_game(&team.inventory)
-            .expect("failed to transpose game to client inventory");
-        let msg = MsgSendKind::Inventory(inventory);
-        ws::send_to_team(&state, None, team.id, &msg.into());
+        broadcast_team_inventory(state, team);
         return;
     }
 
@@ -361,4 +375,12 @@ fn broadcast_team_cell_changes(state: &SharedState, team: &GameTeam, changed: Ha
         };
         ws::send_to_team(&state, None, team.id, &msg.into());
     }
+}
+
+/// Broadcast current inventory state to team clients.
+fn broadcast_team_inventory(state: &SharedState, team: &GameTeam) {
+    let inventory = ClientInventory::from_game(&team.inventory)
+        .expect("failed to transpose game to client inventory");
+    let msg = MsgSendKind::Inventory(inventory);
+    ws::send_to_team(&state, None, team.id, &msg.into());
 }

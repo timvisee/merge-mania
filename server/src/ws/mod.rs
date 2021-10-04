@@ -312,13 +312,14 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
     };
 
     // Do buy, placing item in inventory, get inventory
-    let mut inventory = match state
-        .game
-        .team_buy(team_id, &state.config, action.cell, item.clone())
-    {
-        Some(inv) => inv,
-        None => return,
-    };
+    let (mut inventory, discovered) =
+        match state
+            .game
+            .team_buy(team_id, &state.config, action.cell, item.clone())
+        {
+            Some(inv) => inv,
+            None => return,
+        };
     changed.insert(action.cell);
 
     // Send cell updates
@@ -332,6 +333,12 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
         energy: inventory.energy,
     };
     send_to_team(&state, Some(client_id), team_id, &msg.into());
+
+    // When a new item is discovered, notify the client
+    if discovered {
+        let msg = MsgSendKind::InventoryDiscovered(inventory.discovered);
+        send_to_client(&state, client_id, &msg.into());
+    }
 }
 
 fn action_sell(state: &SharedState, client_id: usize, action: ClientActionSell) {
