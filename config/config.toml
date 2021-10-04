@@ -843,7 +843,7 @@ sprite_path = "first-quarter-moon.png"
 
 [[items]]
 ref = "20.2"
-merge = "20.2"
+merge = "20.3"
 name = "Waxing Gibbous"
 tier = "Moons"
 sell = 1
