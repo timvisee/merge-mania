@@ -998,19 +998,19 @@ sprite_path = "eagle.png"
 ref = "50.0"
 merge = "50.1"
 name = "Teacher"
-tier = "Nathematician"
+tier = "Mathematician"
 label = "1"
 buy = [
-    { money = 1000 },
-    { item = "12.4", quantity = 1 },
-    { energy = 1 },
+    { item = "41.4", quantity = 1 },
+    { energy = 10 },
 ]
-sell = 100
+# TODO: sell cost
+sell = 50625
 drop_interval = 300
 drops = [
-    { item = "51.0", chance = 0.9 },
-    { item = "51.1", chance = 0.08 },
-    { item = "51.2", chance = 0.02 },
+    { item = "51.0", chance = 0.95 },
+    { item = "51.1", chance = 0.04 },
+    { item = "51.2", chance = 0.01 },
 ]
 sprite_path = "man-teacher.png"
 
@@ -1018,14 +1018,16 @@ sprite_path = "man-teacher.png"
 ref = "50.1"
 merge = "50.2"
 name = "Teacher 2"
-tier = "Nathematician"
+tier = "Mathematician"
 label = "2"
-sell = 201
+# TODO: sell cost
+sell = 50625
 drop_interval = 260
 drops = [
-    { item = "51.2", chance = 0.9 },
-    { item = "51.3", chance = 0.08 },
-    { item = "51.4", chance = 0.02 },
+    { item = "51.0", chance = 0.64 },
+    { item = "51.1", chance = 0.21 },
+    { item = "51.2", chance = 0.09 },
+    { item = "51.3", chance = 0.06 },
 ]
 sprite_path = "man-teacher.png"
 
@@ -1033,28 +1035,34 @@ sprite_path = "man-teacher.png"
 ref = "50.2"
 merge = "50.3"
 name = "Teacher 4"
-tier = "Nathematician"
+tier = "Mathematician"
 label = "3"
-sell = 811
+# TODO: sell cost
+sell = 50625
 drop_interval = 220
 drops = [
-    { item = "51.4", chance = 0.9 },
-    { item = "51.5", chance = 0.08 },
-    { item = "51.6", chance = 0.02 },
+    { item = "51.0", chance = 0.32 },
+    { item = "51.1", chance = 0.39 },
+    { item = "51.2", chance = 0.17 },
+    { item = "51.3", chance = 0.11 },
+    { item = "50.0", chance = 0.01 },
 ]
 sprite_path = "man-teacher.png"
 
 [[items]]
 ref = "50.3"
 name = "Teacher 8"
-tier = "Nathematician"
+tier = "Mathematician"
 label = "Max"
-sell = 13095
+# TODO: sell cost
+sell = 50625
 drop_interval = 180
 drops = [
-    { item = "51.6", chance = 0.9 },
-    { item = "51.7", chance = 0.08 },
-    { item = "51.8", chance = 0.02 },
+    { item = "51.1", chance = 0.53 },
+    { item = "51.2", chance = 0.25 },
+    { item = "51.3", chance = 0.17 },
+    { item = "50.0", chance = 0.04 },
+    { item = "50.1", chance = 0.01 },
 ]
 sprite_path = "man-teacher.png"
 
