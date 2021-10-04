@@ -600,7 +600,7 @@ merge = "21.4"
 name = "Sheep"
 tier = "Farm animals"
 sell = 13451
-sprite_path = "ewe.png"
+sprite_path = "sheep.png"
 
 [[items]]
 ref = "21.4"
@@ -1152,16 +1152,36 @@ sprite_path = "keycap-10.png"
 
 
 
+# Stadium
+
+[[items]]
+ref = "60.0"
+# TODO: merge = "60.1"
+name = "[TEST] Stadium"
+tier = "Stadium"
+label = "1"
+buy = [
+    { money = 1 },
+]
+# TODO: sell value
+sell = 1
+drop_interval = 60
+drops = [
+    { item = "61.0", chance = 0.95 },
+    { item = "61.1", chance = 0.04 },
+    # TODO: drops
+]
+sprite_path = "stadium.png"
+
+
+
 # Ball sports
 
 [[items]]
 ref = "61.0"
 merge = "61.1"
-name = "[TEST] Soccer ball"
+name = "Soccer ball"
 tier = "Ball sports"
-buy = [
-    { money = 1 },
-]
 # TODO: set price
 sell = 1
 sprite_path = "soccer-ball.png"
