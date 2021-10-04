@@ -125,7 +125,7 @@ impl GameItem {
 
         // Decrease drop limit
         if let Some(limit) = self.drop_limit.as_mut() {
-            limit.saturating_sub(1);
+            self.drop_limit = Some(limit.saturating_sub(1));
         }
 
         true
