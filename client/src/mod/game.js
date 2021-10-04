@@ -144,8 +144,7 @@ export default {
         this.inventory.items[index].ref = item.ref;
         this.inventory.items[index].name = item.name;
         this.inventory.items[index].tier = item.tier;
-        this.inventory.items[index].label = 'sync';
-        // TODO: use this instead: this.inventory.items[index].label = item.label;
+        this.inventory.items[index].label = item.label;
         this.inventory.items[index].sprite = item.sprite;
     },
 
