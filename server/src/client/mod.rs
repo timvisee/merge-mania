@@ -56,6 +56,9 @@ pub enum MsgSendKind {
     /// Inventory state for current client team.
     Inventory(ClientInventory),
 
+    /// Inventory cell state for current client team.
+    InventoryCell { index: u8, item: Option<ClientItem> },
+
     /// Toast notification.
     Toast(String),
 }

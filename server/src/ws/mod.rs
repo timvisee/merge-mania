@@ -12,8 +12,8 @@ use warp::Filter;
 
 use crate::auth::{generate_client_id, Client, Session};
 use crate::client::{
-    ClientActionBuy, ClientActionMerge, ClientActionSell, ClientActionSwap, MsgRecv, MsgRecvKind,
-    MsgSend, MsgSendKind,
+    ClientActionBuy, ClientActionMerge, ClientActionSell, ClientActionSwap, ClientInventory,
+    MsgRecv, MsgRecvKind, MsgSend, MsgSendKind,
 };
 use crate::state::SharedState;
 
@@ -239,9 +239,9 @@ fn action_swap(state: &SharedState, client_id: usize, action: ClientActionSwap) 
             None => return,
         };
 
-    // Broadcast inventory state
-    let msg = MsgSendKind::Inventory(inventory);
-    send_to_team(&state, Some(client_id), team_id, &msg.into());
+    // Send cell updates
+    send_to_team_cell(&state, client_id, team_id, &inventory, action.cell);
+    send_to_team_cell(&state, client_id, team_id, &inventory, action.other);
 }
 
 fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge) {
@@ -265,9 +265,9 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
             None => return,
         };
 
-    // Broadcast inventory state
-    let msg = MsgSendKind::Inventory(inventory);
-    send_to_team(&state, Some(client_id), team_id, &msg.into());
+    // Send cell updates
+    send_to_team_cell(&state, client_id, team_id, &inventory, action.cell);
+    send_to_team_cell(&state, client_id, team_id, &inventory, action.other);
 }
 
 fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
@@ -315,9 +315,8 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
         None => return,
     };
 
-    // Broadcast inventory state
-    let msg = MsgSendKind::Inventory(inventory);
-    send_to_team(&state, Some(client_id), team_id, &msg.into());
+    // Send cell update
+    send_to_team_cell(&state, client_id, team_id, &inventory, action.cell);
 }
 
 fn action_sell(state: &SharedState, client_id: usize, action: ClientActionSell) {
@@ -335,9 +334,8 @@ fn action_sell(state: &SharedState, client_id: usize, action: ClientActionSell) 
         None => return,
     };
 
-    // Broadcast inventory state
-    let msg = MsgSendKind::Inventory(inventory);
-    send_to_team(&state, Some(client_id), team_id, &msg.into());
+    // Send cell update
+    send_to_team_cell(&state, client_id, team_id, &inventory, action.cell);
 }
 
 fn action_scan_code(state: &SharedState, client_id: usize) {
@@ -427,6 +425,25 @@ pub fn send_to_team(
     }
 
     Ok(())
+}
+
+/// Send state of single inventory cell to team.
+///
+/// Notes:
+/// - also sends to the current client as identified by `client_id`.
+/// - returns `Ok` even if the message reaches no team.
+fn send_to_team_cell(
+    state: &SharedState,
+    client_id: usize,
+    team_id: u32,
+    inventory: &ClientInventory,
+    cell: u8,
+) {
+    let msg = MsgSendKind::InventoryCell {
+        index: cell,
+        item: inventory.grid.items[cell as usize].clone(),
+    };
+    send_to_team(&state, Some(client_id), team_id, &msg.into());
 }
 
 /// Client disconnected.

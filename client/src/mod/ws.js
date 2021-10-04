@@ -82,6 +82,11 @@ export default {
                 this.game.ready = true;
                 break;
 
+            case 'inventory_cell':
+                let index = data.data.index;
+                this.game.inventory.items[index] = data.data.item;
+                break;
+
             case 'config_items':
                 this.game.items = data.data;
                 break;

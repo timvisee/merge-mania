@@ -24,7 +24,7 @@ impl ClientTeam {
 }
 
 /// Game item.
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Clone)]
 pub struct ClientItem {
     /// Item ID.
     #[serde(rename = "ref")]
@@ -75,11 +75,11 @@ impl ClientItem {
 /// An inventory.
 #[derive(Serialize, Debug)]
 pub struct ClientInventory {
-    money: u64,
-    energy: u64,
+    pub money: u64,
+    pub energy: u64,
 
     #[serde(flatten)]
-    grid: ClientInventoryGrid,
+    pub grid: ClientInventoryGrid,
 }
 
 impl ClientInventory {
@@ -95,7 +95,7 @@ impl ClientInventory {
 /// An inventory grid.
 #[derive(Serialize, Debug)]
 pub struct ClientInventoryGrid {
-    items: Vec<Option<ClientItem>>,
+    pub items: Vec<Option<ClientItem>>,
 }
 
 impl ClientInventoryGrid {
