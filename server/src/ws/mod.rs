@@ -293,19 +293,23 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
     };
 
     // Pay amounts, send notification if not enough resources
-    if !state.game.team_pay(team_id, &state.config, costs) {
-        let msg = MsgSendKind::Toast(crate::lang::INSUFFICIENT_RESOURCES_TO_BUY.into());
-        send_to_client(&state, client_id, &msg.into());
+    let mut changed = match state.game.team_pay(team_id, &state.config, costs) {
+        Ok(changed) => changed,
+        Err(_) => {
+            let msg = MsgSendKind::Toast(crate::lang::INSUFFICIENT_RESOURCES_TO_BUY.into());
+            send_to_client(&state, client_id, &msg.into());
 
-        // Broadcast inventory state to reset client state
-        let inventory = state.game.team_client_inventory(&state.config, team_id);
-        if let Some(inventory) = inventory {
-            let msg = MsgSendKind::Inventory(inventory);
-            send_to_team(&state, Some(client_id), team_id, &msg.into());
+            // Broadcast inventory state to reset client state
+            let inventory = state.game.team_client_inventory(&state.config, team_id);
+            if let Some(inventory) = inventory {
+                // TODO: only broadcast changed values (money, energy)
+                let msg = MsgSendKind::Inventory(inventory);
+                send_to_team(&state, Some(client_id), team_id, &msg.into());
+            }
+
+            return;
         }
-
-        return;
-    }
+    };
 
     // Do buy, placing item in inventory, get inventory
     let mut inventory = match state
@@ -315,9 +319,12 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
         Some(inv) => inv,
         None => return,
     };
+    changed.insert(action.cell);
 
-    // Send cell update
-    send_to_team_cell(&state, client_id, team_id, &inventory, action.cell);
+    // Send cell updates
+    for cell in changed {
+        send_to_team_cell(&state, client_id, team_id, &inventory, cell);
+    }
 
     // Send team balances update
     let msg = MsgSendKind::InventoryBalances {

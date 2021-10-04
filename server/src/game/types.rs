@@ -232,30 +232,34 @@ impl GameInventory {
 
     /// Remove the given amounts from the inventory.
     ///
-    /// Returns `false` if the inventory doesn't have enough resources, in which case it isn't
+    /// Returns `Ok(map)` listing changed cells.
+    /// Returns `Err(())` if the inventory doesn't have enough resources, in which case it isn't
     /// modified.
-    pub fn remove_amounts(&mut self, amounts: &[Amount]) -> bool {
+    pub fn remove_amounts(&mut self, amounts: &[Amount]) -> Result<HashSet<u8>, ()> {
         // User must have enough resources
         if !self.has_amounts(amounts) {
-            return false;
+            return Err(());
         }
 
         // Remove all items from inventory
-        amounts.iter().for_each(|amount| match amount {
-            Amount::Money { money } => {
-                self.money -= money;
-            }
-            Amount::Energy { energy } => {
-                self.energy -= energy;
-            }
-            Amount::Item { item, quantity } => {
-                for _ in 0..*quantity {
-                    self.grid.remove_item(item);
+        Ok(amounts.iter().fold(HashSet::new(), |mut changed, amount| {
+            match amount {
+                Amount::Money { money } => {
+                    self.money -= money;
+                }
+                Amount::Energy { energy } => {
+                    self.energy -= energy;
+                }
+                Amount::Item { item, quantity } => {
+                    for _ in 0..*quantity {
+                        if let Some(cell) = self.grid.remove_item(item) {
+                            changed.insert(cell);
+                        }
+                    }
                 }
             }
-        });
-
-        true
+            changed
+        }))
     }
 }
 
@@ -344,14 +348,13 @@ impl GameInventoryGrid {
 
     /// Remove an item from the grid.
     ///
-    /// Returns `true` if succeeded.
-    pub fn remove_item(&mut self, item: &ItemRef) -> bool {
+    /// Returns cell index of removed item on success, `None` on failure.
+    pub fn remove_item(&mut self, item: &ItemRef) -> Option<u8> {
         // TODO: use shared random source
         let mut rng = rand::thread_rng();
 
         // Find random cell index that holds this item
-        let index = self
-            .items
+        self.items
             .iter()
             .enumerate()
             .cycle()
@@ -359,11 +362,8 @@ impl GameInventoryGrid {
             .take(crate::INV_SIZE as usize)
             .filter(|(_, i)| matches!(i, Some(i) if &i.id == item))
             .map(|(i, _)| i)
-            .next();
-        match index {
-            Some(index) => self.items[index].take().is_some(),
-            None => false,
-        }
+            .next()
+            .and_then(|index| self.items[index].take().map(|_| index as u8))
     }
 
     /// Find a random free cell in the inventory.

@@ -180,7 +180,12 @@ impl Game {
     }
 
     /// Pay the given amounts.
-    pub fn team_pay(&self, team_id: u32, config: &Config, amounts: &[Amount]) -> bool {
+    pub fn team_pay(
+        &self,
+        team_id: u32,
+        config: &Config,
+        amounts: &[Amount],
+    ) -> Result<HashSet<u8>, ()> {
         self.ensure_team(config, team_id);
         let teams = self.teams.read().unwrap();
         let mut team = teams.get(&team_id).unwrap().write().unwrap();
