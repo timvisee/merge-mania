@@ -762,107 +762,6 @@ sprite_path = "cook.png"
 
 
 
-# Chicken
-
-[[items]]
-ref = "40.0"
-merge = "40.1"
-name = "Chicken TEST"
-tier = "Chicken"
-label = "1"
-buy = [
-    { item = "31.4", quantity = 1 },
-    { energy = 3 },
-]
-# TODO: sell value
-sell = 3375
-drop_interval = 60
-drops = [
-    { item = "41.0", chance = 0.95 },
-    { item = "41.1", chance = 0.04 },
-    { item = "41.2", chance = 0.00 },
-    { item = "41.3", chance = 0.00 },
-    # TODO: { item = "42.0", chance = 0.01 },
-    # TODO: { item = "42.1", chance = 0.00 },
-]
-sprite_path = "chicken.png"
-
-[[items]]
-ref = "40.1"
-merge = "40.2"
-name = "Chicken 2"
-tier = "Chicken"
-label = "2"
-# TODO: sell value
-sell = 3375
-drop_interval = 51
-drops = [
-    { item = "41.0", chance = 0.87 },
-    { item = "41.1", chance = 0.09 },
-    { item = "41.2", chance = 0.01 },
-    { item = "41.3", chance = 0.00 },
-    # TODO: { item = "42.0", chance = 0.03 },
-    # TODO: { item = "42.1", chance = 0.00 },
-]
-sprite_path = "chicken.png"
-
-[[items]]
-ref = "40.2"
-merge = "40.3"
-name = "Chicken 3"
-tier = "Chicken"
-label = "3"
-# TODO: sell value
-sell = 3375
-drop_interval = 42
-drops = [
-    { item = "41.0", chance = 0.54 },
-    { item = "41.1", chance = 0.32 },
-    { item = "41.2", chance = 0.05 },
-    { item = "41.3", chance = 0.01 },
-    # TODO: { item = "42.0", chance = 0.07 },
-    # TODO: { item = "42.1", chance = 0.01 },
-]
-sprite_path = "chicken.png"
-
-[[items]]
-ref = "40.3"
-merge = "40.4"
-name = "Chicken 4"
-tier = "Chicken"
-label = "4"
-# TODO: sell value
-sell = 3375
-drop_interval = 33
-drops = [
-    { item = "41.0", chance = 0.28 },
-    { item = "41.1", chance = 0.50 },
-    { item = "41.2", chance = 0.07 },
-    { item = "41.3", chance = 0.03 },
-    # TODO: { item = "42.0", chance = 0.09 },
-    # TODO: { item = "42.1", chance = 0.03 },
-]
-sprite_path = "chicken.png"
-
-[[items]]
-ref = "40.4"
-name = "Chicken 5"
-tier = "Chicken"
-label = "Max"
-# TODO: sell price
-sell = 3375
-drop_interval = 24
-drops = [
-    { item = "41.1", chance = 0.42 },
-    { item = "41.2", chance = 0.18 },
-    { item = "41.3", chance = 0.13 },
-    # TODO: { item = "42.0", chance = 0.22 },
-    # TODO: { item = "42.1", chance = 0.05 },
-]
-sprite_path = "chicken.png"
-
-
-
 # Bread
 
 [[items]]
@@ -947,15 +846,16 @@ name = "Chicken"
 tier = "Chicken"
 label = "1"
 buy = [
-    { item = "12.4", quantity = 1 },
-    { energy = 1 },
+    { item = "31.4", quantity = 1 },
+    { energy = 3 },
 ]
-sell = 79
+# TODO: sell value
+sell = 3375
 drop_interval = 60
 drops = [
-    { item = "31.0", chance = 0.95 },
-    { item = "31.1", chance = 0.04 },
-    { item = "41.0", chance = 0.01 },
+    { item = "41.0", chance = 0.95 },
+    { item = "41.1", chance = 0.04 },
+    # TODO: { item = "42.0", chance = 0.01 },
 ]
 sprite_path = "chicken.png"
 
@@ -965,13 +865,14 @@ merge = "40.2"
 name = "Chicken 2"
 tier = "Chicken"
 label = "2"
-sell = 158
+# TODO: sell value
+sell = 3375
 drop_interval = 51
 drops = [
-    { item = "31.0", chance = 0.87 },
-    { item = "31.1", chance = 0.09 },
-    { item = "31.2", chance = 0.01 },
-    { item = "41.0", chance = 0.03 },
+    { item = "41.0", chance = 0.87 },
+    { item = "41.1", chance = 0.09 },
+    { item = "41.2", chance = 0.01 },
+    # TODO: { item = "42.0", chance = 0.03 },
 ]
 sprite_path = "chicken.png"
 
@@ -981,15 +882,16 @@ merge = "40.3"
 name = "Chicken 3"
 tier = "Chicken"
 label = "3"
-sell = 316
+# TODO: sell value
+sell = 3375
 drop_interval = 42
 drops = [
-    { item = "31.0", chance = 0.54 },
-    { item = "31.1", chance = 0.32 },
-    { item = "31.2", chance = 0.05 },
-    { item = "31.3", chance = 0.01 },
-    { item = "41.0", chance = 0.07 },
-    { item = "41.1", chance = 0.01 },
+    { item = "41.0", chance = 0.54 },
+    { item = "41.1", chance = 0.32 },
+    { item = "41.2", chance = 0.05 },
+    { item = "41.3", chance = 0.01 },
+    # TODO: { item = "42.0", chance = 0.07 },
+    # TODO: { item = "42.1", chance = 0.01 },
 ]
 sprite_path = "chicken.png"
 
@@ -999,15 +901,16 @@ merge = "40.4"
 name = "Chicken 4"
 tier = "Chicken"
 label = "4"
-sell = 732
+# TODO: sell value
+sell = 3375
 drop_interval = 33
 drops = [
-    { item = "31.0", chance = 0.28 },
-    { item = "31.1", chance = 0.50 },
-    { item = "31.2", chance = 0.07 },
-    { item = "31.3", chance = 0.03 },
-    { item = "41.0", chance = 0.10 },
-    { item = "41.1", chance = 0.02 },
+    { item = "41.0", chance = 0.28 },
+    { item = "41.1", chance = 0.50 },
+    { item = "41.2", chance = 0.07 },
+    { item = "41.3", chance = 0.03 },
+    # TODO: { item = "42.0", chance = 0.09 },
+    # TODO: { item = "42.1", chance = 0.03 },
 ]
 sprite_path = "chicken.png"
 
@@ -1016,14 +919,15 @@ ref = "40.4"
 name = "Chicken 5"
 tier = "Chicken"
 label = "Max"
-sell = 1464
+# TODO: sell price
+sell = 3375
 drop_interval = 24
 drops = [
-    { item = "31.1", chance = 0.42 },
-    { item = "31.2", chance = 0.18 },
-    { item = "31.3", chance = 0.13 },
-    { item = "41.0", chance = 0.22 },
-    { item = "41.1", chance = 0.05 },
+    { item = "41.1", chance = 0.42 },
+    { item = "41.2", chance = 0.18 },
+    { item = "41.3", chance = 0.13 },
+    # TODO: { item = "42.0", chance = 0.22 },
+    # TODO: { item = "42.1", chance = 0.05 },
 ]
 sprite_path = "chicken.png"
 
