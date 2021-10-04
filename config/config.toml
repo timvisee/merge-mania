@@ -1152,6 +1152,94 @@ sprite_path = "keycap-10.png"
 
 
 
+# Ball sports
+
+[[items]]
+ref = "61.0"
+merge = "61.1"
+name = "[TEST] Soccer ball"
+tier = "Ball sports"
+buy = [
+    { money = 1 },
+]
+# TODO: set price
+sell = 1
+sprite_path = "soccer-ball.png"
+
+[[items]]
+ref = "61.1"
+merge = "61.2"
+name = "Tennis ball"
+tier = "Ball sports"
+# TODO: set price
+sell = 1
+sprite_path = "tennis.png"
+
+[[items]]
+ref = "61.2"
+merge = "61.3"
+name = "Softball"
+tier = "Ball sports"
+# TODO: set price
+sell = 1
+sprite_path = "softball.png"
+
+[[items]]
+ref = "61.3"
+merge = "61.4"
+name = "Baseball"
+tier = "Ball sports"
+# TODO: set price
+sell = 1
+sprite_path = "baseball.png"
+
+[[items]]
+ref = "61.4"
+merge = "61.5"
+name = "Volleyball"
+tier = "Ball sports"
+# TODO: set price
+sell = 1
+sprite_path = "volleyball.png"
+
+[[items]]
+ref = "61.5"
+merge = "61.6"
+name = "Basketball"
+tier = "Ball sports"
+# TODO: set price
+sell = 1
+sprite_path = "basketball.png"
+
+[[items]]
+ref = "61.6"
+merge = "61.7"
+name = "Rugby football"
+tier = "Ball sports"
+# TODO: set price
+sell = 1
+sprite_path = "rugby-football.png"
+
+[[items]]
+ref = "61.7"
+merge = "61.8"
+name = "American football"
+tier = "Ball sports"
+# TODO: set price
+sell = 1
+sprite_path = "american-football.png"
+
+[[items]]
+ref = "61.8"
+merge = "61.9"
+name = "8-ball"
+tier = "Ball sports"
+# TODO: set price
+sell = 1
+sprite_path = "pool-8-ball.png"
+
+
+
 # # Moons
 #
 # [[items]]
