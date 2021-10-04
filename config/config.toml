@@ -1467,7 +1467,7 @@ sprite_path = "dvd.png"
 
 [[items]]
 ref = "80.0"
-merge = "80.1"
+# TODO: merge = "80.1"
 # TODO: update name
 name = "[TEST] Toolbox"
 tier = "Toolbox"
