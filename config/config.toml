@@ -545,7 +545,7 @@ sprite_path = "chicken.png"
 
 
 
-# Bread products
+# Bread
 
 [[items]]
 ref = "31.0"
@@ -620,7 +620,7 @@ sprite_path = "fortune-cookie.png"
 
 
 
-# Birds products
+# Birds
 
 [[items]]
 ref = "41.0"
@@ -679,7 +679,75 @@ sprite_path = "eagle.png"
 
 
 
-# Math / numbers
+# Teacher
+
+[[items]]
+ref = "50.0"
+merge = "50.1"
+name = "Teacher"
+tier = "Nathematician"
+label = "1"
+buy = [
+    { money = 1000 },
+    { item = "12.4", quantity = 1 },
+    { energy = 1 },
+]
+sell = 1000
+drop_interval = 300
+drops = [
+    { item = "51.0", chance = 0.9 },
+    { item = "51.1", chance = 0.08 },
+    { item = "51.2", chance = 0.02 },
+]
+sprite_path = "man-teacher.png"
+
+[[items]]
+ref = "50.1"
+merge = "50.2"
+name = "Teacher 2"
+tier = "Nathematician"
+label = "2"
+sell = 2000
+drop_interval = 260
+drops = [
+    { item = "51.2", chance = 0.9 },
+    { item = "51.3", chance = 0.08 },
+    { item = "51.4", chance = 0.02 },
+]
+sprite_path = "man-teacher.png"
+
+[[items]]
+ref = "50.2"
+merge = "50.3"
+name = "Teacher 4"
+tier = "Nathematician"
+label = "3"
+sell = 4000
+drop_interval = 220
+drops = [
+    { item = "51.4", chance = 0.9 },
+    { item = "51.5", chance = 0.08 },
+    { item = "51.6", chance = 0.02 },
+]
+sprite_path = "man-teacher.png"
+
+[[items]]
+ref = "50.3"
+name = "Teacher 8"
+tier = "Nathematician"
+label = "Max"
+sell = 8000
+drop_interval = 180
+drops = [
+    { item = "51.6", chance = 0.9 },
+    { item = "51.7", chance = 0.08 },
+    { item = "51.8", chance = 0.02 },
+]
+sprite_path = "man-teacher.png"
+
+
+
+# Numbers
 
 [[items]]
 ref = "51.0"
@@ -760,70 +828,6 @@ name = "Ten"
 tier = "Numbers"
 sell = 51200
 sprite_path = "keycap-10.png"
-
-[[items]]
-ref = "50.0"
-merge = "50.1"
-name = "Teacher"
-tier = "Nathematician"
-label = "1"
-buy = [
-    { money = 1000 },
-    { item = "12.4", quantity = 1 },
-    { energy = 1 },
-]
-sell = 1000
-drop_interval = 300
-drops = [
-    { item = "51.0", chance = 0.9 },
-    { item = "51.1", chance = 0.08 },
-    { item = "51.2", chance = 0.02 },
-]
-sprite_path = "man-teacher.png"
-
-[[items]]
-ref = "50.1"
-merge = "50.2"
-name = "Teacher 2"
-tier = "Nathematician"
-label = "2"
-sell = 2000
-drop_interval = 260
-drops = [
-    { item = "51.2", chance = 0.9 },
-    { item = "51.3", chance = 0.08 },
-    { item = "51.4", chance = 0.02 },
-]
-sprite_path = "man-teacher.png"
-
-[[items]]
-ref = "50.2"
-merge = "50.3"
-name = "Teacher 4"
-tier = "Nathematician"
-label = "3"
-sell = 4000
-drop_interval = 220
-drops = [
-    { item = "51.4", chance = 0.9 },
-    { item = "51.5", chance = 0.08 },
-    { item = "51.6", chance = 0.02 },
-]
-sprite_path = "man-teacher.png"
-
-[[items]]
-ref = "50.3"
-name = "Teacher 8"
-tier = "Nathematician"
-label = "Max"
-sell = 8000
-drop_interval = 180
-drops = [
-    { item = "51.6", chance = 0.9 },
-    { item = "51.7", chance = 0.08 },
-    { item = "51.8", chance = 0.02 },
-]
-sprite_path = "man-teacher.png"
 
 
 
