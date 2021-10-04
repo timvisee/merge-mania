@@ -39,6 +39,11 @@ export default {
         );
     },
 
+    // Set inventory cell item.
+    setCell(index, item) {
+        this.inventory.items.splice(index, 1, item);
+    },
+
     // Check wheher the user discovered an item.
     // TODO: implement this using discovered index
     // TODO: remove currentRef
@@ -135,7 +140,7 @@ export default {
             return;
 
         // Instantiate item
-        this.inventory.items[index] = {
+        this.setCell(index, {
             ref: item.ref,
             name: item.name,
             tier: item.tier,
@@ -145,7 +150,7 @@ export default {
             drop_limit: item.drop_limit,
             sprite: item.sprite,
             mergeable: item.merge !== null,
-        };
+        });
     },
 
     // Premove the item at the given index, upgrade it a level.

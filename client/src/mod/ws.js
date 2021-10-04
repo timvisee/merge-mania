@@ -84,7 +84,7 @@ export default {
 
             case 'inventory_cell':
                 let index = data.data.index;
-                this.game.inventory.items[index] = data.data.item;
+                this.game.setCell(index, data.data.item);
                 break;
 
             case 'config_items':
