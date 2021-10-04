@@ -1234,7 +1234,6 @@ sprite_path = "american-football.png"
 
 [[items]]
 ref = "61.8"
-merge = "61.9"
 name = "8-ball"
 tier = "Ball sports"
 # TODO: set price
@@ -1682,7 +1681,6 @@ sprite_path = "shower.png"
 
 [[items]]
 ref = "90.2"
-merge = "90.3"
 # TODO: update name
 name = "Fountain"
 tier = "Water Source"
