@@ -709,24 +709,6 @@ drops = [
 sprite_path = "cook.png"
 
 [[items]]
-ref = "30.2"
-merge = "30.3"
-name = "Bakery"
-tier = "Bakery 3"
-label = "3"
-# TODO: sell
-sell = 225
-drop_interval = 42
-drops = [
-    { item = "31.0", chance = 0.54 },
-    { item = "31.1", chance = 0.32 },
-    { item = "31.2", chance = 0.05 },
-    { item = "31.3", chance = 0.01 },
-    { item = "41.0", chance = 0.08 },
-]
-sprite_path = "cook.png"
-
-[[items]]
 ref = "30.3"
 merge = "30.4"
 name = "Bakery"
@@ -748,7 +730,7 @@ sprite_path = "cook.png"
 ref = "30.4"
 name = "Bakery"
 tier = "Bakery 5"
-label = "5"
+label = "Max"
 # TODO: sell
 sell = 225
 drop_interval = 24
@@ -1321,7 +1303,7 @@ ref = "70.3"
 merge = "70.4"
 name = "Headphone"
 tier = "Speakers"
-label = "5"
+label = "4"
 # TODO: sell value
 sell = 1
 drop_interval = 33
