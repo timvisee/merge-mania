@@ -257,7 +257,7 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
     // TODO: ensure we can merge
 
     // Do merge, get inventory
-    let mut inventory =
+    let (mut inventory, discovered) =
         match state
             .game
             .team_merge(team_id, &state.config, action.cell, action.other)
@@ -269,6 +269,13 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
     // Send cell updates
     send_to_team_cell(&state, client_id, team_id, &inventory, action.cell);
     send_to_team_cell(&state, client_id, team_id, &inventory, action.other);
+
+    // When a new item is discovered, notify the client
+    if discovered {
+        debug!("Team discovered new item by merging, notifying client");
+        let msg = MsgSendKind::InventoryDiscovered(inventory.discovered);
+        send_to_client(&state, client_id, &msg.into());
+    }
 }
 
 fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
@@ -336,6 +343,7 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
 
     // When a new item is discovered, notify the client
     if discovered {
+        debug!("Team discovered new item by buying, notifying client");
         let msg = MsgSendKind::InventoryDiscovered(inventory.discovered);
         send_to_client(&state, client_id, &msg.into());
     }

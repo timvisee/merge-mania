@@ -160,13 +160,15 @@ impl Game {
     }
 
     /// Merge two items for a team.
+    ///
+    /// Returns the new inventory state on success and `true` if a new item was discovered.
     pub fn team_merge(
         &self,
         team_id: u32,
         config: &Config,
         cell: u8,
         other: u8,
-    ) -> Option<ClientInventory> {
+    ) -> Option<(ClientInventory, bool)> {
         self.ensure_team(config, team_id);
         let teams = self.teams.read().unwrap();
         let mut team = teams.get(&team_id).unwrap().write().unwrap();
@@ -183,9 +185,16 @@ impl Game {
             team.inventory.grid.items[other as usize] = None;
         }
 
+        // Check for new item discovery
+        let mut discovered = false;
+        if let Some(item) = &team.inventory.grid.items[cell as usize] {
+            let item_ref = item.id.clone();
+            discovered = team.inventory.discover_item(item_ref);
+        }
+
         let inventory = ClientInventory::from_game(&team.inventory)
             .expect("failed to transpose game to client inventory");
-        Some(inventory)
+        Some((inventory, discovered))
     }
 
     /// Pay the given amounts.
