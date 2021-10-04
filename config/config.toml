@@ -986,8 +986,7 @@ buy = [
     { item = "41.4", quantity = 1 },
     { energy = 10 },
 ]
-# TODO: sell cost
-sell = 50625
+sell = 100
 drop_interval = 300
 drops = [
     { item = "51.0", chance = 0.95 },
@@ -1002,14 +1001,13 @@ merge = "50.2"
 name = "Teacher 2"
 tier = "Mathematician"
 label = "2"
-# TODO: sell cost
-sell = 50625
+sell = 201
 drop_interval = 260
 drops = [
     { item = "51.0", chance = 0.64 },
-    { item = "51.1", chance = 0.21 },
-    { item = "51.2", chance = 0.09 },
-    { item = "51.3", chance = 0.06 },
+    { item = "51.1", chance = 0.25 },
+    { item = "51.2", chance = 0.10 },
+    { item = "51.3", chance = 0.01 },
 ]
 sprite_path = "man-teacher.png"
 
@@ -1019,14 +1017,13 @@ merge = "50.3"
 name = "Teacher 4"
 tier = "Mathematician"
 label = "3"
-# TODO: sell cost
-sell = 50625
+sell = 404
 drop_interval = 220
 drops = [
     { item = "51.0", chance = 0.32 },
-    { item = "51.1", chance = 0.39 },
-    { item = "51.2", chance = 0.17 },
-    { item = "51.3", chance = 0.11 },
+    { item = "51.1", chance = 0.45 },
+    { item = "51.2", chance = 0.19 },
+    { item = "51.3", chance = 0.03 },
     { item = "50.0", chance = 0.01 },
 ]
 sprite_path = "man-teacher.png"
@@ -1036,14 +1033,13 @@ ref = "50.3"
 name = "Teacher 8"
 tier = "Mathematician"
 label = "Max"
-# TODO: sell cost
-sell = 50625
+sell = 811
 drop_interval = 180
 drops = [
-    { item = "51.1", chance = 0.53 },
-    { item = "51.2", chance = 0.25 },
-    { item = "51.3", chance = 0.17 },
-    { item = "50.0", chance = 0.04 },
+    { item = "51.1", chance = 0.62 },
+    { item = "51.2", chance = 0.29 },
+    { item = "51.3", chance = 0.06 },
+    { item = "50.0", chance = 0.02 },
     { item = "50.1", chance = 0.01 },
 ]
 sprite_path = "man-teacher.png"
@@ -1057,7 +1053,7 @@ ref = "51.0"
 merge = "51.1"
 name = "One"
 tier = "Numbers"
-sell = 50625
+sell = 10125
 sprite_path = "keycap-digit-one.png"
 
 [[items]]
@@ -1065,7 +1061,7 @@ ref = "51.1"
 merge = "51.2"
 name = "Two"
 tier = "Numbers"
-sell = 101251
+sell = 20251
 sprite_path = "keycap-digit-two.png"
 
 [[items]]
@@ -1073,7 +1069,7 @@ ref = "51.2"
 merge = "51.3"
 name = "Three"
 tier = "Numbers"
-sell = 202504
+sell = 40504
 sprite_path = "keycap-digit-three.png"
 
 [[items]]
@@ -1081,7 +1077,7 @@ ref = "51.3"
 merge = "51.4"
 name = "Four"
 tier = "Numbers"
-sell = 405011
+sell = 81011
 sprite_path = "keycap-digit-four.png"
 
 [[items]]
@@ -1089,7 +1085,7 @@ ref = "51.4"
 merge = "51.5"
 name = "Five"
 tier = "Numbers"
-sell = 810027
+sell = 162027
 sprite_path = "keycap-digit-five.png"
 
 [[items]]
@@ -1097,7 +1093,7 @@ ref = "51.5"
 merge = "51.6"
 name = "Six"
 tier = "Numbers"
-sell = 1620062
+sell = 324062
 sprite_path = "keycap-digit-six.png"
 
 [[items]]
@@ -1105,7 +1101,7 @@ ref = "51.6"
 merge = "51.7"
 name = "Seven"
 tier = "Numbers"
-sell = 3240137
+sell = 648137
 sprite_path = "keycap-digit-seven.png"
 
 [[items]]
@@ -1113,7 +1109,7 @@ ref = "51.7"
 merge = "51.8"
 name = "Eight"
 tier = "Numbers"
-sell = 6480295
+sell = 1296295
 sprite_path = "keycap-digit-eight.png"
 
 [[items]]
@@ -1121,7 +1117,7 @@ ref = "51.8"
 merge = "51.9"
 name = "Nine"
 tier = "Numbers"
-sell = 12960624
+sell = 2592624
 sprite_path = "keycap-digit-nine.png"
 
 [[items]]
@@ -1129,7 +1125,7 @@ ref = "51.9"
 merge = "50.0"
 name = "Ten"
 tier = "Numbers"
-sell = 25921303
+sell = 5185303
 sprite_path = "keycap-10.png"
 
 
