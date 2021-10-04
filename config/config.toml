@@ -459,7 +459,7 @@ sprite_path = "mushroom.png"
 [[items]]
 ref = "20.0"
 merge = "20.1"
-name = "Farmer 1"
+name = "Farmer"
 tier = "Farmer"
 label = "1"
 buy = [
@@ -651,6 +651,293 @@ sprite_path = "unicorn.png"
 
 
 
+# Bakery
+
+[[items]]
+ref = "30.0"
+merge = "30.1"
+name = "Bakery"
+tier = "Bakery"
+label = "1"
+buy = [
+    { item = "12.4", quantity = 1 },
+    { energy = 1 },
+]
+# TODO: sell
+sell = 225
+drop_interval = 60
+drops = [
+    { item = "31.0", chance = 0.95 },
+    { item = "31.1", chance = 0.04 },
+    { item = "41.0", chance = 0.01 },
+]
+sprite_path = "cook.png"
+
+[[items]]
+ref = "30.1"
+merge = "30.2"
+name = "Bakery"
+tier = "Bakery 2"
+label = "2"
+# TODO: sell
+sell = 225
+drop_interval = 51
+drops = [
+    { item = "31.0", chance = 0.87 },
+    { item = "31.1", chance = 0.09 },
+    { item = "31.2", chance = 0.01 },
+    { item = "41.0", chance = 0.03 },
+]
+sprite_path = "cook.png"
+
+[[items]]
+ref = "30.2"
+merge = "30.3"
+name = "Bakery"
+tier = "Bakery 3"
+label = "3"
+# TODO: sell
+sell = 225
+drop_interval = 42
+drops = [
+    { item = "31.0", chance = 0.54 },
+    { item = "31.1", chance = 0.32 },
+    { item = "31.2", chance = 0.05 },
+    { item = "31.3", chance = 0.01 },
+    { item = "41.0", chance = 0.08 },
+]
+sprite_path = "cook.png"
+
+[[items]]
+ref = "30.2"
+merge = "30.3"
+name = "Bakery"
+tier = "Bakery 3"
+label = "3"
+# TODO: sell
+sell = 225
+drop_interval = 42
+drops = [
+    { item = "31.0", chance = 0.54 },
+    { item = "31.1", chance = 0.32 },
+    { item = "31.2", chance = 0.05 },
+    { item = "31.3", chance = 0.01 },
+    { item = "41.0", chance = 0.08 },
+]
+sprite_path = "cook.png"
+
+[[items]]
+ref = "30.3"
+merge = "30.4"
+name = "Bakery"
+tier = "Bakery 4"
+label = "4"
+# TODO: sell
+sell = 225
+drop_interval = 33
+drops = [
+    { item = "31.0", chance = 0.28 },
+    { item = "31.1", chance = 0.50 },
+    { item = "31.2", chance = 0.07 },
+    { item = "31.3", chance = 0.03 },
+    { item = "41.0", chance = 0.12 },
+]
+sprite_path = "cook.png"
+
+[[items]]
+ref = "30.4"
+name = "Bakery"
+tier = "Bakery 5"
+label = "5"
+# TODO: sell
+sell = 225
+drop_interval = 24
+drops = [
+    { item = "31.1", chance = 0.42 },
+    { item = "31.2", chance = 0.18 },
+    { item = "31.3", chance = 0.13 },
+    { item = "41.0", chance = 0.27 },
+]
+sprite_path = "cook.png"
+
+
+
+# Chicken
+
+[[items]]
+ref = "40.0"
+merge = "40.1"
+name = "Chicken TEST"
+tier = "Chicken"
+label = "1"
+buy = [
+    { item = "31.4", quantity = 1 },
+    { energy = 3 },
+]
+# TODO: sell value
+sell = 3375
+drop_interval = 60
+drops = [
+    { item = "41.0", chance = 0.95 },
+    { item = "41.1", chance = 0.04 },
+    { item = "41.2", chance = 0.00 },
+    { item = "41.3", chance = 0.00 },
+    # TODO: { item = "42.0", chance = 0.01 },
+    # TODO: { item = "42.1", chance = 0.00 },
+]
+sprite_path = "chicken.png"
+
+[[items]]
+ref = "40.1"
+merge = "40.2"
+name = "Chicken 2"
+tier = "Chicken"
+label = "2"
+# TODO: sell value
+sell = 3375
+drop_interval = 51
+drops = [
+    { item = "41.0", chance = 0.87 },
+    { item = "41.1", chance = 0.09 },
+    { item = "41.2", chance = 0.01 },
+    { item = "41.3", chance = 0.00 },
+    # TODO: { item = "42.0", chance = 0.03 },
+    # TODO: { item = "42.1", chance = 0.00 },
+]
+sprite_path = "chicken.png"
+
+[[items]]
+ref = "40.2"
+merge = "40.3"
+name = "Chicken 3"
+tier = "Chicken"
+label = "3"
+# TODO: sell value
+sell = 3375
+drop_interval = 42
+drops = [
+    { item = "41.0", chance = 0.54 },
+    { item = "41.1", chance = 0.32 },
+    { item = "41.2", chance = 0.05 },
+    { item = "41.3", chance = 0.01 },
+    # TODO: { item = "42.0", chance = 0.07 },
+    # TODO: { item = "42.1", chance = 0.01 },
+]
+sprite_path = "chicken.png"
+
+[[items]]
+ref = "40.3"
+merge = "40.4"
+name = "Chicken 4"
+tier = "Chicken"
+label = "4"
+# TODO: sell value
+sell = 3375
+drop_interval = 33
+drops = [
+    { item = "41.0", chance = 0.28 },
+    { item = "41.1", chance = 0.50 },
+    { item = "41.2", chance = 0.07 },
+    { item = "41.3", chance = 0.03 },
+    # TODO: { item = "42.0", chance = 0.09 },
+    # TODO: { item = "42.1", chance = 0.03 },
+]
+sprite_path = "chicken.png"
+
+[[items]]
+ref = "40.4"
+name = "Chicken 5"
+tier = "Chicken"
+label = "Max"
+# TODO: sell price
+sell = 3375
+drop_interval = 24
+drops = [
+    { item = "41.1", chance = 0.42 },
+    { item = "41.2", chance = 0.18 },
+    { item = "41.3", chance = 0.13 },
+    # TODO: { item = "42.0", chance = 0.22 },
+    # TODO: { item = "42.1", chance = 0.05 },
+]
+sprite_path = "chicken.png"
+
+
+
+# Bread
+
+[[items]]
+ref = "31.0"
+merge = "31.1"
+name = "Bread"
+tier = "Bread"
+sell = 225
+sprite_path = "bread.png"
+
+[[items]]
+ref = "31.1"
+merge = "31.2"
+name = "Croissant"
+tier = "Bread"
+sell = 451
+sprite_path = "croissant.png"
+
+[[items]]
+ref = "31.2"
+merge = "31.3"
+name = "Baguette"
+tier = "Bread"
+sell = 904
+sprite_path = "baguette-bread.png"
+
+[[items]]
+ref = "31.3"
+merge = "31.4"
+name = "Flatbread"
+tier = "Bread"
+sell = 1809
+sprite_path = "flatbread.png"
+
+[[items]]
+ref = "31.4"
+merge = "31.5"
+name = "Pretzel"
+tier = "Bread"
+sell = 3621
+sprite_path = "pretzel.png"
+
+[[items]]
+ref = "31.5"
+merge = "31.6"
+name = "Bagel"
+tier = "Bread"
+sell = 7247
+sprite_path = "bagel.png"
+
+[[items]]
+ref = "31.6"
+merge = "31.7"
+name = "Pancake"
+tier = "Bread"
+sell = 14502
+sprite_path = "pancakes.png"
+
+[[items]]
+ref = "31.7"
+merge = "31.8"
+name = "Waffle"
+tier = "Bread"
+sell = 29017
+sprite_path = "waffle.png"
+
+[[items]]
+ref = "31.8"
+name = "Fortune Cookie"
+tier = "Bread"
+sell = 58055
+sprite_path = "fortune-cookie.png"
+
+
+
 # Chicken
 
 [[items]]
@@ -739,81 +1026,6 @@ drops = [
     { item = "41.1", chance = 0.05 },
 ]
 sprite_path = "chicken.png"
-
-
-
-# Bread
-
-[[items]]
-ref = "31.0"
-merge = "31.1"
-name = "Bread"
-tier = "Bread"
-sell = 225
-sprite_path = "bread.png"
-
-[[items]]
-ref = "31.1"
-merge = "31.2"
-name = "Croissant"
-tier = "Bread"
-sell = 451
-sprite_path = "croissant.png"
-
-[[items]]
-ref = "31.2"
-merge = "31.3"
-name = "Baguette"
-tier = "Bread"
-sell = 904
-sprite_path = "baguette-bread.png"
-
-[[items]]
-ref = "31.3"
-merge = "31.4"
-name = "Flatbread"
-tier = "Bread"
-sell = 1809
-sprite_path = "flatbread.png"
-
-[[items]]
-ref = "31.4"
-merge = "31.5"
-name = "Pretzel"
-tier = "Bread"
-sell = 3621
-sprite_path = "pretzel.png"
-
-[[items]]
-ref = "31.5"
-merge = "31.6"
-name = "Bagel"
-tier = "Bread"
-sell = 7247
-sprite_path = "bagel.png"
-
-[[items]]
-ref = "31.6"
-merge = "31.7"
-name = "Pancake"
-tier = "Bread"
-sell = 14502
-sprite_path = "pancakes.png"
-
-[[items]]
-ref = "31.7"
-merge = "31.8"
-name = "Waffle"
-tier = "Bread"
-sell = 29017
-sprite_path = "waffle.png"
-
-[[items]]
-ref = "31.8"
-name = "Fortune Cookie"
-tier = "Bread"
-sell = 58055
-sprite_path = "fortune-cookie.png"
 
 
 
