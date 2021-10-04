@@ -1,6 +1,6 @@
 pub mod types;
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -17,6 +17,10 @@ use crate::types::Amount;
 use crate::util::{i_to_xy, xy_to_i};
 use crate::ws;
 pub use types::*;
+
+/// Threshold in number of changed items after which we should send the full inventory state,
+/// rather than each changed cell individually.
+const INV_CHANGE_PARTIAL_THRESHOLD: usize = 16;
 
 /// Run game.
 pub(crate) async fn run(state: SharedState) {
@@ -104,21 +108,11 @@ impl Game {
         let tick = self.tick.fetch_add(1, Ordering::Relaxed) + 1;
 
         // Update each team
-        let mut changed = false;
         for team in self.teams.read().unwrap().values() {
             let mut team = team.write().unwrap();
-            let team_changed = team.update(&state.config, tick);
-
-            // Broadcast inventory update if team changed
-            if team_changed {
-                broadcast_team_inventory(state, &team);
-            }
-
-            changed = team_changed || changed;
+            let changed = team.update(&state.config, tick);
+            broadcast_team_cell_changes(state, &team, changed);
         }
-
-        // TODO: put factory items onto field
-        // TODO: do not return true if only queue item was added
     }
 
     /// Get the team client inventory.
@@ -339,17 +333,27 @@ impl Game {
     }
 }
 
-pub trait Update {
-    /// Update this state upto the given tick.
-    ///
-    /// Return `true` if internally changed.
-    fn update(&mut self, config: &Config, tick: u64) -> bool;
-}
-
 /// Broadcast current inventory state to team clients.
-fn broadcast_team_inventory(state: &SharedState, team: &GameTeam) {
+fn broadcast_team_cell_changes(state: &SharedState, team: &GameTeam, changed: HashSet<u8>) {
+    // Send full inventory state when a lot of cells have changed
+    if changed.len() >= INV_CHANGE_PARTIAL_THRESHOLD {
+        let inventory = ClientInventory::from_game(&team.inventory)
+            .expect("failed to transpose game to client inventory");
+        let msg = MsgSendKind::Inventory(inventory);
+        ws::send_to_team(&state, None, team.id, &msg.into());
+        return;
+    }
+
+    // Obtain user inventory
     let inventory = ClientInventory::from_game(&team.inventory)
         .expect("failed to transpose game to client inventory");
-    let msg = MsgSendKind::Inventory(inventory);
-    ws::send_to_team(&state, None, team.id, &msg.into());
+
+    // Send each change
+    for cell in changed {
+        let msg = MsgSendKind::InventoryCell {
+            index: cell,
+            item: inventory.grid.items[cell as usize].clone(),
+        };
+        ws::send_to_team(&state, None, team.id, &msg.into());
+    }
 }

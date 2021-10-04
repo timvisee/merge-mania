@@ -1,9 +1,8 @@
-use std::collections::VecDeque;
+use std::collections::{HashSet, VecDeque};
 
 use rand::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use super::Update;
 use crate::config::{Config, ConfigItem, ConfigTeam};
 use crate::types::{Amount, ItemRef};
 use crate::util::{i_to_xy, xy_to_i};
@@ -40,10 +39,11 @@ impl GameTeam {
         self.config = Some(config.team(self.id).cloned().ok_or(())?);
         self.inventory.grid.attach_config(config)
     }
-}
 
-impl Update for GameTeam {
-    fn update(&mut self, config: &Config, tick: u64) -> bool {
+    /// Update game team.
+    ///
+    /// Returns list of changed inventory cells.
+    pub fn update(&mut self, config: &Config, tick: u64) -> HashSet<u8> {
         self.inventory.update(config, tick)
     }
 }
@@ -93,6 +93,40 @@ impl GameItem {
                 Err(())
             }
         }
+    }
+
+    /// Update game item.
+    ///
+    /// Returns `true` if changed.
+    fn update(&mut self, config: &Config, tick: u64) -> bool {
+        // Do nothing if there's no tick, or if we didn't reach it yet
+        if !self.tick.map(|t| t < tick).unwrap_or(false) {
+            return false;
+        }
+
+        // Update tick to next
+        self.tick = self
+            .config
+            .as_ref()
+            .unwrap()
+            .drop_interval
+            .map(|t| tick + t);
+
+        // Select config item to drop
+        let item = match self.config.as_ref().unwrap().random_drop() {
+            Some(item_ref) => item_ref,
+            None => return false,
+        };
+        if !self.push_queue_drop(item) {
+            return false;
+        }
+
+        // Decrease drop limit
+        if let Some(limit) = self.drop_limit.as_mut() {
+            *limit -= 1;
+        }
+
+        true
     }
 
     /// Check whether this is upgradable (mergeable).
@@ -158,39 +192,6 @@ impl GameItem {
     }
 }
 
-impl Update for GameItem {
-    fn update(&mut self, config: &Config, tick: u64) -> bool {
-        // Do nothing if there's no tick, or if we didn't reach it yet
-        if !self.tick.map(|t| t < tick).unwrap_or(false) {
-            return false;
-        }
-
-        // Update tick to next
-        self.tick = self
-            .config
-            .as_ref()
-            .unwrap()
-            .drop_interval
-            .map(|t| tick + t);
-
-        // Select config item to drop
-        let item = match self.config.as_ref().unwrap().random_drop() {
-            Some(item_ref) => item_ref,
-            None => return false,
-        };
-        if !self.push_queue_drop(item) {
-            return false;
-        }
-
-        // Decrease drop limit
-        if let Some(limit) = self.drop_limit.as_mut() {
-            *limit -= 1;
-        }
-
-        true
-    }
-}
-
 /// An inventory.
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct GameInventory {
@@ -209,6 +210,13 @@ impl GameInventory {
             energy: config.defaults.energy,
             grid: GameInventoryGrid::from_config(tick, config)?,
         })
+    }
+
+    /// Update game inventory.
+    ///
+    /// Returns list of changed cells.
+    fn update(&mut self, config: &Config, tick: u64) -> HashSet<u8> {
+        self.grid.update(config, tick)
     }
 
     /// Check whether the inventory contains the given amounts.
@@ -248,12 +256,6 @@ impl GameInventory {
         });
 
         true
-    }
-}
-
-impl Update for GameInventory {
-    fn update(&mut self, config: &Config, tick: u64) -> bool {
-        self.grid.update(config, tick)
     }
 }
 
@@ -309,28 +311,25 @@ impl GameInventoryGrid {
     ///
     /// Is `None` if cell is empty.
     pub fn get_at(&self, x: u32, y: u32) -> &Option<GameItem> {
-        &self.items[xy_to_i(x, y)]
+        &self.items[xy_to_i(x, y) as usize]
     }
 
     /// Get item at grid position.
     ///
     /// Is `None` if cell is empty.
     pub fn get_at_mut(&mut self, x: u32, y: u32) -> &mut Option<GameItem> {
-        &mut self.items[xy_to_i(x, y)]
+        &mut self.items[xy_to_i(x, y) as usize]
     }
 
     /// Place given item randomly in inventory.
     ///
-    /// Returns `false` if there was no space.
+    /// Returns cell index, returns `None` if there was no space.
     #[must_use]
-    pub fn place_item(&mut self, item: GameItem) -> bool {
-        match self.find_free_cell() {
-            Some(coord) => {
-                *self.get_at_mut(coord.0, coord.1) = Some(item);
-                true
-            }
-            None => false,
-        }
+    pub fn place_item(&mut self, item: GameItem) -> Option<u8> {
+        self.find_free_cell().map(|coord| {
+            *self.get_at_mut(coord.0, coord.1) = Some(item);
+            xy_to_i(coord.0, coord.1)
+        })
     }
 
     /// Check whether the grid contains the given number of items.
@@ -383,7 +382,7 @@ impl GameInventoryGrid {
             .take(crate::INV_SIZE as usize)
             .filter(|(_, item)| item.is_none())
             .next()
-            .map(|(i, _)| i_to_xy(i))
+            .map(|(i, _)| i_to_xy(i as u8))
     }
 
     /// Check whether inventory has any free cell.
@@ -396,12 +395,32 @@ impl GameInventoryGrid {
         self.items.iter().filter(|i| i.is_none()).count()
     }
 
+    /// Update game inventory.
+    ///
+    /// Return list of changed cell indices.
+    pub fn update(&mut self, config: &Config, tick: u64) -> HashSet<u8> {
+        // Update items, drop updated state
+        for item in self.items.iter_mut() {
+            if let Some(item) = item {
+                item.update(config, tick);
+            }
+        }
+
+        // Place queued factory items onto field
+        let mut changed = self.place_queue_items(config, tick);
+
+        // Remove items that reached their drop limit
+        changed.extend(self.remove_drop_limit_items(config));
+
+        changed
+    }
+
     /// Place factory queue items if there is space.
-    fn place_queue_items(&mut self, config: &Config, tick: u64) -> bool {
+    fn place_queue_items(&mut self, config: &Config, tick: u64) -> HashSet<u8> {
         // Get number of free grid cells, there must be space
         let max = self.count_free_cells();
         if max <= 0 {
-            return false;
+            return HashSet::new();
         }
 
         // Obtain list of items to place
@@ -424,6 +443,7 @@ impl GameInventoryGrid {
 
         // Place all items
         // TODO: when factory is placed ensure tick setting is correct
+        let mut changed = HashSet::new();
         for item in &items {
             // Resolve item from config
             let item = match config.item(&item) {
@@ -439,50 +459,36 @@ impl GameInventoryGrid {
 
             // Transpose into game item, place it
             let item = GameItem::from_config(tick, item.clone());
-            if !self.place_item(item) {
-                error!("Failed to place selected item, no inventory space");
+            match self.place_item(item) {
+                Some(index) => {
+                    changed.insert(index);
+                }
+                None => {
+                    error!("Failed to place selected item, no inventory space");
+                }
             }
         }
 
-        !items.is_empty()
+        changed
     }
 
     /// Remove items that reached their drop limit, if their drop queue is cleared.
-    fn remove_drop_limit_items(&mut self, config: &Config) -> bool {
-        let mut changed = false;
-        for item in &mut self.items {
+    fn remove_drop_limit_items(&mut self, config: &Config) -> HashSet<u8> {
+        let mut changed = HashSet::new();
+        for (index, item) in self.items.iter_mut().enumerate() {
             match item {
                 Some(i) => match i.drop_limit {
                     Some(limit) if limit <= 0 && i.queue.is_empty() => {
                         // This item reached it limit, remove it
                         // TODO: do we need a special item remove routine?
                         *item = None;
-                        changed = true;
+                        changed.insert(index as u8);
                     }
                     _ => {}
                 },
                 None => {}
             }
         }
-        changed
-    }
-}
-
-impl Update for GameInventoryGrid {
-    fn update(&mut self, config: &Config, tick: u64) -> bool {
-        // Update items, drop updated state
-        for item in self.items.iter_mut() {
-            if let Some(item) = item {
-                item.update(config, tick);
-            }
-        }
-
-        // Place queued factory items onto field
-        let mut changed = self.place_queue_items(config, tick);
-
-        // Remove items that reached their drop limit
-        changed = self.remove_drop_limit_items(config) || changed;
-
         changed
     }
 }

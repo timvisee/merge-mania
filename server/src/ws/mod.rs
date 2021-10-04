@@ -152,7 +152,7 @@ async fn send_initial(state: SharedState, client_id: usize) {
         None => return,
     };
 
-    // Send inventory state
+    // Send full inventory state
     let msg = MsgSendKind::Inventory(inventory);
     send_to_client(&state, client_id, &msg.into());
 }
