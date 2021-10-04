@@ -99,8 +99,10 @@ impl GameItem {
     ///
     /// Returns `true` if changed.
     fn update(&mut self, config: &Config, tick: u64) -> bool {
-        // Do nothing if there's no tick, or if we didn't reach it yet
-        if !self.tick.map(|t| t < tick).unwrap_or(false) {
+        // We must have reached tick, and have not reached the drop limit
+        let reached_tick = self.tick.map(|t| t < tick).unwrap_or(false);
+        let reached_drop_limit = self.drop_limit.map(|l| l == 0).unwrap_or(false);
+        if !reached_tick || reached_drop_limit {
             return false;
         }
 
@@ -123,7 +125,7 @@ impl GameItem {
 
         // Decrease drop limit
         if let Some(limit) = self.drop_limit.as_mut() {
-            *limit -= 1;
+            limit.saturating_sub(1);
         }
 
         true
