@@ -217,6 +217,7 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
         MsgRecvKind::ActionBuy(action) => action_buy(state, client_id, action),
         MsgRecvKind::ActionSell(action) => action_sell(state, client_id, action),
         MsgRecvKind::ActionScanCode => action_scan_code(state, client_id),
+        MsgRecvKind::GetInventory => get_inventory(state, client_id),
     }
 }
 
@@ -359,6 +360,28 @@ fn action_scan_code(state: &SharedState, client_id: usize) {
 
     // Send not yet implemented toast
     let msg = MsgSendKind::Toast(crate::lang::NO_CODE_FREE_ENERGY.into());
+    send_to_client(&state, client_id, &msg.into());
+}
+
+fn get_inventory(state: &SharedState, client_id: usize) {
+    debug!("Client {} invoked get inventory", client_id);
+
+    // Find client team ID
+    let team_id = match state.clients.client_team_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // TODO: ensure we can merge
+
+    // Do merge, get inventory
+    let mut inventory = match state.game.team_client_inventory(&state.config, team_id) {
+        Some(inv) => inv,
+        None => return,
+    };
+
+    // Send inventory state
+    let msg = MsgSendKind::Inventory(inventory);
     send_to_client(&state, client_id, &msg.into());
 }
 

@@ -1,5 +1,8 @@
 import ws from "./ws.js";
 
+// Poll inventory state every two minutes.
+const INVENTORY_POLL_INTERVAL = 2 * 60 * 1000;
+
 export default {
     // Game readyness state.
     //
@@ -8,6 +11,9 @@ export default {
 
     // Current inventory.
     inventory: null,
+
+    // Timer to poll latest inventory state.
+    inventory_poll_timer: null,
 
     // Game configuration items.
     items: null,
@@ -23,6 +29,14 @@ export default {
         this.socket = ws;
         this.socket.vueContext = vueContext;
         this.socket.connect(this);
+
+        // Set up new timer to periodically poll full inventory state
+        if(this.inventory_poll_timer !== null)
+            clearInterval(this.inventory_poll_timer);
+        this.inventory_poll_timer = setInterval(
+            () => this.pollInventoryState(),
+            INVENTORY_POLL_INTERVAL,
+        );
     },
 
     // Check wheher the user discovered an item.
@@ -89,6 +103,11 @@ export default {
         if(!after.includes(merge_item))
             return [merge_item].concat(after);
         return after;
+    },
+
+    // Poll latest inventory state from server.
+    pollInventoryState() {
+        this.socket.send('get_inventory', null);
     },
 
     // Premove the item at the given index, remove it.

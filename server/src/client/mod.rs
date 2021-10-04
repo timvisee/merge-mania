@@ -82,4 +82,7 @@ pub enum MsgRecvKind {
 
     /// Action: scan a code to gain energy.
     ActionScanCode,
+
+    /// Request inventory state update.
+    GetInventory,
 }
