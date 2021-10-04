@@ -889,7 +889,7 @@ buy = [
     { item = "12.4", quantity = 1 },
     { energy = 1 },
 ]
-sell = 1000
+sell = 100
 drop_interval = 300
 drops = [
     { item = "51.0", chance = 0.9 },
@@ -904,7 +904,7 @@ merge = "50.2"
 name = "Teacher 2"
 tier = "Nathematician"
 label = "2"
-sell = 2000
+sell = 201
 drop_interval = 260
 drops = [
     { item = "51.2", chance = 0.9 },
@@ -919,7 +919,7 @@ merge = "50.3"
 name = "Teacher 4"
 tier = "Nathematician"
 label = "3"
-sell = 4000
+sell = 811
 drop_interval = 220
 drops = [
     { item = "51.4", chance = 0.9 },
@@ -933,7 +933,7 @@ ref = "50.3"
 name = "Teacher 8"
 tier = "Nathematician"
 label = "Max"
-sell = 8000
+sell = 13095
 drop_interval = 180
 drops = [
     { item = "51.6", chance = 0.9 },
@@ -951,7 +951,7 @@ ref = "51.0"
 merge = "51.1"
 name = "One"
 tier = "Numbers"
-sell = 100
+sell = 50625
 sprite_path = "keycap-digit-one.png"
 
 [[items]]
@@ -959,7 +959,7 @@ ref = "51.1"
 merge = "51.2"
 name = "Two"
 tier = "Numbers"
-sell = 200
+sell = 101251
 sprite_path = "keycap-digit-two.png"
 
 [[items]]
@@ -967,7 +967,7 @@ ref = "51.2"
 merge = "51.3"
 name = "Three"
 tier = "Numbers"
-sell = 400
+sell = 202504
 sprite_path = "keycap-digit-three.png"
 
 [[items]]
@@ -975,7 +975,7 @@ ref = "51.3"
 merge = "51.4"
 name = "Four"
 tier = "Numbers"
-sell = 800
+sell = 405011
 sprite_path = "keycap-digit-four.png"
 
 [[items]]
@@ -983,7 +983,7 @@ ref = "51.4"
 merge = "51.5"
 name = "Five"
 tier = "Numbers"
-sell = 1600
+sell = 810027
 sprite_path = "keycap-digit-five.png"
 
 [[items]]
@@ -991,7 +991,7 @@ ref = "51.5"
 merge = "51.6"
 name = "Six"
 tier = "Numbers"
-sell = 3200
+sell = 1620062
 sprite_path = "keycap-digit-six.png"
 
 [[items]]
@@ -999,7 +999,7 @@ ref = "51.6"
 merge = "51.7"
 name = "Seven"
 tier = "Numbers"
-sell = 6400
+sell = 3240137
 sprite_path = "keycap-digit-seven.png"
 
 [[items]]
@@ -1007,7 +1007,7 @@ ref = "51.7"
 merge = "51.8"
 name = "Eight"
 tier = "Numbers"
-sell = 12800
+sell = 6480295
 sprite_path = "keycap-digit-eight.png"
 
 [[items]]
@@ -1015,7 +1015,7 @@ ref = "51.8"
 merge = "51.9"
 name = "Nine"
 tier = "Numbers"
-sell = 25600
+sell = 12960624
 sprite_path = "keycap-digit-nine.png"
 
 [[items]]
@@ -1023,7 +1023,7 @@ ref = "51.9"
 merge = "50.0"
 name = "Ten"
 tier = "Numbers"
-sell = 51200
+sell = 25921303
 sprite_path = "keycap-10.png"
 
 
