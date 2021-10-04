@@ -1641,6 +1641,160 @@ sprite_path = "building-construction.png"
 
 
 
+# Water
+
+[[items]]
+ref = "90.0"
+merge = "90.1"
+# TODO: update name
+name = "[TEST] Water Pistol"
+tier = "Water Source"
+label = "1"
+buy = [
+    # TODO: buy price
+    { money = 1 },
+]
+# TODO: sell value
+sell = 1
+drop_interval = 60
+drops = [
+    # TODO: drop items
+    { item = "91.0", chance = 0.95 },
+    { item = "91.1", chance = 0.04 },
+]
+sprite_path = "pistol.png"
+
+[[items]]
+ref = "90.1"
+merge = "90.2"
+name = "Shower"
+tier = "Water Source"
+label = "2"
+# TODO: sell value
+sell = 1
+drop_interval = 51
+drops = [
+    # TODO: drop items
+    { item = "91.0", chance = 0.95 },
+    { item = "91.1", chance = 0.04 },
+]
+sprite_path = "shower.png"
+
+[[items]]
+ref = "90.2"
+merge = "90.3"
+# TODO: update name
+name = "Fountain"
+tier = "Water Source"
+label = "Max"
+# TODO: sell value
+sell = 1
+drop_interval = 42
+drops = [
+    # TODO: drop items
+    { item = "91.0", chance = 0.95 },
+    { item = "91.1", chance = 0.04 },
+]
+sprite_path = "fountain.png"
+
+
+
+# Water
+
+[[items]]
+ref = "91.0"
+merge = "91.1"
+name = "Droplet"
+tier = "Water"
+# TODO: set price
+sell = 1
+sprite_path = "droplet.png"
+
+[[items]]
+ref = "91.1"
+merge = "91.2"
+name = "Droplets"
+tier = "Water"
+# TODO: set price
+sell = 1
+sprite_path = "sweat-droplets.png"
+
+[[items]]
+ref = "91.2"
+merge = "91.3"
+name = "Bucket"
+tier = "Water"
+# TODO: set price
+sell = 1
+sprite_path = "bucket.png"
+
+[[items]]
+ref = "91.3"
+name = "Bathtub"
+tier = "Water"
+# TODO: set price
+sell = 1
+sprite_path = "bathtub.png"
+
+
+
+# Coins
+
+[[items]]
+ref = "92.0"
+merge = "92.1"
+name = "Coin"
+tier = "Coins"
+# TODO: set price
+sell = 1
+sprite_path = "coin.png"
+
+[[items]]
+ref = "92.1"
+merge = "92.2"
+name = "Purse"
+tier = "Coins"
+# TODO: set price
+sell = 1
+sprite_path = "purse.png"
+
+[[items]]
+ref = "92.2"
+merge = "92.3"
+name = "Banknotes"
+tier = "Coins"
+# TODO: set price
+sell = 1
+sprite_path = "dollar-banknote.png"
+
+[[items]]
+ref = "92.3"
+merge = "92.4"
+name = "Winged Banknotes"
+tier = "Coins"
+# TODO: set price
+sell = 1
+sprite_path = "money-with-wings.png"
+
+[[items]]
+ref = "92.4"
+merge = "92.5"
+name = "Money Bag"
+tier = "Coins"
+# TODO: set price
+sell = 1
+sprite_path = "money-bag.png"
+
+[[items]]
+ref = "92.5"
+name = "Bank"
+tier = "Coins"
+# TODO: set price
+sell = 1
+sprite_path = "bank.png"
+
+
+
 # # Moons
 #
 # [[items]]
