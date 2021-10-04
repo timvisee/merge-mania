@@ -187,13 +187,24 @@
                         <td>
                             <ul class="drops-list">
                                 <li v-for="drop in game.items[selectedCell.ref].drops">
-                                    <img :src="'/sprites/' + game.items[drop.item].sprite"
-                                        :title="game.items[drop.item].name"
-                                        :alt="game.items[drop.item].name"
-                                        draggable="false"
-                                        class="item tiny"
-                                    />
-                                    {{ game.items[drop.item].name }}
+                                    <span v-if="selectedCell.ref == drop.item || game.isDiscovered(drop.item)">
+                                        <img :src="'/sprites/' + game.items[drop.item].sprite"
+                                            :title="game.items[drop.item].name"
+                                            :alt="game.items[drop.item].name"
+                                            draggable="false"
+                                            class="item tiny"
+                                        />
+                                        {{ game.items[drop.item].name }}
+                                    </span>
+                                    <span v-else>
+                                        <img src="/sprites/white-question-mark.png"
+                                            title="Undiscovered item"
+                                            alt="Undiscovered item"
+                                            draggable="false"
+                                            class="item tiny"
+                                        />
+                                        ?
+                                    </span>
                                     <span class="subtle">{{ parseFloat(drop.chance * 100).toPrecision(2) }}%</span>
                                 </li>
                             </ul>
