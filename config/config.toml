@@ -454,7 +454,204 @@ sprite_path = "mushroom.png"
 
 
 
-# Chicken factory
+# Farmer
+
+[[items]]
+ref = "20.0"
+merge = "20.1"
+name = "Farmer 1"
+tier = "Farmer"
+label = "1"
+buy = [
+    { item = "11.5", quantity = 1 },
+    { energy = 1 },
+]
+# TODO: sell value
+sell = 1
+drop_interval = 60
+drops = [
+    { item = "12.0", chance = 0.95 },
+    { item = "12.1", chance = 0.04 },
+    { item = "21.0", chance = 0.01 },
+]
+sprite_path = "farmer.png"
+
+[[items]]
+ref = "20.1"
+merge = "20.2"
+name = "Farmer 2"
+tier = "Farmer"
+label = "2"
+# TODO: sell value
+sell = 1
+drop_interval = 53
+drops = [
+    { item = "12.0", chance = 0.84 },
+    { item = "12.1", chance = 0.10 },
+    { item = "12.2", chance = 0.02 },
+    { item = "21.0", chance = 0.04 },
+]
+sprite_path = "farmer.png"
+
+[[items]]
+ref = "20.2"
+merge = "20.3"
+name = "Farmer 3"
+tier = "Farmer"
+label = "3"
+# TODO: sell value
+sell = 1
+drop_interval = 46
+drops = [
+    { item = "12.0", chance = 0.71 },
+    { item = "12.1", chance = 0.17 },
+    { item = "12.2", chance = 0.03 },
+    { item = "12.3", chance = 0.01 },
+    { item = "21.0", chance = 0.08 },
+]
+sprite_path = "farmer.png"
+
+[[items]]
+ref = "20.3"
+merge = "20.4"
+name = "Farmer 4"
+tier = "Farmer"
+label = "4"
+# TODO: sell value
+sell = 1
+drop_interval = 39
+drops = [
+    { item = "12.0", chance = 0.47 },
+    { item = "12.1", chance = 0.30 },
+    { item = "12.2", chance = 0.06 },
+    { item = "12.3", chance = 0.03 },
+    { item = "21.0", chance = 0.13 },
+    { item = "21.1", chance = 0.01 },
+]
+sprite_path = "farmer.png"
+
+[[items]]
+ref = "20.4"
+merge = "20.5"
+name = "Farmer 5"
+tier = "Farmer"
+label = "5"
+# TODO: sell value
+sell = 1
+drop_interval = 32
+drops = [
+    { item = "12.0", chance = 0.23 },
+    { item = "12.1", chance = 0.46 },
+    { item = "12.2", chance = 0.07 },
+    { item = "12.3", chance = 0.05 },
+    { item = "21.0", chance = 0.16 },
+    { item = "21.1", chance = 0.03 },
+]
+sprite_path = "farmer.png"
+
+[[items]]
+ref = "20.5"
+name = "Farmer 6"
+tier = "Farmer"
+label = "Max"
+# TODO: sell value
+sell = 1
+drop_interval = 24
+drops = [
+    { item = "12.1", chance = 0.52 },
+    { item = "12.2", chance = 0.12 },
+    { item = "12.3", chance = 0.09 },
+    { item = "21.0", chance = 0.22 },
+    { item = "21.1", chance = 0.05 },
+]
+sprite_path = "farmer.png"
+
+
+
+# Farm animals
+
+[[items]]
+ref = "21.0"
+merge = "21.1"
+name = "Cat"
+tier = "Farm animals"
+sell = 1680
+sprite_path = "cat.png"
+
+[[items]]
+ref = "21.1"
+merge = "21.2"
+name = "Rabbit"
+tier = "Farm animals"
+sell = 3361
+sprite_path = "rabbit.png"
+
+[[items]]
+ref = "21.2"
+merge = "21.3"
+name = "Pig"
+tier = "Farm animals"
+sell = 6724
+sprite_path = "pig.png"
+
+[[items]]
+ref = "21.3"
+merge = "21.4"
+name = "Sheep"
+tier = "Farm animals"
+sell = 13451
+sprite_path = "ewe.png"
+
+[[items]]
+ref = "21.4"
+merge = "21.5"
+name = "Goat"
+tier = "Farm animals"
+sell = 26907
+sprite_path = "goat.png"
+
+[[items]]
+ref = "21.5"
+merge = "21.6"
+name = "Cow"
+tier = "Farm animals"
+sell = 53822
+sprite_path = "cow.png"
+
+[[items]]
+ref = "21.6"
+merge = "21.7"
+name = "Ox"
+tier = "Farm animals"
+sell = 107657
+sprite_path = "ox.png"
+
+[[items]]
+ref = "21.7"
+merge = "21.8"
+name = "Llama"
+tier = "Farm animals"
+sell = 215335
+sprite_path = "llama.png"
+
+[[items]]
+ref = "21.8"
+merge = "21.9"
+name = "Horse"
+tier = "Farm animals"
+sell = 430704
+sprite_path = "horse.png"
+
+[[items]]
+ref = "21.9"
+name = "Unicorn"
+tier = "Farm animals"
+sell = 861463
+sprite_path = "unicorn.png"
+
+
+
+# Chicken
 
 [[items]]
 ref = "40.0"
