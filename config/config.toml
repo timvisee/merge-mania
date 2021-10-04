@@ -1249,7 +1249,7 @@ sprite_path = "pool-8-ball.png"
 ref = "70.0"
 merge = "70.1"
 # TODO: update name
-name = "[TEST] Speaker Low Volume"
+name = "[TEST] Speaker"
 tier = "Speakers"
 label = "1"
 buy = [
@@ -1269,7 +1269,7 @@ sprite_path = "speaker-low-volume.png"
 [[items]]
 ref = "70.1"
 merge = "70.2"
-name = "Speaker Medium Volume"
+name = "Speaker Medium"
 tier = "Speakers"
 label = "2"
 # TODO: sell value
@@ -1285,7 +1285,7 @@ sprite_path = "speaker-medium-volume.png"
 [[items]]
 ref = "70.2"
 merge = "70.3"
-name = "Speaker High Volume"
+name = "Speaker High"
 tier = "Speakers"
 label = "3"
 # TODO: sell value
@@ -1460,6 +1460,184 @@ tier = "Music"
 # TODO: set price
 sell = 1
 sprite_path = "dvd.png"
+
+
+
+# Toolbox
+
+[[items]]
+ref = "80.0"
+merge = "80.1"
+# TODO: update name
+name = "[TEST] Toolbox"
+tier = "Toolbox"
+label = "1"
+buy = [
+    # TODO: buy price
+    { money = 1 },
+]
+# TODO: sell value
+sell = 1
+drop_interval = 60
+drops = [
+    # TODO: drop items
+    { item = "81.0", chance = 0.95 },
+    { item = "81.1", chance = 0.04 },
+]
+sprite_path = "toolbox.png"
+
+
+
+# Tools
+
+[[items]]
+ref = "81.0"
+merge = "81.1"
+name = "Hammer"
+tier = "Tools"
+# TODO: set price
+sell = 1
+sprite_path = "hammer.png"
+
+[[items]]
+ref = "81.1"
+merge = "81.2"
+name = "Wrench"
+tier = "Tools"
+# TODO: set price
+sell = 1
+sprite_path = "wrench.png"
+
+[[items]]
+ref = "81.2"
+merge = "81.3"
+name = "Hammer/Wrench"
+tier = "Tools"
+# TODO: set price
+sell = 1
+sprite_path = "hammer-and-wrench.png"
+
+[[items]]
+ref = "81.3"
+merge = "81.4"
+name = "Hammer/Pick"
+tier = "Tools"
+# TODO: set price
+sell = 1
+sprite_path = "hammer-and-pick.png"
+
+[[items]]
+ref = "81.4"
+merge = "81.5"
+name = "Screwdriver"
+tier = "Tools"
+# TODO: set price
+sell = 1
+sprite_path = "screwdriver.png"
+
+[[items]]
+ref = "81.5"
+merge = "81.6"
+name = "Bolt"
+tier = "Tools"
+# TODO: set price
+sell = 1
+sprite_path = "nut-and-bold.png"
+
+[[items]]
+ref = "81.6"
+merge = "81.7"
+name = "Saw"
+tier = "Tools"
+# TODO: set price
+sell = 1
+sprite_path = "carpentry-saw.png"
+
+[[items]]
+ref = "81.7"
+name = "Axe"
+tier = "Tools"
+# TODO: set price
+sell = 1
+sprite_path = "axe.png"
+
+
+
+# Helpers
+
+[[items]]
+ref = "82.0"
+merge = "82.1"
+name = "Pencil"
+tier = "Helpers"
+# TODO: set price
+sell = 1
+sprite_path = "pencil.png"
+
+[[items]]
+ref = "82.1"
+merge = "82.2"
+name = "Ruler"
+tier = "Helpers"
+# TODO: set price
+sell = 1
+sprite_path = "straight-ruler.png"
+
+[[items]]
+ref = "82.2"
+merge = "82.3"
+name = "Traingular Ruler"
+tier = "Helpers"
+# TODO: set price
+sell = 1
+sprite_path = "triangular-ruler.png"
+
+[[items]]
+ref = "82.3"
+name = "Clamp"
+tier = "Helpers"
+# TODO: set price
+sell = 1
+sprite_path = "clamp.png"
+
+
+
+# Helpers
+
+[[items]]
+ref = "83.0"
+merge = "83.1"
+name = "Safety Vest"
+tier = "Construction"
+# TODO: set price
+sell = 1
+sprite_path = "safety-vest.png"
+
+[[items]]
+ref = "83.1"
+merge = "83.2"
+name = "Worker"
+tier = "Construction"
+# TODO: set price
+sell = 1
+sprite_path = "construction-worker.png"
+
+[[items]]
+ref = "83.2"
+merge = "83.3"
+name = "Barrier"
+tier = "Construction"
+# TODO: set price
+sell = 1
+sprite_path = "construction.png"
+
+[[items]]
+ref = "83.3"
+name = "Crane"
+tier = "Construction"
+# TODO: set price
+sell = 1
+sprite_path = "building-construction.png"
 
 
 
