@@ -1161,22 +1161,25 @@ sprite_path = "keycap-10.png"
 # Mining
 
 [[items]]
-ref = "120.3"
-name = "New moon"
-tier = "Moons"
-label = "Max"
-sell = 1
-drop_interval = 60
-drops = [
-    { item = "20.5", chance = 0.9 },
-    { item = "20.6", chance = 0.08 },
-    { item = "20.7", chance = 0.02 },
+ref = "200.0"
+name = "Pick"
+tier = "Mining"
+buy = [
+    { money = 10000 },
+    { energy = 5 },
 ]
-sprite_path = "new-moon-face.png"
+sell = 500
+drop_interval = 180
+drop_limit = 10
+drops = [
+    { item = "201.0", chance = 0.85 },
+    { item = "202.0", chance = 0.15 },
+]
+sprite_path = "pick.png"
 
 
 
-# Rocks diamonds
+# Useless
 
 [[items]]
 ref = "201.0"
@@ -1184,6 +1187,10 @@ name = "Pet Rock"
 tier = "Useless"
 sell = 1
 sprite_path = "rock.png"
+
+
+
+# Gems
 
 [[items]]
 ref = "202.0"
@@ -1207,20 +1214,3 @@ name = "Crown"
 tier = "Gems"
 sell = 75000
 sprite_path = "crown.png"
-
-[[items]]
-ref = "200.0"
-name = "Pick"
-tier = "Mining"
-buy = [
-    { money = 10000 },
-    { energy = 5 },
-]
-sell = 500
-drop_interval = 180
-drop_limit = 10
-drops = [
-    { item = "201.0", chance = 0.85 },
-    { item = "202.0", chance = 0.15 },
-]
-sprite_path = "pick.png"
