@@ -967,15 +967,23 @@ ref = "31.0"
 merge = "31.1"
 name = "Diamond"
 tier = "Gems"
-sell = 20000
+sell = 15000
 sprite_path = "gem-stone.png"
 
 [[items]]
 ref = "31.1"
+merge = "31.2"
 name = "Diamond Ring"
 tier = "Gems"
-sell = 50000
+sell = 35000
 sprite_path = "ring.png"
+
+[[items]]
+ref = "31.2"
+name = "Crown"
+tier = "Gems"
+sell = 75000
+sprite_path = "crown.png"
 
 [[items]]
 ref = "130.0"
@@ -985,11 +993,11 @@ buy = [
     { money = 10000 },
     { energy = 5 },
 ]
-sell = 9000
-drop_interval = 300
+sell = 500
+drop_interval = 180
 drop_limit = 10
 drops = [
-    { item = "30.0", chance = 0.9 },
-    { item = "31.0", chance = 0.1 },
+    { item = "30.0", chance = 0.85 },
+    { item = "31.0", chance = 0.15 },
 ]
 sprite_path = "pick.png"
