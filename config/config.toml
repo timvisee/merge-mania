@@ -38,13 +38,13 @@ password = "team1"
 
 [[teams]]
 id = 2
-name = "Team 2"
-password = "team2"
+name = "Tim"
+password = "tim"
 
 [[teams]]
 id = 3
-name = "Team 3"
-password = "team3"
+name = "Mauri maxed"
+password = "mauri"
 
 [[teams]]
 id = 4
@@ -85,6 +85,21 @@ password = "team10"
 id = 11
 name = "team 11"
 password = "team11"
+
+[[teams]]
+id = 12
+name = "Bob"
+password = "bob"
+
+[[teams]]
+id = 13
+name = "Thomas"
+password = "thomas"
+
+[[teams]]
+id = 14
+name = "Mauri"
+password = "mauri"
 
 
 
@@ -284,6 +299,7 @@ sprite_path = "banana.png"
 ref = "11.2"
 merge = "11.3"
 name = "Pineapple"
+description = "Ananas or Anannas?"
 tier = "Fruit"
 sell = 8
 sprite_path = "pineapple.png"
@@ -395,6 +411,7 @@ sprite_path = "cucumber.png"
 ref = "12.2"
 merge = "12.3"
 name = "Onion"
+description = "A sad vegetable"
 tier = "Vegetable"
 sell = 64
 sprite_path = "onion.png"
