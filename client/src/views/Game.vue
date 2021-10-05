@@ -176,6 +176,10 @@
                     </div>
                 </div>
 
+                <p v-if="game.items[selectedCell.ref].description" class="font-italic">
+                    {{ game.items[selectedCell.ref].description }}
+                </p>
+
                 <table class="simple-table">
                     <tr><td>Name:</td><td>{{ selectedCell.name }}</td></tr>
                     <tr><td>Tier:</td><td>{{ selectedCell.tier }}</td></tr>

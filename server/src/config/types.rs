@@ -56,6 +56,9 @@ pub struct ConfigItem {
     /// Tier display name.
     pub tier: String,
 
+    /// Optional: description to render on client.
+    pub description: Option<String>,
+
     /// Optional: label to render on client.
     pub label: Option<String>,
 
