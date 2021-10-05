@@ -1139,22 +1139,99 @@ sprite_path = "keycap-10.png"
 
 [[items]]
 ref = "60.0"
-# TODO: merge = "60.1"
-# TODO: update name
-name = "[TEST] Stadium"
+merge = "60.1"
+name = "Stadium"
 tier = "Stadium"
 label = "1"
 buy = [
-    { money = 1 },
+    { item = "11.10", quantity = 1 },
+    { energy = 3 },
 ]
 client_order = 8
-# TODO: sell value
-sell = 1
-drop_interval = 60
+sell = 3000
+drop_interval = 80
 drops = [
     { item = "61.0", chance = 0.95 },
-    { item = "61.1", chance = 0.04 },
-    # TODO: drops
+    { item = "61.1", chance = 0.05 },
+]
+sprite_path = "stadium.png"
+
+[[items]]
+ref = "60.1"
+merge = "60.2"
+name = "Stadium 2"
+tier = "Stadium"
+label = "2"
+sell = 6001
+drop_interval = 72
+drops = [
+    { item = "61.0", chance = 0.85 },
+    { item = "61.1", chance = 0.11 },
+    { item = "61.2", chance = 0.03 },
+    { item = "61.3", chance = 0.01 },
+]
+sprite_path = "stadium.png"
+
+[[items]]
+ref = "60.2"
+merge = "60.3"
+name = "Stadium 3"
+tier = "Stadium"
+label = "3"
+sell = 12004
+drop_interval = 64
+drops = [
+    { item = "61.0", chance = 0.72 },
+    { item = "61.1", chance = 0.20 },
+    { item = "61.2", chance = 0.06 },
+    { item = "61.3", chance = 0.02 },
+]
+sprite_path = "stadium.png"
+
+[[items]]
+ref = "60.3"
+merge = "60.4"
+name = "Stadium 4"
+tier = "Stadium"
+label = "4"
+sell = 24011
+drop_interval = 56
+drops = [
+    { item = "61.0", chance = 0.50 },
+    { item = "61.1", chance = 0.33 },
+    { item = "61.2", chance = 0.11 },
+    { item = "61.3", chance = 0.06 },
+]
+sprite_path = "stadium.png"
+
+[[items]]
+ref = "60.4"
+merge = "60.5"
+name = "Stadium 5"
+tier = "Stadium"
+label = "5"
+sell = 48027
+drop_interval = 48
+drops = [
+    { item = "61.0", chance = 0.25 },
+    { item = "61.1", chance = 0.49 },
+    { item = "61.2", chance = 0.17 },
+    { item = "61.3", chance = 0.09 },
+]
+sprite_path = "stadium.png"
+
+[[items]]
+ref = "60.5"
+name = "Stadium 6"
+tier = "Stadium"
+label = "Max"
+sell = 96062
+drop_interval = 40
+drops = [
+    { item = "61.0", chance = 0.05 },
+    { item = "61.1", chance = 0.60 },
+    { item = "61.2", chance = 0.23 },
+    { item = "61.3", chance = 0.12 },
 ]
 sprite_path = "stadium.png"
 
@@ -1167,8 +1244,7 @@ ref = "61.0"
 merge = "61.1"
 name = "Soccer ball"
 tier = "Ball sports"
-# TODO: set price
-sell = 1
+sell = 2953
 sprite_path = "soccer-ball.png"
 
 [[items]]
@@ -1176,8 +1252,7 @@ ref = "61.1"
 merge = "61.2"
 name = "Tennis ball"
 tier = "Ball sports"
-# TODO: set price
-sell = 1
+sell = 5907
 sprite_path = "tennis.png"
 
 [[items]]
@@ -1185,8 +1260,7 @@ ref = "61.2"
 merge = "61.3"
 name = "Softball"
 tier = "Ball sports"
-# TODO: set price
-sell = 1
+sell = 11815
 sprite_path = "softball.png"
 
 [[items]]
@@ -1194,8 +1268,7 @@ ref = "61.3"
 merge = "61.4"
 name = "Baseball"
 tier = "Ball sports"
-# TODO: set price
-sell = 1
+sell = 23631
 sprite_path = "baseball.png"
 
 [[items]]
@@ -1203,8 +1276,7 @@ ref = "61.4"
 merge = "61.5"
 name = "Volleyball"
 tier = "Ball sports"
-# TODO: set price
-sell = 1
+sell = 47263
 sprite_path = "volleyball.png"
 
 [[items]]
@@ -1212,8 +1284,7 @@ ref = "61.5"
 merge = "61.6"
 name = "Basketball"
 tier = "Ball sports"
-# TODO: set price
-sell = 1
+sell = 94527
 sprite_path = "basketball.png"
 
 [[items]]
@@ -1221,8 +1292,7 @@ ref = "61.6"
 merge = "61.7"
 name = "Rugby football"
 tier = "Ball sports"
-# TODO: set price
-sell = 1
+sell = 189055
 sprite_path = "rugby-football.png"
 
 [[items]]
@@ -1230,16 +1300,14 @@ ref = "61.7"
 merge = "61.8"
 name = "American football"
 tier = "Ball sports"
-# TODO: set price
-sell = 1
+sell = 378111
 sprite_path = "american-football.png"
 
 [[items]]
 ref = "61.8"
 name = "8-ball"
 tier = "Ball sports"
-# TODO: set price
-sell = 1
+sell = 756223
 sprite_path = "pool-8-ball.png"
 
 
