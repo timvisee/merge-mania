@@ -209,7 +209,7 @@
                                         />
                                         ?
                                     </span>
-                                    <span class="subtle">{{ parseFloat(drop.chance * 100).toPrecision(2) }}%</span>
+                                    <span class="subtle">{{ formatPercentage(drop.chance) }}</span>
                                 </li>
                             </ul>
                         </td>
@@ -231,6 +231,7 @@
 
 <script>
 import sessionManager from "../util/session.js";
+import utilFormat from "../util/format.js";
 
 export default {
   name: "Game",
@@ -469,6 +470,10 @@ export default {
 
         // Must be mergeable, must have same ID
         return a.mergeable && a.ref == b.ref;
+    },
+
+    formatPercentage(value) {
+        return utilFormat.formatPercentage(value);
     },
   }
 };
