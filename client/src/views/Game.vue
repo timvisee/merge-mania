@@ -118,7 +118,7 @@
                                 <span v-if="amount.money">{{ amount.money }} money</span>
                                 <span v-if="amount.energy">{{ amount.energy }} energy</span>
                                 <span v-if="amount.item">
-                                    <span v-if="amount.quantity > 1">{{ amount.quantity }}x }}</span>
+                                    <span v-if="amount.quantity > 1">{{ amount.quantity }}×</span>
                                     <img :src="'/sprites/' + game.items[amount.item].sprite"
                                         :title="game.items[amount.item].name"
                                         :alt="game.items[amount.item].name"
