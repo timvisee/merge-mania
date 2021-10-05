@@ -129,7 +129,7 @@ impl GameItem {
         }
 
         // Decrease drop limit
-        if let Some(limit) = self.drop_limit.as_mut() {
+        if let Some(limit) = self.drop_limit {
             self.drop_limit = Some(limit.saturating_sub(1));
         }
 
@@ -175,6 +175,9 @@ impl GameItem {
         // TODO: update ticks!
         // TODO: set to current game tick to instantly drop, instead of 0!
         self.tick = item.drop_interval.map(|_| 0);
+        self.drop_limit = item.drop_limit.clone();
+
+        // TODO: ensure to set all values!
 
         true
     }

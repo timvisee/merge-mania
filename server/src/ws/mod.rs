@@ -444,7 +444,7 @@ pub fn send_to_client(
         // handled in other task
         let _ = client.tx.send(Message::text(&msg));
 
-        debug!("WS({0}): - msg queued for client {0}", client.client_id);
+        trace!("WS({0}): - msg queued for client {0}", client.client_id);
         return Ok(());
     }
 
@@ -463,7 +463,7 @@ pub fn send_to_team(
     team_id: u32,
     msg: &MsgSend,
 ) -> serde_json::Result<()> {
-    debug!(
+    trace!(
         "WS({}): send msg to team {}",
         client_id.unwrap_or(0),
         team_id,
