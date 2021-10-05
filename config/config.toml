@@ -1585,7 +1585,7 @@ drops = [
     { item = "82.0", chance = 0.02 },
     { item = "83.0", chance = 0.01 },
 ]
-sprite_path = "toolbox.png"
+sprite_path = "toolbox-green.png"
 
 [[items]]
 ref = "80.2"
@@ -1602,7 +1602,7 @@ drops = [
     { item = "82.0", chance = 0.03 },
     { item = "83.0", chance = 0.02 },
 ]
-sprite_path = "toolbox.png"
+sprite_path = "toolbox-purple.png"
 
 [[items]]
 ref = "80.3"
@@ -1619,7 +1619,7 @@ drops = [
     { item = "82.0", chance = 0.04 },
     { item = "83.0", chance = 0.03 },
 ]
-sprite_path = "toolbox.png"
+sprite_path = "toolbox-blue.png"
 
 [[items]]
 ref = "80.4"
@@ -1637,7 +1637,7 @@ drops = [
     { item = "82.0", chance = 0.05 },
     { item = "83.0", chance = 0.04 },
 ]
-sprite_path = "toolbox.png"
+sprite_path = "toolbox-gray.png"
 
 [[items]]
 ref = "80.5"
@@ -1654,7 +1654,7 @@ drops = [
     { item = "82.0", chance = 0.07 },
     { item = "83.0", chance = 0.06 },
 ]
-sprite_path = "toolbox.png"
+sprite_path = "toolbox-silver.png"
 
 [[items]]
 ref = "80.6"
@@ -1670,7 +1670,7 @@ drops = [
     { item = "82.0", chance = 0.09 },
     { item = "83.0", chance = 0.08 },
 ]
-sprite_path = "toolbox.png"
+sprite_path = "toolbox-gold.png"
 
 
 
