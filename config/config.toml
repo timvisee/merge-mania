@@ -181,7 +181,7 @@ merge = "10.3"
 name = "Fruit tree 3"
 tier = "Fruit tree"
 label = "3"
-sell = 12
+sell = 11
 drop_interval = 48
 drops = [
     { item = "11.0", chance = 0.77 },
@@ -197,7 +197,7 @@ merge = "10.4"
 name = "Fruit tree 4"
 tier = "Fruit tree"
 label = "4"
-sell = 24
+sell = 20
 drop_interval = 42
 drops = [
     { item = "11.0", chance = 0.62 },
@@ -213,7 +213,7 @@ merge = "10.5"
 name = "Fruit tree 5"
 tier = "Fruit tree"
 label = "5"
-sell = 48
+sell = 35
 drop_interval = 36
 drops = [
     { item = "11.0", chance = 0.33 },
@@ -230,7 +230,7 @@ merge = "10.6"
 name = "Fruit tree 6"
 tier = "Fruit tree"
 label = "6"
-sell = 96
+sell = 61
 drop_interval = 30
 drops = [
     { item = "11.1", chance = 0.72 },
@@ -246,7 +246,7 @@ ref = "10.6"
 name = "Fruit tree 7"
 tier = "Fruit tree"
 label = "Max"
-sell = 192
+sell = 105
 drop_interval = 24
 drops = [
     { item = "11.1", chance = 0.59 },
@@ -470,8 +470,7 @@ buy = [
     { energy = 1 },
 ]
 client_order = 2
-# TODO: sell value
-sell = 1
+sell = 35
 drop_interval = 60
 drops = [
     { item = "12.0", chance = 0.95 },
@@ -486,8 +485,7 @@ merge = "20.2"
 name = "Farmer 2"
 tier = "Farmer"
 label = "2"
-# TODO: sell value
-sell = 1
+sell = 54
 drop_interval = 53
 drops = [
     { item = "12.0", chance = 0.84 },
@@ -503,8 +501,7 @@ merge = "20.3"
 name = "Farmer 3"
 tier = "Farmer"
 label = "3"
-# TODO: sell value
-sell = 1
+sell = 83
 drop_interval = 46
 drops = [
     { item = "12.0", chance = 0.71 },
@@ -521,8 +518,7 @@ merge = "20.4"
 name = "Farmer 4"
 tier = "Farmer"
 label = "4"
-# TODO: sell value
-sell = 1
+sell = 128
 drop_interval = 39
 drops = [
     { item = "12.0", chance = 0.47 },
@@ -540,8 +536,7 @@ merge = "20.5"
 name = "Farmer 5"
 tier = "Farmer"
 label = "5"
-# TODO: sell value
-sell = 1
+sell = 197
 drop_interval = 32
 drops = [
     { item = "12.0", chance = 0.23 },
@@ -558,8 +553,7 @@ ref = "20.5"
 name = "Farmer 6"
 tier = "Farmer"
 label = "Max"
-# TODO: sell value
-sell = 1
+sell = 304
 drop_interval = 24
 drops = [
     { item = "12.1", chance = 0.52 },
@@ -668,8 +662,7 @@ buy = [
     { energy = 1 },
 ]
 client_order = 3
-# TODO: sell
-sell = 225
+sell = 200
 drop_interval = 60
 drops = [
     { item = "31.0", chance = 0.95 },
@@ -684,8 +677,7 @@ merge = "30.2"
 name = "Bakery"
 tier = "Bakery 2"
 label = "2"
-# TODO: sell
-sell = 225
+sell = 301
 drop_interval = 51
 drops = [
     { item = "31.0", chance = 0.87 },
@@ -701,8 +693,7 @@ merge = "30.3"
 name = "Bakery"
 tier = "Bakery 3"
 label = "3"
-# TODO: sell
-sell = 225
+sell = 454
 drop_interval = 42
 drops = [
     { item = "31.0", chance = 0.54 },
@@ -719,8 +710,7 @@ merge = "30.4"
 name = "Bakery"
 tier = "Bakery 4"
 label = "4"
-# TODO: sell
-sell = 225
+sell = 684
 drop_interval = 33
 drops = [
     { item = "31.0", chance = 0.28 },
@@ -736,8 +726,7 @@ ref = "30.4"
 name = "Bakery"
 tier = "Bakery 5"
 label = "Max"
-# TODO: sell
-sell = 225
+sell = 1031
 drop_interval = 24
 drops = [
     { item = "31.1", chance = 0.42 },
@@ -837,8 +826,7 @@ buy = [
     { energy = 3 },
 ]
 client_order = 4
-# TODO: sell value
-sell = 3375
+sell = 2984
 drop_interval = 60
 drops = [
     { item = "41.0", chance = 0.95 },
@@ -853,8 +841,7 @@ merge = "40.2"
 name = "Chicken 2"
 tier = "Chicken"
 label = "2"
-# TODO: sell value
-sell = 3375
+sell = 4477
 drop_interval = 51
 drops = [
     { item = "41.0", chance = 0.87 },
@@ -870,8 +857,7 @@ merge = "40.3"
 name = "Chicken 3"
 tier = "Chicken"
 label = "3"
-# TODO: sell value
-sell = 3375
+sell = 6718
 drop_interval = 42
 drops = [
     { item = "41.0", chance = 0.54 },
@@ -889,8 +875,7 @@ merge = "40.4"
 name = "Chicken 4"
 tier = "Chicken"
 label = "4"
-# TODO: sell value
-sell = 3375
+sell = 10080
 drop_interval = 33
 drops = [
     { item = "41.0", chance = 0.28 },
@@ -907,8 +892,7 @@ ref = "40.4"
 name = "Chicken 5"
 tier = "Chicken"
 label = "Max"
-# TODO: sell price
-sell = 3375
+sell = 15125
 drop_interval = 24
 drops = [
     { item = "41.1", chance = 0.42 },
@@ -993,7 +977,7 @@ buy = [
     { energy = 10 },
 ]
 client_order = 5
-sell = 100
+sell = 6389
 drop_interval = 300
 drops = [
     { item = "51.0", chance = 0.95 },
@@ -1008,7 +992,7 @@ merge = "50.2"
 name = "Teacher 2"
 tier = "Mathematician"
 label = "2"
-sell = 201
+sell = 9585
 drop_interval = 260
 drops = [
     { item = "51.0", chance = 0.64 },
@@ -1024,7 +1008,7 @@ merge = "50.3"
 name = "Teacher 4"
 tier = "Mathematician"
 label = "3"
-sell = 404
+sell = 14380
 drop_interval = 220
 drops = [
     { item = "51.0", chance = 0.32 },
@@ -1040,7 +1024,7 @@ ref = "50.3"
 name = "Teacher 8"
 tier = "Mathematician"
 label = "Max"
-sell = 811
+sell = 21573
 drop_interval = 180
 drops = [
     { item = "51.1", chance = 0.62 },
@@ -1164,7 +1148,7 @@ merge = "60.2"
 name = "Stadium 2"
 tier = "Stadium"
 label = "2"
-sell = 6001
+sell = 4501
 drop_interval = 72
 drops = [
     { item = "61.0", chance = 0.85 },
@@ -1180,7 +1164,7 @@ merge = "60.3"
 name = "Stadium 3"
 tier = "Stadium"
 label = "3"
-sell = 12004
+sell = 6754
 drop_interval = 64
 drops = [
     { item = "61.0", chance = 0.72 },
@@ -1196,7 +1180,7 @@ merge = "60.4"
 name = "Stadium 4"
 tier = "Stadium"
 label = "4"
-sell = 24011
+sell = 10134
 drop_interval = 56
 drops = [
     { item = "61.0", chance = 0.50 },
@@ -1212,7 +1196,7 @@ merge = "60.5"
 name = "Stadium 5"
 tier = "Stadium"
 label = "5"
-sell = 48027
+sell = 15206
 drop_interval = 48
 drops = [
     { item = "61.0", chance = 0.25 },
@@ -1227,7 +1211,7 @@ ref = "60.5"
 name = "Stadium 6"
 tier = "Stadium"
 label = "Max"
-sell = 96062
+sell = 22817
 drop_interval = 40
 drops = [
     { item = "61.0", chance = 0.05 },
@@ -1262,7 +1246,7 @@ ref = "61.2"
 merge = "61.3"
 name = "Softball"
 tier = "Ball sports"
-sell = 11815
+sell = 11816
 sprite_path = "softball.png"
 
 [[items]]
@@ -1270,7 +1254,7 @@ ref = "61.3"
 merge = "61.4"
 name = "Baseball"
 tier = "Ball sports"
-sell = 23631
+sell = 23635
 sprite_path = "baseball.png"
 
 [[items]]
@@ -1278,7 +1262,7 @@ ref = "61.4"
 merge = "61.5"
 name = "Volleyball"
 tier = "Ball sports"
-sell = 47263
+sell = 47275
 sprite_path = "volleyball.png"
 
 [[items]]
@@ -1286,7 +1270,7 @@ ref = "61.5"
 merge = "61.6"
 name = "Basketball"
 tier = "Ball sports"
-sell = 94527
+sell = 94558
 sprite_path = "basketball.png"
 
 [[items]]
@@ -1294,7 +1278,7 @@ ref = "61.6"
 merge = "61.7"
 name = "Rugby football"
 tier = "Ball sports"
-sell = 189055
+sell = 189129
 sprite_path = "rugby-football.png"
 
 [[items]]
@@ -1302,14 +1286,14 @@ ref = "61.7"
 merge = "61.8"
 name = "American football"
 tier = "Ball sports"
-sell = 378111
+sell = 378279
 sprite_path = "american-football.png"
 
 [[items]]
 ref = "61.8"
 name = "8-ball"
 tier = "Ball sports"
-sell = 756223
+sell = 756592
 sprite_path = "pool-8-ball.png"
 
 
@@ -1821,7 +1805,7 @@ merge = "90.2"
 name = "Shower"
 tier = "Water Source"
 label = "2"
-sell = 601
+sell = 452
 drop_interval = 30
 drops = [
     { item = "91.0", chance = 0.70 },
@@ -1834,7 +1818,7 @@ ref = "90.2"
 name = "Fountain"
 tier = "Water Source"
 label = "Max"
-sell = 1202
+sell = 679
 drop_interval = 60
 drops = [
     { item = "91.0", chance = 0.30 },
@@ -2066,7 +2050,7 @@ sprite_path = "bank.png"
 
 [[items]]
 ref = "200.0"
-name = "Pick"
+name = "Pick (10 drops)"
 tier = "Mining"
 buy = [
     { money = 10000 },
