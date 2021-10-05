@@ -75,6 +75,10 @@ pub struct ConfigItem {
     /// Sprite file path.
     #[serde(rename = "sprite", alias = "sprite_path")]
     pub sprite_path: String,
+
+    /// Client ordering value.
+    #[serde(default)]
+    pub client_order: i16,
 }
 
 impl ConfigItem {

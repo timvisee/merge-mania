@@ -55,7 +55,7 @@ export default {
     getBuyableItems() {
         return Object.values(this.items)
             .filter(i => i.buy !== null && i.buy !== undefined)
-            .sort((a, b) => parseInt(a.ref.split('.')[0]) - parseInt(b.ref.split('.')[0]));
+            .sort((a, b) => this.items[a.ref].client_order - this.items[b.ref].client_order);
     },
 
     /// Find the item before the given reference.

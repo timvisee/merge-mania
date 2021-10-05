@@ -147,6 +147,7 @@ buy = [
     { money = 5 },
     { energy = 1 },
 ]
+client_order = 1
 sell = 3
 drop_interval = 60
 drops = [
@@ -466,6 +467,7 @@ buy = [
     { item = "11.5", quantity = 1 },
     { energy = 1 },
 ]
+client_order = 2
 # TODO: sell value
 sell = 1
 drop_interval = 60
@@ -663,6 +665,7 @@ buy = [
     { item = "12.4", quantity = 1 },
     { energy = 1 },
 ]
+client_order = 3
 # TODO: sell
 sell = 225
 drop_interval = 60
@@ -831,6 +834,7 @@ buy = [
     { item = "31.4", quantity = 1 },
     { energy = 3 },
 ]
+client_order = 4
 # TODO: sell value
 sell = 3375
 drop_interval = 60
@@ -986,6 +990,7 @@ buy = [
     { item = "41.4", quantity = 1 },
     { energy = 10 },
 ]
+client_order = 5
 sell = 100
 drop_interval = 300
 drops = [
@@ -1142,6 +1147,7 @@ label = "1"
 buy = [
     { money = 1 },
 ]
+client_order = 8
 # TODO: sell value
 sell = 1
 drop_interval = 60
@@ -1251,6 +1257,7 @@ buy = [
     # TODO: buy price
     { money = 1 },
 ]
+client_order = 10
 # TODO: sell value
 sell = 1
 drop_interval = 60
@@ -1471,6 +1478,7 @@ buy = [
     # TODO: buy price
     { money = 1 },
 ]
+client_order = 9
 # TODO: sell value
 sell = 1
 drop_interval = 60
@@ -1648,6 +1656,7 @@ buy = [
     { money = 3333 },
     { energy = 3 },
 ]
+client_order = 6
 sell = 300
 drop_interval = 20
 drops = [
@@ -1912,6 +1921,7 @@ buy = [
     { money = 10000 },
     { energy = 5 },
 ]
+client_order = 7
 sell = 500
 drop_interval = 180
 drop_limit = 10
