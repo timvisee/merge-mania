@@ -205,7 +205,7 @@ drops = [
     { item = "11.2", chance = 0.02 },
     { item = "12.0", chance = 0.05 },
 ]
-sprite_path = "deciduous-tree.png"
+sprite_path = "deciduous-tree-apples.png"
 
 [[items]]
 ref = "10.3"
@@ -221,7 +221,7 @@ drops = [
     { item = "11.2", chance = 0.03 },
     { item = "12.0", chance = 0.07 },
 ]
-sprite_path = "deciduous-tree.png"
+sprite_path = "deciduous-tree-dark.png"
 
 [[items]]
 ref = "10.4"
@@ -238,7 +238,7 @@ drops = [
     { item = "11.3", chance = 0.01 },
     { item = "12.0", chance = 0.10 },
 ]
-sprite_path = "deciduous-tree.png"
+sprite_path = "deciduous-tree-dark-apples.png"
 
 [[items]]
 ref = "10.5"
@@ -255,7 +255,7 @@ drops = [
     { item = "12.0", chance = 0.16 },
     { item = "12.1", chance = 0.01 },
 ]
-sprite_path = "deciduous-tree.png"
+sprite_path = "deciduous-tree-gold.png"
 
 [[items]]
 ref = "10.6"
@@ -272,7 +272,7 @@ drops = [
     { item = "12.0", chance = 0.20 },
     { item = "12.1", chance = 0.03 },
 ]
-sprite_path = "deciduous-tree.png"
+sprite_path = "deciduous-tree-gold-apples.png"
 
 
 
