@@ -1,0 +1,1966 @@
+# Game configuration
+
+[game]
+# Milliseconds per tick
+tick_millis = 1000
+
+# Reset game state when starting server
+reset = false
+
+# Immediately start new games
+start = true
+
+
+# Team defaults
+
+[defaults]
+money = 50
+energy = 25
+
+# Default inventory items by reference
+inventory = [
+    "10.0",
+    "11.0",
+    "11.0",
+    "11.0",
+    "11.0",
+    "11.0",
+]
+
+
+
+# Teams
+
+[[teams]]
+id = 1
+name = "Team 1"
+password = "team1"
+
+[[teams]]
+id = 2
+name = "Team 2"
+password = "team2"
+
+[[teams]]
+id = 3
+name = "Team 3"
+password = "team3"
+
+
+
+# Item configuration example:
+#
+# [[items]]
+#
+# # Unique item reference
+# id = "1.0"
+#
+# # Optional: mergeable into item reference
+# merge = "1.1"
+#
+# # Item display name
+# name = "Apple"
+#
+# # Item tier name
+# tier = "Fruit"
+#
+# # Optional: item label, overlayed on client
+# label = "Label"
+#
+# # Optional: costs to buy item
+# buy = [
+#     # Pay money
+#     { money = 123 },
+#     # Pay energy
+#     { energy = 123 },
+#     # Pay an item
+#     { item = "2.4", quantity = 1 },
+# ]
+#
+# # Sell price
+# sell = 1
+#
+# # Path to sprite to show on client
+# sprite_path = "red-apple.png"
+#
+# # Optional: drop interval in number of ticks
+# drop_interval = 60
+#
+# # Optional: destroy item after number of drops
+# drop_limit = 10
+#
+# # Optional: list of items that may be dropped
+# drops = [
+#     { item = "11.0", chance = 0.90 },
+#     { item = "11.1", chance = 0.10 },
+# ]
+
+
+
+# Fruit tree
+
+[[items]]
+ref = "10.0"
+merge = "10.1"
+name = "Fruit tree"
+tier = "Fruit tree"
+description = "Good 'ol trusty tree. Must be heaven for moneys."
+label = "1"
+buy = [
+    { money = 5 },
+    { energy = 1 },
+]
+client_order = 1
+sell = 3
+drop_interval = 60
+drops = [
+    { item = "11.0", chance = 0.95 },
+    { item = "11.1", chance = 0.04 },
+    { item = "12.0", chance = 0.01 },
+]
+sprite_path = "deciduous-tree.png"
+
+[[items]]
+ref = "10.1"
+merge = "10.2"
+name = "Fruit tree 2"
+tier = "Fruit tree"
+label = "2"
+sell = 6
+drop_interval = 54
+drops = [
+    { item = "11.0", chance = 0.90 },
+    { item = "11.1", chance = 0.06 },
+    { item = "11.2", chance = 0.01 },
+    { item = "12.0", chance = 0.03 },
+]
+sprite_path = "deciduous-tree.png"
+
+[[items]]
+ref = "10.2"
+merge = "10.3"
+name = "Fruit tree 3"
+tier = "Fruit tree"
+label = "3"
+sell = 11
+drop_interval = 48
+drops = [
+    { item = "11.0", chance = 0.77 },
+    { item = "11.1", chance = 0.16 },
+    { item = "11.2", chance = 0.02 },
+    { item = "12.0", chance = 0.05 },
+]
+sprite_path = "deciduous-tree-apples.png"
+
+[[items]]
+ref = "10.3"
+merge = "10.4"
+name = "Fruit tree 4"
+tier = "Fruit tree"
+label = "4"
+sell = 20
+drop_interval = 42
+drops = [
+    { item = "11.0", chance = 0.62 },
+    { item = "11.1", chance = 0.28 },
+    { item = "11.2", chance = 0.03 },
+    { item = "12.0", chance = 0.07 },
+]
+sprite_path = "deciduous-tree-dark.png"
+
+[[items]]
+ref = "10.4"
+merge = "10.5"
+name = "Fruit tree 5"
+tier = "Fruit tree"
+label = "5"
+sell = 35
+drop_interval = 36
+drops = [
+    { item = "11.0", chance = 0.33 },
+    { item = "11.1", chance = 0.50 },
+    { item = "11.2", chance = 0.05 },
+    { item = "11.3", chance = 0.01 },
+    { item = "12.0", chance = 0.10 },
+]
+sprite_path = "deciduous-tree-dark-apples.png"
+
+[[items]]
+ref = "10.5"
+merge = "10.6"
+name = "Fruit tree 6"
+tier = "Fruit tree"
+label = "6"
+sell = 61
+drop_interval = 30
+drops = [
+    { item = "11.1", chance = 0.72 },
+    { item = "11.2", chance = 0.08 },
+    { item = "11.3", chance = 0.03 },
+    { item = "12.0", chance = 0.16 },
+    { item = "12.1", chance = 0.01 },
+]
+sprite_path = "deciduous-tree-gold.png"
+
+[[items]]
+ref = "10.6"
+name = "Fruit tree 7"
+tier = "Fruit tree"
+description = "So versatile!"
+label = "Max"
+sell = 105
+drop_interval = 24
+drops = [
+    { item = "11.1", chance = 0.59 },
+    { item = "11.2", chance = 0.13 },
+    { item = "11.3", chance = 0.05 },
+    { item = "12.0", chance = 0.20 },
+    { item = "12.1", chance = 0.03 },
+]
+sprite_path = "deciduous-tree-gold-apples.png"
+
+
+
+# Fruit
+
+[[items]]
+ref = "11.0"
+merge = "11.1"
+name = "Apple"
+tier = "Fruit"
+description = "Apples do fall far from the tree"
+sell = 1
+sprite_path = "red-apple.png"
+
+[[items]]
+ref = "11.1"
+merge = "11.2"
+name = "Banana"
+tier = "Fruit"
+sell = 3
+sprite_path = "banana.png"
+
+[[items]]
+ref = "11.2"
+merge = "11.3"
+name = "Pineapple"
+description = "Ananas or Anannas?"
+tier = "Fruit"
+sell = 8
+sprite_path = "pineapple.png"
+
+[[items]]
+ref = "11.3"
+merge = "11.4"
+name = "Cherries"
+tier = "Fruit"
+sell = 19
+sprite_path = "cherries.png"
+
+[[items]]
+ref = "11.4"
+merge = "11.5"
+name = "Strawberry"
+tier = "Fruit"
+sell = 43
+sprite_path = "strawberry.png"
+
+[[items]]
+ref = "11.5"
+merge = "11.6"
+name = "Watermelon"
+description = "When life gives you watermelons... wait?"
+tier = "Fruit"
+sell = 94
+sprite_path = "watermelon.png"
+
+[[items]]
+ref = "11.6"
+merge = "11.7"
+name = "Grape"
+tier = "Fruit"
+sell = 201
+sprite_path = "grapes.png"
+
+[[items]]
+ref = "11.7"
+merge = "11.8"
+name = "Lemon"
+tier = "Fruit"
+description = "When life gives you lemons"
+sell = 423
+sprite_path = "lemon.png"
+
+[[items]]
+ref = "11.8"
+merge = "11.9"
+name = "Tangerine"
+tier = "Fruit"
+sell = 880
+sprite_path = "tangerine.png"
+
+[[items]]
+ref = "11.9"
+merge = "11.10"
+name = "Pear"
+tier = "Fruit"
+sell = 1815
+sprite_path = "pear.png"
+
+[[items]]
+ref = "11.10"
+merge = "11.11"
+name = "Peach"
+description = "Weirdly shaped"
+tier = "Fruit"
+sell = 3719
+sprite_path = "peach.png"
+
+[[items]]
+ref = "11.11"
+merge = "11.12"
+name = "Mango"
+tier = "Fruit"
+sell = 7582
+sprite_path = "mango.png"
+
+[[items]]
+ref = "11.12"
+name = "Blueberries"
+description = "4096 apples make one blueberry"
+tier = "Fruit"
+sell = 15397
+sprite_path = "blueberries.png"
+
+
+
+# Vegetables
+
+[[items]]
+ref = "12.0"
+merge = "12.1"
+name = "Tomato"
+tier = "Vegetable"
+sell = 15
+sprite_path = "tomato.png"
+
+[[items]]
+ref = "12.1"
+merge = "12.2"
+name = "Cucumber"
+tier = "Vegetable"
+sell = 31
+sprite_path = "cucumber.png"
+
+[[items]]
+ref = "12.2"
+merge = "12.3"
+name = "Onion"
+description = "A sad vegetable"
+tier = "Vegetable"
+sell = 64
+sprite_path = "onion.png"
+
+[[items]]
+ref = "12.3"
+merge = "12.4"
+name = "Carrot"
+tier = "Vegetable"
+sell = 131
+sprite_path = "carrot.png"
+
+[[items]]
+ref = "12.4"
+merge = "12.5"
+name = "Eggplant"
+tier = "Vegetable"
+sell = 267
+sprite_path = "eggplant.png"
+
+[[items]]
+ref = "12.5"
+merge = "12.6"
+name = "Bell Pepper"
+tier = "Vegetable"
+sell = 542
+sprite_path = "bell-pepper.png"
+
+[[items]]
+ref = "12.6"
+merge = "12.7"
+name = "Potato"
+description = "Potato potato"
+tier = "Vegetable"
+sell = 1097
+sprite_path = "potato.png"
+
+[[items]]
+ref = "12.7"
+merge = "12.8"
+name = "Corn"
+tier = "Vegetable"
+sell = 2215
+sprite_path = "ear-of-corn.png"
+
+[[items]]
+ref = "12.8"
+merge = "12.9"
+name = "Broccoli"
+tier = "Vegetable"
+sell = 4464
+sprite_path = "broccoli.png"
+
+[[items]]
+ref = "12.9"
+merge = "12.10"
+name = "Garlic"
+tier = "Vegetable"
+sell = 8983
+sprite_path = "garlic.png"
+
+[[items]]
+ref = "12.10"
+name = "Mushroom"
+tier = "Vegetable"
+sell = 18055
+sprite_path = "mushroom.png"
+
+
+
+# Farmer
+
+[[items]]
+ref = "20.0"
+merge = "20.1"
+name = "Farmer"
+tier = "Farmer"
+label = "1"
+buy = [
+    { item = "11.5", quantity = 1 },
+    { energy = 1 },
+]
+client_order = 2
+sell = 35
+drop_interval = 60
+drops = [
+    { item = "12.0", chance = 0.95 },
+    { item = "12.1", chance = 0.04 },
+    { item = "21.0", chance = 0.01 },
+]
+sprite_path = "farmer.png"
+
+[[items]]
+ref = "20.1"
+merge = "20.2"
+name = "Farmer 2"
+tier = "Farmer"
+label = "2"
+sell = 54
+drop_interval = 53
+drops = [
+    { item = "12.0", chance = 0.84 },
+    { item = "12.1", chance = 0.10 },
+    { item = "12.2", chance = 0.02 },
+    { item = "21.0", chance = 0.04 },
+]
+sprite_path = "farmer.png"
+
+[[items]]
+ref = "20.2"
+merge = "20.3"
+name = "Farmer 3"
+tier = "Farmer"
+label = "3"
+sell = 83
+drop_interval = 46
+drops = [
+    { item = "12.0", chance = 0.71 },
+    { item = "12.1", chance = 0.17 },
+    { item = "12.2", chance = 0.03 },
+    { item = "12.3", chance = 0.01 },
+    { item = "21.0", chance = 0.08 },
+]
+sprite_path = "farmer.png"
+
+[[items]]
+ref = "20.3"
+merge = "20.4"
+name = "Farmer 4"
+tier = "Farmer"
+label = "4"
+sell = 128
+drop_interval = 39
+drops = [
+    { item = "12.0", chance = 0.47 },
+    { item = "12.1", chance = 0.30 },
+    { item = "12.2", chance = 0.06 },
+    { item = "12.3", chance = 0.03 },
+    { item = "21.0", chance = 0.13 },
+    { item = "21.1", chance = 0.01 },
+]
+sprite_path = "farmer.png"
+
+[[items]]
+ref = "20.4"
+merge = "20.5"
+name = "Farmer 5"
+tier = "Farmer"
+label = "5"
+sell = 197
+drop_interval = 32
+drops = [
+    { item = "12.0", chance = 0.23 },
+    { item = "12.1", chance = 0.46 },
+    { item = "12.2", chance = 0.07 },
+    { item = "12.3", chance = 0.05 },
+    { item = "21.0", chance = 0.16 },
+    { item = "21.1", chance = 0.03 },
+]
+sprite_path = "farmer.png"
+
+[[items]]
+ref = "20.5"
+name = "Farmer 6"
+tier = "Farmer"
+label = "Max"
+sell = 304
+drop_interval = 24
+drops = [
+    { item = "12.1", chance = 0.52 },
+    { item = "12.2", chance = 0.12 },
+    { item = "12.3", chance = 0.09 },
+    { item = "21.0", chance = 0.22 },
+    { item = "21.1", chance = 0.05 },
+]
+sprite_path = "farmer.png"
+
+
+
+# Farm animals
+
+[[items]]
+ref = "21.0"
+merge = "21.1"
+name = "Cat"
+description = "Meow"
+tier = "Farm animals"
+sell = 1680
+sprite_path = "cat.png"
+
+[[items]]
+ref = "21.1"
+merge = "21.2"
+name = "Rabbit"
+tier = "Farm animals"
+sell = 3361
+sprite_path = "rabbit.png"
+
+[[items]]
+ref = "21.2"
+merge = "21.3"
+name = "Pig"
+tier = "Farm animals"
+sell = 6724
+sprite_path = "pig.png"
+
+[[items]]
+ref = "21.3"
+merge = "21.4"
+name = "Sheep"
+tier = "Farm animals"
+sell = 13451
+sprite_path = "sheep.png"
+
+[[items]]
+ref = "21.4"
+merge = "21.5"
+name = "Goat"
+tier = "Farm animals"
+sell = 26907
+sprite_path = "goat.png"
+
+[[items]]
+ref = "21.5"
+merge = "21.6"
+name = "Cow"
+tier = "Farm animals"
+sell = 53822
+sprite_path = "cow.png"
+
+[[items]]
+ref = "21.6"
+merge = "21.7"
+name = "Ox"
+tier = "Farm animals"
+sell = 107657
+sprite_path = "ox.png"
+
+[[items]]
+ref = "21.7"
+merge = "21.8"
+name = "Llama"
+tier = "Farm animals"
+sell = 215335
+sprite_path = "llama.png"
+
+[[items]]
+ref = "21.8"
+merge = "21.9"
+name = "Horse"
+tier = "Farm animals"
+sell = 430704
+sprite_path = "horse.png"
+
+[[items]]
+ref = "21.9"
+name = "Unicorn"
+description = "Must be a special farm"
+tier = "Farm animals"
+sell = 861463
+sprite_path = "unicorn.png"
+
+
+
+# Bakery
+
+[[items]]
+ref = "30.0"
+merge = "30.1"
+name = "Bakery"
+tier = "Bakery"
+label = "1"
+buy = [
+    { item = "12.4", quantity = 1 },
+    { energy = 1 },
+]
+client_order = 3
+sell = 200
+drop_interval = 60
+drops = [
+    { item = "31.0", chance = 0.95 },
+    { item = "31.1", chance = 0.04 },
+    { item = "41.0", chance = 0.01 },
+]
+sprite_path = "cook.png"
+
+[[items]]
+ref = "30.1"
+merge = "30.2"
+name = "Bakery"
+tier = "Bakery 2"
+label = "2"
+sell = 301
+drop_interval = 51
+drops = [
+    { item = "31.0", chance = 0.87 },
+    { item = "31.1", chance = 0.09 },
+    { item = "31.2", chance = 0.01 },
+    { item = "41.0", chance = 0.03 },
+]
+sprite_path = "cook.png"
+
+[[items]]
+ref = "30.2"
+merge = "30.3"
+name = "Bakery"
+tier = "Bakery 3"
+label = "3"
+sell = 454
+drop_interval = 42
+drops = [
+    { item = "31.0", chance = 0.54 },
+    { item = "31.1", chance = 0.32 },
+    { item = "31.2", chance = 0.05 },
+    { item = "31.3", chance = 0.01 },
+    { item = "41.0", chance = 0.08 },
+]
+sprite_path = "cook.png"
+
+[[items]]
+ref = "30.3"
+merge = "30.4"
+name = "Bakery"
+tier = "Bakery 4"
+label = "4"
+sell = 684
+drop_interval = 33
+drops = [
+    { item = "31.0", chance = 0.28 },
+    { item = "31.1", chance = 0.50 },
+    { item = "31.2", chance = 0.07 },
+    { item = "31.3", chance = 0.03 },
+    { item = "41.0", chance = 0.12 },
+]
+sprite_path = "cook.png"
+
+[[items]]
+ref = "30.4"
+name = "Bakery"
+tier = "Bakery 5"
+label = "Max"
+sell = 1031
+drop_interval = 24
+drops = [
+    { item = "31.1", chance = 0.42 },
+    { item = "31.2", chance = 0.18 },
+    { item = "31.3", chance = 0.13 },
+    { item = "41.0", chance = 0.27 },
+]
+sprite_path = "cook.png"
+
+
+
+# Bread
+
+[[items]]
+ref = "31.0"
+merge = "31.1"
+name = "Bread"
+tier = "Bread"
+sell = 225
+sprite_path = "bread.png"
+
+[[items]]
+ref = "31.1"
+merge = "31.2"
+name = "Croissant"
+tier = "Bread"
+sell = 451
+sprite_path = "croissant.png"
+
+[[items]]
+ref = "31.2"
+merge = "31.3"
+name = "Baguette"
+tier = "Bread"
+sell = 904
+sprite_path = "baguette-bread.png"
+
+[[items]]
+ref = "31.3"
+merge = "31.4"
+name = "Flatbread"
+tier = "Bread"
+sell = 1809
+sprite_path = "flatbread.png"
+
+[[items]]
+ref = "31.4"
+merge = "31.5"
+name = "Pretzel"
+tier = "Bread"
+sell = 3621
+sprite_path = "pretzel.png"
+
+[[items]]
+ref = "31.5"
+merge = "31.6"
+name = "Bagel"
+tier = "Bread"
+sell = 7247
+sprite_path = "bagel.png"
+
+[[items]]
+ref = "31.6"
+merge = "31.7"
+name = "Pancake"
+tier = "Bread"
+sell = 14502
+sprite_path = "pancakes.png"
+
+[[items]]
+ref = "31.7"
+merge = "31.8"
+name = "Waffle"
+tier = "Bread"
+sell = 29017
+sprite_path = "waffle.png"
+
+[[items]]
+ref = "31.8"
+name = "Fortune Cookie"
+description = "Try your luck"
+tier = "Bread"
+sell = 58055
+sprite_path = "fortune-cookie.png"
+
+
+
+# Chicken
+
+[[items]]
+ref = "40.0"
+merge = "40.1"
+name = "Chicken"
+tier = "Chicken"
+label = "1"
+buy = [
+    { item = "31.4", quantity = 1 },
+    { energy = 3 },
+]
+client_order = 4
+sell = 2984
+drop_interval = 60
+drops = [
+    { item = "41.0", chance = 0.95 },
+    { item = "41.1", chance = 0.04 },
+    # TODO: { item = "42.0", chance = 0.01 },
+]
+sprite_path = "chicken.png"
+
+[[items]]
+ref = "40.1"
+merge = "40.2"
+name = "Chicken 2"
+tier = "Chicken"
+label = "2"
+sell = 4477
+drop_interval = 51
+drops = [
+    { item = "41.0", chance = 0.87 },
+    { item = "41.1", chance = 0.09 },
+    { item = "41.2", chance = 0.01 },
+    # TODO: { item = "42.0", chance = 0.03 },
+]
+sprite_path = "chicken.png"
+
+[[items]]
+ref = "40.2"
+merge = "40.3"
+name = "Chicken 3"
+tier = "Chicken"
+label = "3"
+sell = 6718
+drop_interval = 42
+drops = [
+    { item = "41.0", chance = 0.54 },
+    { item = "41.1", chance = 0.32 },
+    { item = "41.2", chance = 0.05 },
+    { item = "41.3", chance = 0.01 },
+    # TODO: { item = "42.0", chance = 0.07 },
+    # TODO: { item = "42.1", chance = 0.01 },
+]
+sprite_path = "chicken.png"
+
+[[items]]
+ref = "40.3"
+merge = "40.4"
+name = "Chicken 4"
+tier = "Chicken"
+label = "4"
+sell = 10080
+drop_interval = 33
+drops = [
+    { item = "41.0", chance = 0.28 },
+    { item = "41.1", chance = 0.50 },
+    { item = "41.2", chance = 0.07 },
+    { item = "41.3", chance = 0.03 },
+    # TODO: { item = "42.0", chance = 0.09 },
+    # TODO: { item = "42.1", chance = 0.03 },
+]
+sprite_path = "chicken.png"
+
+[[items]]
+ref = "40.4"
+name = "Chicken 5"
+tier = "Chicken"
+label = "Max"
+sell = 15125
+drop_interval = 24
+drops = [
+    { item = "41.1", chance = 0.42 },
+    { item = "41.2", chance = 0.18 },
+    { item = "41.3", chance = 0.13 },
+    # TODO: { item = "42.0", chance = 0.22 },
+    # TODO: { item = "42.1", chance = 0.05 },
+]
+sprite_path = "chicken.png"
+
+
+
+# Birds
+
+[[items]]
+ref = "41.0"
+merge = "41.1"
+name = "Egg"
+tier = "Bird"
+sell = 3375
+sprite_path = "egg.png"
+
+[[items]]
+ref = "41.1"
+merge = "41.2"
+name = "Baby Chick"
+tier = "Bird"
+sell = 6751
+sprite_path = "baby-chick.png"
+
+[[items]]
+ref = "41.2"
+merge = "41.3"
+name = "Duck"
+description = "Quack"
+tier = "Bird"
+sell = 13504
+sprite_path = "duck.png"
+
+[[items]]
+ref = "41.3"
+merge = "41.4"
+name = "Swan"
+tier = "Bird"
+sell = 27011
+sprite_path = "swan.png"
+
+[[items]]
+ref = "41.4"
+merge = "41.5"
+name = "Owl"
+tier = "Bird"
+sell = 54027
+sprite_path = "owl.png"
+
+[[items]]
+ref = "41.5"
+merge = "41.6"
+name = "Peacock"
+tier = "Bird"
+sell = 108062
+sprite_path = "peacock.png"
+
+[[items]]
+ref = "41.6"
+name = "Eagle"
+tier = "Bird"
+sell = 216137
+sprite_path = "eagle.png"
+
+
+
+# Teacher
+
+[[items]]
+ref = "50.0"
+merge = "50.1"
+name = "Teacher"
+tier = "Mathematician"
+label = "1"
+buy = [
+    { item = "41.4", quantity = 1 },
+    { energy = 10 },
+]
+client_order = 5
+sell = 6389
+drop_interval = 300
+drops = [
+    { item = "51.0", chance = 0.95 },
+    { item = "51.1", chance = 0.04 },
+    { item = "51.2", chance = 0.01 },
+]
+sprite_path = "man-teacher.png"
+
+[[items]]
+ref = "50.1"
+merge = "50.2"
+name = "Teacher 2"
+tier = "Mathematician"
+label = "2"
+sell = 9585
+drop_interval = 260
+drops = [
+    { item = "51.0", chance = 0.64 },
+    { item = "51.1", chance = 0.25 },
+    { item = "51.2", chance = 0.10 },
+    { item = "51.3", chance = 0.01 },
+]
+sprite_path = "man-teacher.png"
+
+[[items]]
+ref = "50.2"
+merge = "50.3"
+name = "Teacher 4"
+tier = "Mathematician"
+label = "3"
+sell = 14380
+drop_interval = 220
+drops = [
+    { item = "51.0", chance = 0.32 },
+    { item = "51.1", chance = 0.45 },
+    { item = "51.2", chance = 0.19 },
+    { item = "51.3", chance = 0.03 },
+    { item = "50.0", chance = 0.01 },
+]
+sprite_path = "man-teacher.png"
+
+[[items]]
+ref = "50.3"
+name = "Teacher 8"
+tier = "Mathematician"
+description = "E=mc²"
+label = "Max"
+sell = 21573
+drop_interval = 180
+drops = [
+    { item = "51.1", chance = 0.62 },
+    { item = "51.2", chance = 0.29 },
+    { item = "51.3", chance = 0.06 },
+    { item = "50.0", chance = 0.02 },
+    { item = "50.1", chance = 0.01 },
+]
+sprite_path = "man-teacher.png"
+
+
+
+# Numbers
+
+[[items]]
+ref = "51.0"
+merge = "51.1"
+name = "One"
+tier = "Numbers"
+sell = 10125
+sprite_path = "keycap-digit-one.png"
+
+[[items]]
+ref = "51.1"
+merge = "51.2"
+name = "Two"
+tier = "Numbers"
+sell = 20251
+sprite_path = "keycap-digit-two.png"
+
+[[items]]
+ref = "51.2"
+merge = "51.3"
+name = "Three"
+tier = "Numbers"
+sell = 40504
+sprite_path = "keycap-digit-three.png"
+
+[[items]]
+ref = "51.3"
+merge = "51.4"
+name = "Four"
+tier = "Numbers"
+sell = 81011
+sprite_path = "keycap-digit-four.png"
+
+[[items]]
+ref = "51.4"
+merge = "51.5"
+name = "Five"
+tier = "Numbers"
+sell = 162027
+sprite_path = "keycap-digit-five.png"
+
+[[items]]
+ref = "51.5"
+merge = "51.6"
+name = "Six"
+tier = "Numbers"
+sell = 324062
+sprite_path = "keycap-digit-six.png"
+
+[[items]]
+ref = "51.6"
+merge = "51.7"
+name = "Seven"
+tier = "Numbers"
+sell = 648137
+sprite_path = "keycap-digit-seven.png"
+
+[[items]]
+ref = "51.7"
+merge = "51.8"
+name = "Eight"
+tier = "Numbers"
+sell = 1296295
+sprite_path = "keycap-digit-eight.png"
+
+[[items]]
+ref = "51.8"
+merge = "51.9"
+name = "Nine"
+tier = "Numbers"
+sell = 2592624
+sprite_path = "keycap-digit-nine.png"
+
+[[items]]
+ref = "51.9"
+merge = "50.0"
+name = "Ten"
+tier = "Numbers"
+sell = 5185303
+sprite_path = "keycap-10.png"
+
+
+
+# Stadium
+
+[[items]]
+ref = "60.0"
+merge = "60.1"
+name = "Stadium"
+tier = "Stadium"
+label = "1"
+buy = [
+    { item = "11.10", quantity = 1 },
+    { energy = 3 },
+]
+client_order = 8
+sell = 3000
+drop_interval = 80
+drops = [
+    { item = "61.0", chance = 0.95 },
+    { item = "61.1", chance = 0.05 },
+]
+sprite_path = "stadium.png"
+
+[[items]]
+ref = "60.1"
+merge = "60.2"
+name = "Stadium 2"
+tier = "Stadium"
+label = "2"
+sell = 4501
+drop_interval = 72
+drops = [
+    { item = "61.0", chance = 0.85 },
+    { item = "61.1", chance = 0.11 },
+    { item = "61.2", chance = 0.03 },
+    { item = "61.3", chance = 0.01 },
+]
+sprite_path = "stadium.png"
+
+[[items]]
+ref = "60.2"
+merge = "60.3"
+name = "Stadium 3"
+tier = "Stadium"
+label = "3"
+sell = 6754
+drop_interval = 64
+drops = [
+    { item = "61.0", chance = 0.72 },
+    { item = "61.1", chance = 0.20 },
+    { item = "61.2", chance = 0.06 },
+    { item = "61.3", chance = 0.02 },
+]
+sprite_path = "stadium.png"
+
+[[items]]
+ref = "60.3"
+merge = "60.4"
+name = "Stadium 4"
+tier = "Stadium"
+label = "4"
+sell = 10134
+drop_interval = 56
+drops = [
+    { item = "61.0", chance = 0.50 },
+    { item = "61.1", chance = 0.33 },
+    { item = "61.2", chance = 0.11 },
+    { item = "61.3", chance = 0.06 },
+]
+sprite_path = "stadium.png"
+
+[[items]]
+ref = "60.4"
+merge = "60.5"
+name = "Stadium 5"
+tier = "Stadium"
+label = "5"
+sell = 15206
+drop_interval = 48
+drops = [
+    { item = "61.0", chance = 0.25 },
+    { item = "61.1", chance = 0.49 },
+    { item = "61.2", chance = 0.17 },
+    { item = "61.3", chance = 0.09 },
+]
+sprite_path = "stadium.png"
+
+[[items]]
+ref = "60.5"
+name = "Stadium 6"
+tier = "Stadium"
+label = "Max"
+sell = 22817
+drop_interval = 40
+drops = [
+    { item = "61.0", chance = 0.05 },
+    { item = "61.1", chance = 0.60 },
+    { item = "61.2", chance = 0.23 },
+    { item = "61.3", chance = 0.12 },
+]
+sprite_path = "stadium.png"
+
+
+
+# Ball sports
+
+[[items]]
+ref = "61.0"
+merge = "61.1"
+name = "Soccer ball"
+tier = "Ball sports"
+sell = 2953
+sprite_path = "soccer-ball.png"
+
+[[items]]
+ref = "61.1"
+merge = "61.2"
+name = "Tennis ball"
+tier = "Ball sports"
+sell = 5907
+sprite_path = "tennis.png"
+
+[[items]]
+ref = "61.2"
+merge = "61.3"
+name = "Softball"
+tier = "Ball sports"
+sell = 11816
+sprite_path = "softball.png"
+
+[[items]]
+ref = "61.3"
+merge = "61.4"
+name = "Baseball"
+tier = "Ball sports"
+sell = 23635
+sprite_path = "baseball.png"
+
+[[items]]
+ref = "61.4"
+merge = "61.5"
+name = "Volleyball"
+tier = "Ball sports"
+sell = 47275
+sprite_path = "volleyball.png"
+
+[[items]]
+ref = "61.5"
+merge = "61.6"
+name = "Basketball"
+tier = "Ball sports"
+sell = 94558
+sprite_path = "basketball.png"
+
+[[items]]
+ref = "61.6"
+merge = "61.7"
+name = "Rugby football"
+tier = "Ball sports"
+sell = 189129
+sprite_path = "rugby-football.png"
+
+[[items]]
+ref = "61.7"
+merge = "61.8"
+name = "American football"
+tier = "Ball sports"
+sell = 378279
+sprite_path = "american-football.png"
+
+[[items]]
+ref = "61.8"
+name = "8-ball"
+tier = "Ball sports"
+sell = 756592
+sprite_path = "pool-8-ball.png"
+
+
+
+# Speaker
+
+[[items]]
+ref = "70.0"
+merge = "70.1"
+name = "Speaker"
+tier = "Speakers"
+label = "1"
+buy = [
+    { item = "11.12", quantity = 1 },
+    { item = "12.4", quantity = 3 },
+    { item = "21.5", quantity = 1 },
+    { item = "41.4", quantity = 2 },
+    { item = "82.3", quantity = 1 },
+    { item = "83.3", quantity = 1 },
+    { money = 100000 },
+    { energy = 10 },
+]
+client_order = 10
+sell = 4165376
+drop_interval = 300
+drops = [
+    { item = "71.0", chance = 0.95 },
+    { item = "71.1", chance = 0.05 },
+]
+sprite_path = "speaker-low-volume.png"
+
+[[items]]
+ref = "70.1"
+merge = "70.2"
+name = "Tweeter"
+tier = "Speakers"
+label = "2"
+sell = 6248066
+drop_interval = 270
+drops = [
+    { item = "71.0", chance = 0.88 },
+    { item = "71.1", chance = 0.09 },
+    { item = "71.2", chance = 0.02 },
+    { item = "72.0", chance = 0.01 },
+]
+sprite_path = "speaker-medium-volume.png"
+
+[[items]]
+ref = "70.2"
+merge = "70.3"
+name = "Subwoofer"
+tier = "Speakers"
+label = "3"
+sell = 9372102
+drop_interval = 240
+drops = [
+    { item = "71.0", chance = 0.55 },
+    { item = "71.1", chance = 0.35 },
+    { item = "71.2", chance = 0.06 },
+    { item = "71.3", chance = 0.02 },
+    { item = "72.0", chance = 0.02 },
+]
+sprite_path = "speaker-high-volume.png"
+
+[[items]]
+ref = "70.3"
+merge = "70.4"
+name = "Headphone"
+tier = "Speakers"
+label = "4"
+sell = 14058158
+drop_interval = 210
+drops = [
+    { item = "71.0", chance = 0.29 },
+    { item = "71.1", chance = 0.53 },
+    { item = "71.2", chance = 0.11 },
+    { item = "71.3", chance = 0.04 },
+    { item = "72.0", chance = 0.025 },
+    { item = "72.1", chance = 0.005 },
+]
+sprite_path = "headphone.png"
+
+[[items]]
+ref = "70.4"
+name = "Radio"
+tier = "Speakers"
+label = "Max"
+sell = 21087245
+drop_interval = 180
+drops = [
+    { item = "71.0", chance = 0.03 },
+    { item = "71.1", chance = 0.52 },
+    { item = "71.2", chance = 0.24 },
+    { item = "71.3", chance = 0.15 },
+    { item = "72.0", chance = 0.05 },
+    { item = "72.1", chance = 0.01 },
+]
+sprite_path = "radio.png"
+
+
+
+# Instruments
+
+[[items]]
+ref = "71.0"
+merge = "71.1"
+name = "Piano"
+tier = "Instruments"
+sell = 1302838
+sprite_path = "musical-keyboard.png"
+
+[[items]]
+ref = "71.1"
+merge = "71.2"
+name = "Accordion"
+tier = "Instruments"
+sell = 2605678
+sprite_path = "accordion.png"
+
+[[items]]
+ref = "71.2"
+merge = "71.3"
+name = "Drum"
+tier = "Instruments"
+sell = 5211359
+sprite_path = "drum.png"
+
+[[items]]
+ref = "71.3"
+merge = "71.4"
+name = "Long Drum"
+tier = "Instruments"
+sell = 10422723
+sprite_path = "long-drum.png"
+
+[[items]]
+ref = "71.4"
+merge = "71.5"
+name = "Guitar"
+tier = "Instruments"
+sell = 20845454
+sprite_path = "guitar.png"
+
+[[items]]
+ref = "71.5"
+merge = "71.6"
+name = "Banjo"
+tier = "Instruments"
+sell = 41690921
+sprite_path = "banjo.png"
+
+[[items]]
+ref = "71.6"
+merge = "71.7"
+name = "Violin"
+tier = "Instruments"
+sell = 83381863
+sprite_path = "violin.png"
+
+[[items]]
+ref = "71.7"
+merge = "71.8"
+name = "Trumpet"
+tier = "Instruments"
+sell = 166763760
+sprite_path = "trumpet.png"
+
+[[items]]
+ref = "71.8"
+name = "Saxophone"
+description = "That's one expensive instrument!"
+tier = "Instruments"
+sell = 333527575
+sprite_path = "saxophone.png"
+
+
+
+# Music
+
+[[items]]
+ref = "72.0"
+merge = "72.1"
+name = "Music Note"
+tier = "Music"
+sell = 219744900
+sprite_path = "musical-note.png"
+
+[[items]]
+ref = "72.1"
+merge = "72.2"
+name = "Music Notes"
+tier = "Music"
+sell = 439489801
+sprite_path = "musical-notes.png"
+
+[[items]]
+ref = "72.2"
+merge = "72.3"
+name = "Music Score"
+tier = "Music"
+sell = 878979604
+sprite_path = "musical-score.png"
+
+[[items]]
+ref = "72.3"
+merge = "72.4"
+name = "CD"
+tier = "Music"
+sell = 1757959211
+sprite_path = "optical-disk.png"
+
+[[items]]
+ref = "72.4"
+name = "DVD"
+description = "One expensive piece of music"
+tier = "Music"
+sell = 3515918427
+sprite_path = "dvd.png"
+
+
+
+# Toolbox
+
+[[items]]
+ref = "80.0"
+merge = "80.1"
+name = "Toolbox"
+tier = "Toolbox"
+label = "1"
+buy = [
+    { item = "11.8", quantity = 1 },
+    { item = "12.6", quantity = 1 },
+    { money = 3000 },
+    { energy = 3 },
+]
+client_order = 9
+sell = 4567
+drop_interval = 60
+drops = [
+    { item = "81.0", chance = 0.95 },
+    { item = "81.1", chance = 0.04 },
+    { item = "82.0", chance = 0.005 },
+    { item = "83.0", chance = 0.005 },
+]
+sprite_path = "toolbox.png"
+
+[[items]]
+ref = "80.1"
+merge = "80.2"
+name = "Toolbox 2"
+tier = "Toolbox"
+label = "2"
+sell = 6852
+drop_interval = 55
+drops = [
+    { item = "81.0", chance = 0.90 },
+    { item = "81.1", chance = 0.06 },
+    { item = "81.2", chance = 0.01 },
+    { item = "82.0", chance = 0.02 },
+    { item = "83.0", chance = 0.01 },
+]
+sprite_path = "toolbox.png"
+
+[[items]]
+ref = "80.2"
+merge = "80.3"
+name = "Toolbox 3"
+tier = "Toolbox"
+label = "3"
+sell = 10280
+drop_interval = 50
+drops = [
+    { item = "81.0", chance = 0.77 },
+    { item = "81.1", chance = 0.16 },
+    { item = "81.2", chance = 0.02 },
+    { item = "82.0", chance = 0.03 },
+    { item = "83.0", chance = 0.02 },
+]
+sprite_path = "toolbox.png"
+
+[[items]]
+ref = "80.3"
+merge = "80.4"
+name = "toolbox 4"
+tier = "toolbox"
+label = "4"
+sell = 15423
+drop_interval = 45
+drops = [
+    { item = "81.0", chance = 0.62 },
+    { item = "81.1", chance = 0.28 },
+    { item = "81.2", chance = 0.03 },
+    { item = "82.0", chance = 0.04 },
+    { item = "83.0", chance = 0.03 },
+]
+sprite_path = "toolbox.png"
+
+[[items]]
+ref = "80.4"
+merge = "80.5"
+name = "toolbox 5"
+tier = "toolbox"
+label = "5"
+sell = 23140
+drop_interval = 41
+drops = [
+    { item = "81.0", chance = 0.33 },
+    { item = "81.1", chance = 0.50 },
+    { item = "81.2", chance = 0.06 },
+    { item = "81.3", chance = 0.02 },
+    { item = "82.0", chance = 0.05 },
+    { item = "83.0", chance = 0.04 },
+]
+sprite_path = "toolbox.png"
+
+[[items]]
+ref = "80.5"
+merge = "80.6"
+name = "toolbox 6"
+tier = "toolbox"
+label = "6"
+sell = 34718
+drop_interval = 37
+drops = [
+    { item = "81.1", chance = 0.72 },
+    { item = "81.2", chance = 0.10 },
+    { item = "81.3", chance = 0.05 },
+    { item = "82.0", chance = 0.07 },
+    { item = "83.0", chance = 0.06 },
+]
+sprite_path = "toolbox.png"
+
+[[items]]
+ref = "80.6"
+name = "toolbox 7"
+tier = "toolbox"
+label = "Max"
+sell = 52090
+drop_interval = 33
+drops = [
+    { item = "81.1", chance = 0.62 },
+    { item = "81.2", chance = 0.16 },
+    { item = "81.3", chance = 0.05 },
+    { item = "82.0", chance = 0.09 },
+    { item = "83.0", chance = 0.08 },
+]
+sprite_path = "toolbox.png"
+
+
+
+# Tools
+
+[[items]]
+ref = "81.0"
+merge = "81.1"
+name = "Hammer"
+description = "A hammer will fix anything"
+tier = "Tools"
+sell = 4038
+sprite_path = "hammer.png"
+
+[[items]]
+ref = "81.1"
+merge = "81.2"
+name = "Wrench"
+tier = "Tools"
+sell = 8077
+sprite_path = "wrench.png"
+
+[[items]]
+ref = "81.2"
+merge = "81.3"
+name = "Hammer/Wrench"
+tier = "Tools"
+sell = 16156
+sprite_path = "hammer-and-wrench.png"
+
+[[items]]
+ref = "81.3"
+merge = "81.4"
+name = "Hammer/Pick"
+tier = "Tools"
+sell = 32315
+sprite_path = "hammer-and-pick.png"
+
+[[items]]
+ref = "81.4"
+merge = "81.5"
+name = "Screwdriver"
+tier = "Tools"
+sell = 64635
+sprite_path = "screwdriver.png"
+
+[[items]]
+ref = "81.5"
+merge = "81.6"
+name = "Bolt"
+tier = "Tools"
+sell = 129278
+sprite_path = "nut-and-bold.png"
+
+[[items]]
+ref = "81.6"
+merge = "81.7"
+name = "Saw"
+tier = "Tools"
+sell = 258569
+sprite_path = "carpentry-saw.png"
+
+[[items]]
+ref = "81.7"
+name = "Axe"
+tier = "Tools"
+sell = 517159
+sprite_path = "axe.png"
+
+
+
+# Helpers
+
+[[items]]
+ref = "82.0"
+merge = "82.1"
+name = "Pencil"
+tier = "Helpers"
+sell = 243028
+sprite_path = "pencil.png"
+
+[[items]]
+ref = "82.1"
+merge = "82.2"
+name = "Ruler"
+tier = "Helpers"
+sell = 486057
+sprite_path = "straight-ruler.png"
+
+[[items]]
+ref = "82.2"
+merge = "82.3"
+name = "Traingular Ruler"
+tier = "Helpers"
+sell = 972116
+sprite_path = "triangular-ruler.png"
+
+[[items]]
+ref = "82.3"
+name = "Clamp"
+tier = "Helpers"
+sell = 1944235
+sprite_path = "clamp.png"
+
+
+
+# Helpers
+
+[[items]]
+ref = "83.0"
+merge = "83.1"
+name = "Safety Vest"
+description = "Safety first!"
+tier = "Construction"
+sell = 280382
+sprite_path = "safety-vest.png"
+
+[[items]]
+ref = "83.1"
+merge = "83.2"
+name = "Worker"
+tier = "Construction"
+sell = 560765
+sprite_path = "construction-worker.png"
+
+[[items]]
+ref = "83.2"
+merge = "83.3"
+name = "Barrier"
+tier = "Construction"
+sell = 1121532
+sprite_path = "construction.png"
+
+[[items]]
+ref = "83.3"
+name = "Crane"
+tier = "Construction"
+sell = 2243067
+sprite_path = "building-construction.png"
+
+
+
+# Water
+
+[[items]]
+ref = "90.0"
+merge = "90.1"
+name = "Water Pistol"
+description = "Go patch that annoying leak by merging 4 together"
+tier = "Water Source"
+label = "1"
+buy = [
+    { money = 3333 },
+    { energy = 3 },
+]
+client_order = 6
+sell = 300
+drop_interval = 20
+drops = [
+    { item = "91.0", chance = 1.00 },
+]
+sprite_path = "pistol.png"
+
+[[items]]
+ref = "90.1"
+merge = "90.2"
+name = "Shower"
+tier = "Water Source"
+label = "2"
+sell = 452
+drop_interval = 30
+drops = [
+    { item = "91.0", chance = 0.70 },
+    { item = "91.1", chance = 0.30 },
+]
+sprite_path = "shower.png"
+
+[[items]]
+ref = "90.2"
+name = "Fountain"
+description = "Look and find a Lucky Drop"
+tier = "Water Source"
+label = "Max"
+sell = 679
+drop_interval = 60
+drops = [
+    { item = "91.0", chance = 0.30 },
+    { item = "91.1", chance = 0.30 },
+    { item = "92.0", chance = 0.39 },
+    { item = "92.1", chance = 0.05 },
+]
+sprite_path = "fountain.png"
+
+
+
+# Water
+
+[[items]]
+ref = "91.0"
+merge = "91.1"
+name = "Droplet"
+description = "Drip drop"
+tier = "Water"
+sell = 5
+sprite_path = "droplet.png"
+
+[[items]]
+ref = "91.1"
+merge = "91.2"
+name = "Droplets"
+description = "Useless"
+tier = "Water"
+sell = 11
+sprite_path = "sweat-droplets.png"
+
+[[items]]
+ref = "91.2"
+merge = "91.3"
+name = "Bucket"
+description = "This water is claiming your valuable space"
+tier = "Water"
+sell = 24
+sprite_path = "bucket.png"
+
+[[items]]
+ref = "91.3"
+name = "Bathtub"
+description = "Enough is enough"
+tier = "Water"
+sell = 51
+sprite_path = "bathtub.png"
+
+
+
+# Coins
+
+[[items]]
+ref = "92.0"
+merge = "92.1"
+name = "Lucky Drop"
+description = "Go make a wish!"
+tier = "Coins"
+sell = 250
+sprite_path = "coin.png"
+
+[[items]]
+ref = "92.1"
+merge = "92.2"
+name = "Purse"
+tier = "Coins"
+sell = 501
+sprite_path = "purse.png"
+
+[[items]]
+ref = "92.2"
+merge = "92.3"
+name = "Banknotes"
+tier = "Coins"
+sell = 1004
+sprite_path = "dollar-banknote.png"
+
+[[items]]
+ref = "92.3"
+merge = "92.4"
+name = "Winged Banknotes"
+tier = "Coins"
+sell = 2011
+sprite_path = "money-with-wings.png"
+
+[[items]]
+ref = "92.4"
+merge = "92.5"
+name = "Money Bag"
+tier = "Coins"
+sell = 4027
+sprite_path = "money-bag.png"
+
+[[items]]
+ref = "92.5"
+name = "Bank"
+description = "A wish come true?"
+tier = "Coins"
+sell = 8062
+sprite_path = "bank.png"
+
+
+
+# Mining
+
+[[items]]
+ref = "200.0"
+name = "Pick (10 drops)"
+description = "Hope to find something valuable!"
+tier = "Mining"
+buy = [
+    { money = 10000 },
+    { energy = 5 },
+]
+client_order = 7
+sell = 500
+drop_interval = 180
+drop_limit = 10
+drops = [
+    { item = "201.0", chance = 0.85 },
+    { item = "202.0", chance = 0.15 },
+]
+sprite_path = "pick.png"
+
+
+
+# Useless
+
+[[items]]
+ref = "201.0"
+name = "Pet Rock"
+description = "A stone and a stone makes... a stone. -- Fred Flintstone"
+tier = "Useless"
+sell = 1
+sprite_path = "rock.png"
+
+
+
+# Gems
+
+[[items]]
+ref = "202.0"
+merge = "202.1"
+name = "Diamond"
+description = "When life gives you diamonds!"
+tier = "Gems"
+sell = 15000
+sprite_path = "gem-stone.png"
+
+[[items]]
+ref = "202.1"
+merge = "202.2"
+name = "Diamond Ring"
+tier = "Gems"
+sell = 35000
+sprite_path = "ring.png"
+
+[[items]]
+ref = "202.2"
+name = "Crown"
+description = "King of Merge Mania"
+tier = "Gems"
+sell = 75000
+sprite_path = "crown.png"
