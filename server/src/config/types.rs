@@ -13,6 +13,9 @@ pub struct ConfigGame {
 
     /// Whether to reset the game state on start.
     pub reset: bool,
+
+    /// Whether to immediately start new games.
+    pub start: bool,
 }
 
 /// Represents a configured team.

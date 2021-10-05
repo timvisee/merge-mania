@@ -81,8 +81,13 @@ fn state() -> SharedState {
     info!("Initializing global state...");
     let config = config::load().expect("failed to load game config");
 
+    let start = config.game.start;
     let mut state = State::new(config);
-    state.game.running = true;
+
+    // Start new games if configured
+    if start && state.game.tick() == 0 {
+        state.game.running = true;
+    }
 
     state.shared()
 }

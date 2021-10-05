@@ -7,6 +7,8 @@ tick_millis = 1000
 # Reset game state when starting server
 reset = false
 
+# Immediately start new games
+start = true
 
 
 # Team defaults
