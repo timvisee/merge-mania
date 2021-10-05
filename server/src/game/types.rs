@@ -1,4 +1,5 @@
 use std::collections::{HashSet, VecDeque};
+use std::sync::atomic::{AtomicU32, AtomicU64, Ordering};
 
 use rand::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -21,6 +22,9 @@ pub struct GameTeam {
 
     #[serde(skip)]
     pub config: Option<ConfigTeam>,
+
+    #[serde(default)]
+    pub stats: GameTeamStats,
 }
 
 impl GameTeam {
@@ -31,6 +35,7 @@ impl GameTeam {
             inventory: GameInventory::from_config(tick, config)
                 .unwrap_or_else(|| GameInventory::default()),
             config: config.team(id).cloned(),
+            stats: GameTeamStats::default(),
         }
     }
 
@@ -43,7 +48,7 @@ impl GameTeam {
     /// Update game team.
     ///
     /// Returns list of changed inventory cells and `true` if a new item is discovered.
-    pub fn update(&mut self, config: &Config, tick: u64) -> (HashSet<u8>, bool) {
+    pub fn update(&mut self, config: &Config, tick: u64) -> (HashSet<u8>, bool, u32) {
         self.inventory.update(config, tick)
     }
 }
@@ -220,14 +225,14 @@ impl GameInventory {
     /// Update game inventory.
     ///
     /// Returns list of changed cells and `true` if a new item is discovered.
-    fn update(&mut self, config: &Config, tick: u64) -> (HashSet<u8>, bool) {
+    fn update(&mut self, config: &Config, tick: u64) -> (HashSet<u8>, bool, u32) {
         // Update grid, collect changed cells and discovered items
-        let (changed, discovered) = self.grid.update(config, tick);
+        let (changed, discovered, drop_count) = self.grid.update(config, tick);
 
         // Check wheher new items are discovered
         let discovered = self.discover_items(discovered);
 
-        (changed, discovered)
+        (changed, discovered, drop_count)
     }
 
     /// Discover an item.
@@ -432,7 +437,7 @@ impl GameInventoryGrid {
     /// Update game inventory.
     ///
     /// Return list of changed cell indices.
-    pub fn update(&mut self, config: &Config, tick: u64) -> (HashSet<u8>, HashSet<ItemRef>) {
+    pub fn update(&mut self, config: &Config, tick: u64) -> (HashSet<u8>, HashSet<ItemRef>, u32) {
         // Update items, drop updated state
         for item in self.items.iter_mut() {
             if let Some(item) = item {
@@ -442,11 +447,12 @@ impl GameInventoryGrid {
 
         // Place queued factory items onto field
         let (mut changed, discovered) = self.place_queue_items(config, tick);
+        let drop_count = changed.len() as u32;
 
         // Remove items that reached their drop limit
         changed.extend(self.remove_drop_limit_items(config));
 
-        (changed, discovered)
+        (changed, discovered, drop_count)
     }
 
     /// Place factory queue items if there is space.
@@ -536,5 +542,92 @@ impl Default for GameInventoryGrid {
                 .map(|_| None)
                 .collect::<Vec<_>>(),
         }
+    }
+}
+
+/// Game team stats.
+#[derive(Serialize, Deserialize, Default, Debug)]
+pub struct GameTeamStats {
+    /// Number of merges by user.
+    merge_count: AtomicU32,
+
+    /// Number of items bought by user.
+    buy_count: AtomicU32,
+
+    /// Number of items sold by user.
+    sell_count: AtomicU32,
+
+    /// Number of item swaps (moves) by user.
+    swap_count: AtomicU32,
+
+    /// Number of codes scanned by user.
+    code_count: AtomicU32,
+
+    /// Number of items dropped by factories.
+    // TODO:
+    drop_count: AtomicU32,
+
+    /// Money spent by user.
+    money_spent: AtomicU64,
+
+    /// Money earned by user from selling.
+    money_earned: AtomicU64,
+
+    /// Energy spent by user.
+    energy_spent: AtomicU64,
+
+    /// Energy earned by user from scanning codes.
+    energy_earned: AtomicU64,
+}
+
+impl GameTeamStats {
+    /// Increase merge counter by one.
+    pub fn inc_merge(&self) {
+        self.merge_count.fetch_add(1, Ordering::Relaxed);
+    }
+
+    /// Increase buy counter by one.
+    pub fn inc_buy(&self) {
+        self.buy_count.fetch_add(1, Ordering::Relaxed);
+    }
+
+    /// Increase sell counter by one.
+    pub fn inc_sell(&self) {
+        self.sell_count.fetch_add(1, Ordering::Relaxed);
+    }
+
+    /// Increase swap counter by one.
+    pub fn inc_swap(&self) {
+        self.swap_count.fetch_add(1, Ordering::Relaxed);
+    }
+
+    /// Increase code scan counter by one.
+    pub fn inc_scan_code(&self) {
+        self.code_count.fetch_add(1, Ordering::Relaxed);
+    }
+
+    /// Increase drop counter by one.
+    pub fn inc_drop(&self, amount: u32) {
+        self.drop_count.fetch_add(amount, Ordering::Relaxed);
+    }
+
+    /// Increase money spent.
+    pub fn inc_money_spent(&self, amount: u64) {
+        self.money_spent.fetch_add(amount, Ordering::Relaxed);
+    }
+
+    /// Increase money earned.
+    pub fn inc_money_earned(&self, amount: u64) {
+        self.money_earned.fetch_add(amount, Ordering::Relaxed);
+    }
+
+    /// Increase energy spent.
+    pub fn inc_energy_spent(&self, amount: u64) {
+        self.energy_spent.fetch_add(amount, Ordering::Relaxed);
+    }
+
+    /// Increase energy earned.
+    pub fn inc_energy_earned(&self, amount: u64) {
+        self.energy_earned.fetch_add(amount, Ordering::Relaxed);
     }
 }

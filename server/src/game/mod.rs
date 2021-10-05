@@ -110,7 +110,9 @@ impl Game {
         // Update each team
         for team in self.teams.read().unwrap().values() {
             let mut team = team.write().unwrap();
-            let (changed, discovered) = team.update(&state.config, tick);
+            let (changed, discovered, drop_count) = team.update(&state.config, tick);
+
+            // Broadcast cell changes
             broadcast_team_cell_changes(state, &team, changed);
 
             // Send new inventory state if user discovered new items
@@ -121,6 +123,9 @@ impl Game {
                 let msg = MsgSendKind::InventoryDiscovered(inventory.discovered);
                 ws::send_to_team(&state, None, team.id, &msg.into());
             }
+
+            // Increase stats
+            team.stats.inc_drop(drop_count);
         }
     }
 
@@ -153,6 +158,9 @@ impl Game {
         let tmp = team.inventory.grid.items[cell as usize].take();
         team.inventory.grid.items[cell as usize] = team.inventory.grid.items[other as usize].take();
         team.inventory.grid.items[other as usize] = tmp;
+
+        // Increase stats
+        team.stats.inc_swap();
 
         let inventory = ClientInventory::from_game(&team.inventory)
             .expect("failed to transpose game to client inventory");
@@ -192,6 +200,9 @@ impl Game {
             discovered = team.inventory.discover_item(item_ref);
         }
 
+        // Increase stats
+        team.stats.inc_merge();
+
         let inventory = ClientInventory::from_game(&team.inventory)
             .expect("failed to transpose game to client inventory");
         Some((inventory, discovered))
@@ -207,6 +218,10 @@ impl Game {
         self.ensure_team(config, team_id);
         let teams = self.teams.read().unwrap();
         let mut team = teams.get(&team_id).unwrap().write().unwrap();
+
+        // Increase stats
+        team.stats.inc_money_spent(amounts_money(&amounts));
+        team.stats.inc_energy_spent(amounts_energy(&amounts));
 
         // Remove inventory amounts
         team.inventory.remove_amounts(amounts)
@@ -232,15 +247,17 @@ impl Game {
         let item_id = item.id.clone();
         let mut cell = &mut team.inventory.grid.items[cell as usize];
 
-        // Cell must be empty
+        // Cell must be empty, put game item in it
         if cell.is_some() {
             return None;
         }
-
         *cell = Some(GameItem::from_config(self.tick(), item));
 
         // Check for new item discovery
         let discovered = team.inventory.discover_item(item_id);
+
+        // Increase stats
+        team.stats.inc_buy();
 
         let inventory = ClientInventory::from_game(&team.inventory)
             .expect("failed to transpose game to client inventory");
@@ -258,10 +275,16 @@ impl Game {
         // Get sell, must contain item
         let mut cell = &mut team.inventory.grid.items[cell as usize];
 
-        match cell.take() {
-            Some(item) => team.inventory.money += item.config.as_ref().unwrap().sell,
+        // Clear cell, get sell amount to earn
+        let amount = match cell.take() {
+            Some(item) => item.config.as_ref().unwrap().sell,
             None => return None,
-        }
+        };
+        team.inventory.money += amount;
+
+        // Increase stats
+        team.stats.inc_sell();
+        team.stats.inc_money_earned(amount);
 
         let inventory = ClientInventory::from_game(&team.inventory)
             .expect("failed to transpose game to client inventory");
@@ -278,8 +301,15 @@ impl Game {
         warn!("Code scanning not yet implemented");
 
         // Gain some money and energy for now
-        team.inventory.money += 10;
-        team.inventory.energy += 5;
+        // TODO: grab these values from configuration
+        const MONEY_INC: u64 = 10;
+        const ENERGY_INC: u64 = 5;
+        // team.inventory.money += MONEY_INC;
+        team.inventory.energy += ENERGY_INC;
+
+        // Increase stats
+        team.stats.inc_scan_code();
+        team.stats.inc_energy_earned(ENERGY_INC);
 
         let inventory = ClientInventory::from_game(&team.inventory)
             .expect("failed to transpose game to client inventory");
@@ -392,4 +422,26 @@ fn broadcast_team_inventory(state: &SharedState, team: &GameTeam) {
         .expect("failed to transpose game to client inventory");
     let msg = MsgSendKind::Inventory(inventory);
     ws::send_to_team(&state, None, team.id, &msg.into());
+}
+
+/// Get money amount for given list of amounts.
+fn amounts_money(amounts: &[Amount]) -> u64 {
+    amounts
+        .iter()
+        .map(|amount| match amount {
+            Amount::Money { money } => *money,
+            _ => 0,
+        })
+        .sum()
+}
+
+/// Get energy amount for given list of amounts.
+fn amounts_energy(amounts: &[Amount]) -> u64 {
+    amounts
+        .iter()
+        .map(|amount| match amount {
+            Amount::Energy { energy } => *energy,
+            _ => 0,
+        })
+        .sum()
 }
