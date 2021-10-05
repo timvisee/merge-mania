@@ -1539,23 +1539,126 @@ sprite_path = "dvd.png"
 
 [[items]]
 ref = "80.0"
-# TODO: merge = "80.1"
-# TODO: update name
-name = "[TEST] Toolbox"
+merge = "80.1"
+name = "Toolbox"
 tier = "Toolbox"
 label = "1"
 buy = [
-    # TODO: buy price
-    { money = 1 },
+    { item = "11.8", quantity = 1 },
+    { item = "12.6", quantity = 1 },
+    { money = 3000 },
+    { energy = 3 },
 ]
 client_order = 9
-# TODO: sell value
-sell = 1
+sell = 4567
 drop_interval = 60
 drops = [
-    # TODO: drop items
     { item = "81.0", chance = 0.95 },
     { item = "81.1", chance = 0.04 },
+    { item = "82.0", chance = 0.005 },
+    { item = "83.0", chance = 0.005 },
+]
+sprite_path = "toolbox.png"
+
+[[items]]
+ref = "80.1"
+merge = "80.2"
+name = "Toolbox 2"
+tier = "Toolbox"
+label = "2"
+sell = 6852
+drop_interval = 55
+drops = [
+    { item = "81.0", chance = 0.90 },
+    { item = "81.1", chance = 0.06 },
+    { item = "81.2", chance = 0.01 },
+    { item = "82.0", chance = 0.02 },
+    { item = "83.0", chance = 0.01 },
+]
+sprite_path = "toolbox.png"
+
+[[items]]
+ref = "80.2"
+merge = "80.3"
+name = "Toolbox 3"
+tier = "Toolbox"
+label = "3"
+sell = 10280
+drop_interval = 50
+drops = [
+    { item = "81.0", chance = 0.77 },
+    { item = "81.1", chance = 0.16 },
+    { item = "81.2", chance = 0.02 },
+    { item = "82.0", chance = 0.03 },
+    { item = "83.0", chance = 0.02 },
+]
+sprite_path = "toolbox.png"
+
+[[items]]
+ref = "80.3"
+merge = "80.4"
+name = "toolbox 4"
+tier = "toolbox"
+label = "4"
+sell = 15423
+drop_interval = 45
+drops = [
+    { item = "81.0", chance = 0.62 },
+    { item = "81.1", chance = 0.28 },
+    { item = "81.2", chance = 0.03 },
+    { item = "82.0", chance = 0.04 },
+    { item = "83.0", chance = 0.03 },
+]
+sprite_path = "toolbox.png"
+
+[[items]]
+ref = "80.4"
+merge = "80.5"
+name = "toolbox 5"
+tier = "toolbox"
+label = "5"
+sell = 23140
+drop_interval = 41
+drops = [
+    { item = "81.0", chance = 0.33 },
+    { item = "81.1", chance = 0.50 },
+    { item = "81.2", chance = 0.06 },
+    { item = "81.3", chance = 0.02 },
+    { item = "82.0", chance = 0.05 },
+    { item = "83.0", chance = 0.04 },
+]
+sprite_path = "toolbox.png"
+
+[[items]]
+ref = "80.5"
+merge = "80.6"
+name = "toolbox 6"
+tier = "toolbox"
+label = "6"
+sell = 34718
+drop_interval = 37
+drops = [
+    { item = "81.1", chance = 0.72 },
+    { item = "81.2", chance = 0.10 },
+    { item = "81.3", chance = 0.05 },
+    { item = "82.0", chance = 0.07 },
+    { item = "83.0", chance = 0.06 },
+]
+sprite_path = "toolbox.png"
+
+[[items]]
+ref = "80.6"
+name = "toolbox 7"
+tier = "toolbox"
+label = "Max"
+sell = 52090
+drop_interval = 33
+drops = [
+    { item = "81.1", chance = 0.62 },
+    { item = "81.2", chance = 0.16 },
+    { item = "81.3", chance = 0.05 },
+    { item = "82.0", chance = 0.09 },
+    { item = "83.0", chance = 0.08 },
 ]
 sprite_path = "toolbox.png"
 
@@ -1568,8 +1671,7 @@ ref = "81.0"
 merge = "81.1"
 name = "Hammer"
 tier = "Tools"
-# TODO: set price
-sell = 1
+sell = 4038
 sprite_path = "hammer.png"
 
 [[items]]
@@ -1577,8 +1679,7 @@ ref = "81.1"
 merge = "81.2"
 name = "Wrench"
 tier = "Tools"
-# TODO: set price
-sell = 1
+sell = 8077
 sprite_path = "wrench.png"
 
 [[items]]
@@ -1586,8 +1687,7 @@ ref = "81.2"
 merge = "81.3"
 name = "Hammer/Wrench"
 tier = "Tools"
-# TODO: set price
-sell = 1
+sell = 16156
 sprite_path = "hammer-and-wrench.png"
 
 [[items]]
@@ -1595,8 +1695,7 @@ ref = "81.3"
 merge = "81.4"
 name = "Hammer/Pick"
 tier = "Tools"
-# TODO: set price
-sell = 1
+sell = 32315
 sprite_path = "hammer-and-pick.png"
 
 [[items]]
@@ -1604,8 +1703,7 @@ ref = "81.4"
 merge = "81.5"
 name = "Screwdriver"
 tier = "Tools"
-# TODO: set price
-sell = 1
+sell = 64635
 sprite_path = "screwdriver.png"
 
 [[items]]
@@ -1613,8 +1711,7 @@ ref = "81.5"
 merge = "81.6"
 name = "Bolt"
 tier = "Tools"
-# TODO: set price
-sell = 1
+sell = 129278
 sprite_path = "nut-and-bold.png"
 
 [[items]]
@@ -1622,16 +1719,14 @@ ref = "81.6"
 merge = "81.7"
 name = "Saw"
 tier = "Tools"
-# TODO: set price
-sell = 1
+sell = 258569
 sprite_path = "carpentry-saw.png"
 
 [[items]]
 ref = "81.7"
 name = "Axe"
 tier = "Tools"
-# TODO: set price
-sell = 1
+sell = 517159
 sprite_path = "axe.png"
 
 
@@ -1643,8 +1738,7 @@ ref = "82.0"
 merge = "82.1"
 name = "Pencil"
 tier = "Helpers"
-# TODO: set price
-sell = 1
+sell = 243028
 sprite_path = "pencil.png"
 
 [[items]]
@@ -1652,8 +1746,7 @@ ref = "82.1"
 merge = "82.2"
 name = "Ruler"
 tier = "Helpers"
-# TODO: set price
-sell = 1
+sell = 486057
 sprite_path = "straight-ruler.png"
 
 [[items]]
@@ -1661,16 +1754,14 @@ ref = "82.2"
 merge = "82.3"
 name = "Traingular Ruler"
 tier = "Helpers"
-# TODO: set price
-sell = 1
+sell = 972116
 sprite_path = "triangular-ruler.png"
 
 [[items]]
 ref = "82.3"
 name = "Clamp"
 tier = "Helpers"
-# TODO: set price
-sell = 1
+sell = 1944235
 sprite_path = "clamp.png"
 
 
@@ -1682,8 +1773,7 @@ ref = "83.0"
 merge = "83.1"
 name = "Safety Vest"
 tier = "Construction"
-# TODO: set price
-sell = 1
+sell = 280382
 sprite_path = "safety-vest.png"
 
 [[items]]
@@ -1691,8 +1781,7 @@ ref = "83.1"
 merge = "83.2"
 name = "Worker"
 tier = "Construction"
-# TODO: set price
-sell = 1
+sell = 560765
 sprite_path = "construction-worker.png"
 
 [[items]]
@@ -1700,16 +1789,14 @@ ref = "83.2"
 merge = "83.3"
 name = "Barrier"
 tier = "Construction"
-# TODO: set price
-sell = 1
+sell = 1121532
 sprite_path = "construction.png"
 
 [[items]]
 ref = "83.3"
 name = "Crane"
 tier = "Construction"
-# TODO: set price
-sell = 1
+sell = 2243067
 sprite_path = "building-construction.png"
 
 
