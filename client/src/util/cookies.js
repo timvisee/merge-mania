@@ -1,3 +1,5 @@
+'use strict';
+
 export default {
     /**
      * Get a cookie by name.

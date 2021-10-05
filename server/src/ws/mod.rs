@@ -479,7 +479,7 @@ pub fn send_to_team(
         // handled in other task
         let _ = client.tx.send(Message::text(&msg));
 
-        debug!(
+        trace!(
             "WS({}): - msg queued for client {}",
             client_id.unwrap_or(0),
             client.client_id

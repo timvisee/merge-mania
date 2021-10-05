@@ -1,3 +1,5 @@
+'use strict';
+
 import axios from "axios";
 import cookies from "./cookies";
 

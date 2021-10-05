@@ -187,6 +187,7 @@ impl Game {
 
         let upgraded = team.inventory.grid.items[cell as usize]
             .as_mut()
+            // TODO: this unwrap sometimes fails
             .unwrap()
             .upgrade(config);
         if upgraded {

@@ -105,6 +105,7 @@ impl GameItem {
     /// Returns `true` if changed.
     fn update(&mut self, config: &Config, tick: u64) -> bool {
         // We must have reached tick, and have not reached the drop limit
+        // TODO: queue must have space
         let reached_tick = self.tick.map(|t| t < tick).unwrap_or(false);
         let reached_drop_limit = self.drop_limit.map(|l| l == 0).unwrap_or(false);
         if !reached_tick || reached_drop_limit {
