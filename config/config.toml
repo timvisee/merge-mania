@@ -1723,7 +1723,7 @@ merge = "81.6"
 name = "Bolt"
 tier = "Tools"
 sell = 129278
-sprite_path = "nut-and-bold.png"
+sprite_path = "nut-and-bolt.png"
 
 [[items]]
 ref = "81.6"
