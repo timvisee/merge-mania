@@ -1736,10 +1736,18 @@ sprite_path = "carpentry-saw.png"
 
 [[items]]
 ref = "81.7"
+merge = "81.8"
 name = "Axe"
 tier = "Tools"
 sell = 517159
 sprite_path = "axe.png"
+
+[[items]]
+ref = "81.8"
+name = "Crowbar"
+tier = "Tools"
+sell = 1034352
+sprite_path = "crowbar.png"
 
 
 
