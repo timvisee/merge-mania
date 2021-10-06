@@ -7,89 +7,93 @@
     </div>
 
     <div v-if="game && game.ready" class="text-center">
-        <h1 class="h3 mb-3 fw-normal">
-            <span v-if="$auth.session">{{ $auth.session.name }}</span>
-            <span v-else>Game</span>
-        </h1>
+        <div class="game">
+            <div class="header">
+                <h1 class="h3 mb-3 fw-normal title">
+                    <span v-if="$auth.session">{{ $auth.session.name }}</span>
+                    <span v-else>Game</span>
+                </h1>
 
-        <h5 class="h5 mb-3 fw-normal text-right float-right">
-            Energie:
-            {{ game.inventory.energy }}
-        </h5>
-        <h5 class="h5 mb-3 fw-normal text-left">
-            Geld:
-            {{ game.inventory.money }}
-        </h5>
+                <h5 class="h5 mb-3 fw-normal left">
+                    Geld:
+                    {{ game.inventory.money }}
+                </h5>
+                <h5 class="h5 mb-3 fw-normal right">
+                    Energie:
+                    {{ game.inventory.energy }}
+                </h5>
+            </div>
 
-        <b-button-group class="toolbar tabs w-100" size="lg">
-            <b-button
-                type="button"
-                class="w-100"
-                variant="outline-dark"
-                squared
-                @click.stop.prevent="toggleMode('merge')"
-                :pressed="mode == 'merge'">Merge</b-button>
-            <b-button
-                type="button"
-                class="w-100"
-                variant="outline-dark"
-                squared
-                @click.prevent="showBuy()"
-                :pressed="mode == 'buy'">Buy</b-button>
-            <b-button
-                type="button"
-                class="w-100"
-                variant="outline-dark"
-                squared
-                @click.prevent="toggleMode('sell')"
-                :pressed="mode == 'sell'">Sell</b-button>
-            <b-button
-                type="button"
-                class="w-100"
-                variant="outline-dark"
-                squared
-                @click.prevent="toggleMode('details')"
-                :pressed="mode == 'details'">Details</b-button>
-        </b-button-group>
+            <b-button-group class="toolbar tabs w-100" size="lg">
+                <b-button
+                    type="button"
+                    class="w-100"
+                    variant="outline-dark"
+                    squared
+                    @click.stop.prevent="toggleMode('merge')"
+                    :pressed="mode == 'merge'">Merge</b-button>
+                <b-button
+                    type="button"
+                    class="w-100"
+                    variant="outline-dark"
+                    squared
+                    @click.prevent="showBuy()"
+                    :pressed="mode == 'buy'">Buy</b-button>
+                <b-button
+                    type="button"
+                    class="w-100"
+                    variant="outline-dark"
+                    squared
+                    @click.prevent="toggleMode('sell')"
+                    :pressed="mode == 'sell'">Sell</b-button>
+                <b-button
+                    type="button"
+                    class="w-100"
+                    variant="outline-dark"
+                    squared
+                    @click.prevent="toggleMode('details')"
+                    :pressed="mode == 'details'">Details</b-button>
+            </b-button-group>
 
-        <!-- Inventory grid -->
-        <div class="game-grid">
-            <div v-for="(cell, index) in game.inventory.items"
-                class="cell"
-                @click.stop="toggleSelect(index)"
-                v-bind:class="{ select: selected == index, item: cell, factory: cell && cell.drop_interval, subtle: isSubtle(index), plus: !cell && mode == 'buy' && buyItem }"
-            >
-                <div v-if="cell">
-                    <div class="overlay">
-                        <div v-if="mode == 'details' && cell.drop_interval" class="ne">
-                            {{ cell.drop_interval }}t
+            <!-- Inventory grid -->
+            <div class="game-grid">
+                <div v-for="(cell, index) in game.inventory.items"
+                    class="cell"
+                    @click.stop="toggleSelect(index)"
+                    v-bind:class="{ select: selected == index, item: cell, factory: cell && cell.drop_interval, subtle: isSubtle(index), plus: !cell && mode == 'buy' && buyItem }"
+                >
+                    <div v-if="cell">
+                        <div class="overlay">
+                            <div v-if="mode == 'details' && cell.drop_interval" class="ne">
+                                {{ cell.drop_interval }}t
+                            </div>
+                            <div v-if="mode == 'sell' && cell.sell" class="nw">
+                                {{ cell.sell }}
+                            </div>
                         </div>
-                        <div v-if="mode == 'sell' && cell.sell" class="nw">
-                            {{ cell.sell }}
-                        </div>
-                    </div>
-                    <img :src="'/sprites/' + cell.sprite"
-                        :title="cell.name"
-                        :alt="cell.name"
-                        draggable="false"
-                    />
-                    <div v-if="cell.label" class="overlay">
-                        <div class="sw">
-                            {{ cell.label }}
+                        <img :src="'/sprites/' + cell.sprite"
+                            :title="cell.name"
+                            :alt="cell.name"
+                            draggable="false"
+                        />
+                        <div v-if="cell.label" class="overlay">
+                            <div class="sw">
+                                {{ cell.label }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <b-button-group class="toolbar w-100" size="lg">
-            <b-button
-                type="button"
-                class="w-100"
-                variant="outline-dark"
-                @click.stop.prevent="actionScanCode"
-                squared>Scan code</b-button>
-        </b-button-group>
+            <b-button-group class="toolbar w-100" size="lg">
+                <b-button
+                    type="button"
+                    class="w-100"
+                    variant="outline-dark"
+                    @click.stop.prevent="actionScanCode"
+                    squared>Scan code</b-button>
+            </b-button-group>
+        </div>
 
         <!-- Buy modal -->
         <b-modal
@@ -491,6 +495,39 @@ span.subtle {
     overflow-x: auto;
 }
 
+.game {
+    margin: 0 auto;
+    max-width: 70vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .title {
+    display: inline;
+    flex-grow: 1;
+    margin: 0 2em;
+}
+
+.header .left {
+    text-align: left;
+    float: left;
+    order: -1;
+    flex-grow: 0;
+    margin: 0;
+}
+
+.header .right {
+    text-align: right;
+    float: right;
+    order: 1;
+    flex-grow: 0;
+    margin: 0;
+}
+
 .game-grid {
     --grid-space: 5px;
     --grid-row-cells: 8;
@@ -735,10 +772,6 @@ ul.drops-list {
 .simple-table tr td:first-child {
     font-weight: bold;
     text-align: right;
-}
-
-.toolbar {
-    max-width: 70vh;
 }
 
 img.item.tiny {
