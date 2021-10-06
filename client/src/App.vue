@@ -74,7 +74,7 @@ export default {
         // Force refresh to reset client states
         // TODO: this is a hack, improve this, reset states from JS instead
         let loc = window.location;
-        window.location.href = loc.origin + '/' + loc.pathname;
+        window.location.href = loc.origin + loc.pathname;
     },
   },
 };
