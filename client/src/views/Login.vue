@@ -134,9 +134,9 @@ export default {
         this.loading = true;
         this.$auth.login(this.form)
             .then(() => this.showGame())
-            .catch(() => {
+            .catch((msg) => {
                 // TODO: improve error message
-                alert("Error: " + error.response.data.message);
+                alert("Error: " + msg);
             })
             .finally(() => this.loading = false);
     },

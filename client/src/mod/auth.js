@@ -21,8 +21,9 @@ export default {
                 })
                 .catch((error) => {
                     // TODO: improve error handling
-                    console.log("Error: " + error.response.data.message);
-                    reject(error.response.data.message);
+                    let msg = error.response.data.message;
+                    console.log("Error: " + msg);
+                    reject(msg);
                 });
         });
     },
