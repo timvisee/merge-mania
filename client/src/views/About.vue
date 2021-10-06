@@ -2,13 +2,23 @@
   <div>
     <div class="page-small-card text-center mt-5">
 
-        <h1 class="h3 mb-3 fw-normal">Over</h1>
+        <h1 class="h3 mb-3 fw-normal">About</h1>
         <p>
             Merge Mania game.
         </p>
 
         <p>
-            Ontwikkeld door: <a href="https://timvisee.com/" target="_blank">Tim Visée</a>
+            Built by:
+            <br>
+            <a href="https://timvisee.com/" target="_blank">Tim Visée</a>,
+            Mauri,
+            Jelle
+        </p>
+
+        <p>
+            Source:
+            <br>
+            <a href="https://gitlab.com/timvisee/merge-mania" target="_blank">Merge Mania on GitLab</a>
         </p>
 
     </div>

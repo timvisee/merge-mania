@@ -18,16 +18,16 @@
                         Home
                     </router-link>
                     <router-link v-if="!auth.auth" :to="{name: 'login'}" class="nav-link">
-                        Inloggen
+                        Login
                     </router-link>
                     <router-link v-if="auth.auth" :to="{name: 'game'}" class="nav-link">
                         Game
                     </router-link>
                     <router-link :to="{name: 'about'}" class="nav-link">
-                        Over
+                        About
                     </router-link>
                     <a v-if="auth.auth" href="#" @click.prevent="logout" class="nav-link">
-                        Uitloggen
+                        Logout
                     </a>
                 </b-navbar-nav>
             </b-collapse>
