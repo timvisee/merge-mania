@@ -1,7 +1,7 @@
 import ws from "./ws.js";
 
-// Poll inventory state every two minutes.
-const INVENTORY_POLL_INTERVAL = 2 * 60 * 1000;
+// Poll inventory state every five minutes.
+const INVENTORY_POLL_INTERVAL = 5 * 60 * 1000;
 
 export default {
     // Game readyness state.
