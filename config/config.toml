@@ -524,7 +524,7 @@ drops = [
     { item = "12.2", chance = 0.02 },
     { item = "21.0", chance = 0.04 },
 ]
-sprite_path = "farmer.png"
+sprite_path = "farmer-dark.png"
 
 [[items]]
 ref = "20.2"
@@ -541,7 +541,7 @@ drops = [
     { item = "12.3", chance = 0.01 },
     { item = "21.0", chance = 0.08 },
 ]
-sprite_path = "farmer.png"
+sprite_path = "farmer-gray.png"
 
 [[items]]
 ref = "20.3"
@@ -559,7 +559,7 @@ drops = [
     { item = "21.0", chance = 0.13 },
     { item = "21.1", chance = 0.01 },
 ]
-sprite_path = "farmer.png"
+sprite_path = "farmer-white.png"
 
 [[items]]
 ref = "20.4"
@@ -577,7 +577,7 @@ drops = [
     { item = "21.0", chance = 0.16 },
     { item = "21.1", chance = 0.03 },
 ]
-sprite_path = "farmer.png"
+sprite_path = "farmer-blue.png"
 
 [[items]]
 ref = "20.5"
@@ -593,7 +593,7 @@ drops = [
     { item = "21.0", chance = 0.22 },
     { item = "21.1", chance = 0.05 },
 ]
-sprite_path = "farmer.png"
+sprite_path = "farmer-gold.png"
 
 
 
@@ -718,7 +718,7 @@ drops = [
     { item = "31.2", chance = 0.01 },
     { item = "41.0", chance = 0.03 },
 ]
-sprite_path = "cook.png"
+sprite_path = "cook-gray.png"
 
 [[items]]
 ref = "30.2"
@@ -735,7 +735,7 @@ drops = [
     { item = "31.3", chance = 0.01 },
     { item = "41.0", chance = 0.08 },
 ]
-sprite_path = "cook.png"
+sprite_path = "cook-black.png"
 
 [[items]]
 ref = "30.3"
@@ -752,7 +752,7 @@ drops = [
     { item = "31.3", chance = 0.03 },
     { item = "41.0", chance = 0.12 },
 ]
-sprite_path = "cook.png"
+sprite_path = "cook-red.png"
 
 [[items]]
 ref = "30.4"
@@ -767,7 +767,7 @@ drops = [
     { item = "31.3", chance = 0.13 },
     { item = "41.0", chance = 0.27 },
 ]
-sprite_path = "cook.png"
+sprite_path = "cook-gold.png"
 
 
 
