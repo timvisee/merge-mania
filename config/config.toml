@@ -453,6 +453,7 @@ sprite_path = "potato.png"
 ref = "12.7"
 merge = "12.8"
 name = "Corn"
+description = "Freak On a Leash"
 tier = "Vegetable"
 sell = 2215
 sprite_path = "ear-of-corn.png"
