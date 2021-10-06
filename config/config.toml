@@ -1613,8 +1613,8 @@ sprite_path = "toolbox-purple.png"
 [[items]]
 ref = "80.3"
 merge = "80.4"
-name = "toolbox 4"
-tier = "toolbox"
+name = "Toolbox 4"
+tier = "Toolbox"
 label = "4"
 sell = 15423
 drop_interval = 45
@@ -1630,8 +1630,8 @@ sprite_path = "toolbox-blue.png"
 [[items]]
 ref = "80.4"
 merge = "80.5"
-name = "toolbox 5"
-tier = "toolbox"
+name = "Toolbox 5"
+tier = "Toolbox"
 label = "5"
 sell = 23140
 drop_interval = 41
@@ -1648,8 +1648,8 @@ sprite_path = "toolbox-gray.png"
 [[items]]
 ref = "80.5"
 merge = "80.6"
-name = "toolbox 6"
-tier = "toolbox"
+name = "Toolbox 6"
+tier = "Toolbox"
 label = "6"
 sell = 34718
 drop_interval = 37
@@ -1664,8 +1664,8 @@ sprite_path = "toolbox-silver.png"
 
 [[items]]
 ref = "80.6"
-name = "toolbox 7"
-tier = "toolbox"
+name = "Toolbox 7"
+tier = "Toolbox"
 label = "Max"
 sell = 52090
 drop_interval = 33
