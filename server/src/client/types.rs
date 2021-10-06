@@ -3,9 +3,30 @@ use std::collections::HashSet;
 use rand::prelude::*;
 use serde::Serialize;
 
+use crate::auth::Session;
 use crate::config::Config;
 use crate::game::types::*;
 use crate::types::{Amount, ItemRef};
+
+/// Client session state.
+// TODO: add admin boolean property
+#[derive(Serialize, Debug)]
+pub struct ClientSession {
+    /// Account display name.
+    pub name: String,
+
+    /// Team ID if part of a game team.
+    pub team_id: Option<u32>,
+}
+
+impl ClientSession {
+    pub fn from_session(config: &Config, session: &Session) -> Self {
+        Self {
+            name: config.team(session.team_id).unwrap().name.clone(),
+            team_id: Some(session.team_id),
+        }
+    }
+}
 
 /// Represents a team.
 #[derive(Serialize, Debug)]

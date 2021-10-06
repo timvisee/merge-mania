@@ -7,7 +7,10 @@
     </div>
 
     <div v-if="game && game.ready" class="text-center">
-        <h1 class="h3 mb-3 fw-normal">Game</h1>
+        <h1 class="h3 mb-3 fw-normal">
+            <span v-if="$auth.session">{{ $auth.session.name }}</span>
+            <span v-else>Game</span>
+        </h1>
 
         <h5 class="h5 mb-3 fw-normal text-right float-right">
             Energie:

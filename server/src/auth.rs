@@ -145,8 +145,10 @@ impl SessionManager {
 
 /// A team session.
 #[derive(Serialize, Deserialize, Debug, Clone)]
+// TODO: add admin property
 pub struct Session {
     // Team this session is for.
+    // TODO: make option
     pub team_id: u32,
 
     // Session token.
@@ -243,7 +245,7 @@ impl Client {
 
 /// Session data.
 #[derive(Serialize, Deserialize, Debug)]
-pub struct SessionData {
+pub struct SessionToken {
     pub token: String,
 }
 

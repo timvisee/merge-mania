@@ -47,8 +47,8 @@ impl From<MsgRecvKind> for MsgRecv {
 #[derive(Serialize, Debug)]
 #[serde(tag = "kind", content = "data", rename_all = "snake_case")]
 pub enum MsgSendKind {
-    /// Ping request.
-    Ping,
+    /// Authentication session state.
+    Session(ClientSession),
 
     /// Game item configuration.
     ConfigItems(HashMap<ItemRef, ConfigItem>),

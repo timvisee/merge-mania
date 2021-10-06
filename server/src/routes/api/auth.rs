@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use warp::reply::{json, Json};
 
-use crate::auth::SessionData;
+use crate::auth::SessionToken;
 use crate::state::SharedState;
 
 /// Get list of teams.
@@ -45,13 +45,13 @@ pub fn login(data: LoginData, state: SharedState) -> Box<dyn Reply> {
     // Create session
     let session = state.sessions.add(data.team);
 
-    Box::new(json(&SessionData {
+    Box::new(json(&SessionToken {
         token: session.token().into(),
     }))
 }
 
 /// Logout route.
-pub fn logout(data: SessionData, state: SharedState) -> impl Reply {
+pub fn logout(data: SessionToken, state: SharedState) -> impl Reply {
     // TODO: we might want to check session token validity here
 
     state.sessions.remove(&data.token);
@@ -67,6 +67,6 @@ pub struct LoginData {
 }
 
 /// Session validation route.
-pub fn validate(data: SessionData, state: SharedState) -> impl Reply {
+pub fn validate(data: SessionToken, state: SharedState) -> impl Reply {
     json(&state.sessions.is_valid(&data.token))
 }

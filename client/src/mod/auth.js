@@ -5,6 +5,9 @@ export default {
     // Authentication state cache, null if unknown.
     auth: null,
 
+    // Session state from server.
+    session: null,
+
     // Attempt to authenticate with given form data.
     login(formdata) {
         return new Promise((resolve, reject) => {

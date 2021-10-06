@@ -13,7 +13,7 @@ use warp::Filter;
 use crate::auth::{generate_client_id, Client, Session};
 use crate::client::{
     ClientActionBuy, ClientActionMerge, ClientActionSell, ClientActionSwap, ClientInventory,
-    MsgRecv, MsgRecvKind, MsgSend, MsgSendKind,
+    ClientSession, MsgRecv, MsgRecvKind, MsgSend, MsgSendKind,
 };
 use crate::state::SharedState;
 
@@ -60,7 +60,7 @@ pub async fn connected(state: SharedState, ws: WebSocket) {
         .register(Client::new(client_id, session.team_id, tx));
 
     // Send game state to client
-    send_initial(state.clone(), client_id).await;
+    send_initial(state.clone(), client_id, &session).await;
 
     // Handle client messages
     handle(state.clone(), client_id, &mut user_ws_rx).await;
@@ -95,8 +95,8 @@ async fn handle_auth(
         };
 
         // Try to parse session token and validate
-        // TODO: get MsgRecv here, instead of SessionData directly
-        let session: crate::auth::SessionData = match serde_json::from_str(msg) {
+        // TODO: get MsgRecv here, instead of SessionToken directly
+        let session: crate::auth::SessionToken = match serde_json::from_str(msg) {
             Ok(session) => session,
             Err(err) => {
                 warn!(
@@ -131,10 +131,10 @@ async fn handle_auth(
 }
 
 /// Send current state to client.
-async fn send_initial(state: SharedState, client_id: usize) {
-    // TODO: send initial data
-    // TODO: - team info
-    // TODO: - game state
+async fn send_initial(state: SharedState, client_id: usize, session: &Session) {
+    // Send session state
+    let msg = MsgSendKind::Session(ClientSession::from_session(&state.config, session));
+    send_to_client(&state, client_id, &msg.into());
 
     // Send item configuration
     let msg = MsgSendKind::ConfigItems(state.config.items.clone());

@@ -5,6 +5,7 @@ export default {
     socket: null,
 
     // Game state.
+    // TODO: we also have vueContext.$game
     game: null,
 
     // Vue context.
@@ -77,6 +78,10 @@ export default {
         let data = JSON.parse(event.data);
 
         switch(data.kind) {
+            case 'session':
+                this.vueContext.$auth.session = data.data;
+                break;
+
             case 'inventory':
                 this.game.inventory = data.data;
                 this.game.ready = true;
