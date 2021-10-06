@@ -877,7 +877,7 @@ drops = [
     { item = "41.2", chance = 0.01 },
     # TODO: { item = "42.0", chance = 0.03 },
 ]
-sprite_path = "chicken.png"
+sprite_path = "chicken-brown.png"
 
 [[items]]
 ref = "40.2"
@@ -895,7 +895,7 @@ drops = [
     # TODO: { item = "42.0", chance = 0.07 },
     # TODO: { item = "42.1", chance = 0.01 },
 ]
-sprite_path = "chicken.png"
+sprite_path = "chicken-black.png"
 
 [[items]]
 ref = "40.3"
@@ -913,7 +913,7 @@ drops = [
     # TODO: { item = "42.0", chance = 0.09 },
     # TODO: { item = "42.1", chance = 0.03 },
 ]
-sprite_path = "chicken.png"
+sprite_path = "chicken-silver.png"
 
 [[items]]
 ref = "40.4"
@@ -929,7 +929,7 @@ drops = [
     # TODO: { item = "42.0", chance = 0.22 },
     # TODO: { item = "42.1", chance = 0.05 },
 ]
-sprite_path = "chicken.png"
+sprite_path = "chicken-gold.png"
 
 
 
