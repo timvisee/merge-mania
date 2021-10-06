@@ -9,17 +9,17 @@
     <div v-if="game && game.ready" class="text-center">
         <div class="game">
             <div class="header">
-                <h1 class="h3 mb-3 fw-normal title">
+                <h1 class="h3 fw-normal title">
                     <span v-if="$auth.session">{{ $auth.session.name }}</span>
                     <span v-else>Game</span>
                 </h1>
 
-                <h5 class="h5 mb-3 fw-normal left">
-                    Geld:
+                <h5 class="h5 fw-normal left">
+                    Money:
                     {{ game.inventory.money }}
                 </h5>
-                <h5 class="h5 mb-3 fw-normal right">
-                    Energie:
+                <h5 class="h5 fw-normal right">
+                    Energy:
                     {{ game.inventory.energy }}
                 </h5>
             </div>
@@ -501,30 +501,36 @@ span.subtle {
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-areas: "left title right";
+    gap: 0.2em 1em;
+    justify-items: stretch;
     align-items: center;
+    margin: 0 0 1em 0;
+}
+
+@media screen and (max-width: 470px) {
+    .header {
+        grid-template-areas:
+            "title title"
+            "left right";
+    }
 }
 
 .header .title {
-    display: inline;
-    flex-grow: 1;
-    margin: 0 2em;
+    grid-area: title;
+    margin: 0;
 }
 
 .header .left {
+    grid-area: left;
     text-align: left;
-    float: left;
-    order: -1;
-    flex-grow: 0;
     margin: 0;
 }
 
 .header .right {
+    grid-area: right;
     text-align: right;
-    float: right;
-    order: 1;
-    flex-grow: 0;
     margin: 0;
 }
 
