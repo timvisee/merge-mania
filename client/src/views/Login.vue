@@ -10,7 +10,7 @@
 
         <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
 
-            <h1 class="h3 mb-3 fw-normal">Inloggen</h1>
+            <h1 class="h3 mb-3 fw-normal">Login</h1>
 
             <b-form-select
                 v-model="form.team"
@@ -37,7 +37,7 @@
                 size="lg"
                 variant="primary"
                 class="w-100 mt-4"
-            >Inloggen</b-button>
+            >Login</b-button>
 
             <b-button
                 type="reset"

@@ -10,7 +10,7 @@ use rand::Rng;
 use serde::{Deserialize, Serialize};
 use tokio::time::{self, Duration};
 
-use crate::client::{ClientInventory, MsgSendKind};
+use crate::client::{ClientInventory, ClientTeamStats, MsgSendKind};
 use crate::config::{Config, ConfigItem};
 use crate::state::SharedState;
 use crate::types::Amount;
@@ -137,6 +137,15 @@ impl Game {
         let inventory = ClientInventory::from_game(&team.inventory)
             .expect("failed to transpose game to client inventory");
         Some(inventory)
+    }
+
+    /// Get the team client stats.
+    pub fn team_client_stats(&self, config: &Config, team_id: u32) -> Option<ClientTeamStats> {
+        self.ensure_team(config, team_id);
+        let teams = self.teams.read().unwrap();
+        let team = teams.get(&team_id)?.read().unwrap();
+        let stats = ClientTeamStats::from_game(&team.stats);
+        Some(stats)
     }
 
     /// Swap two items for a team.

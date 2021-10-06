@@ -553,35 +553,34 @@ impl Default for GameInventoryGrid {
 #[derive(Serialize, Deserialize, Default, Debug)]
 pub struct GameTeamStats {
     /// Number of merges by user.
-    merge_count: AtomicU32,
+    pub merge_count: AtomicU32,
 
     /// Number of items bought by user.
-    buy_count: AtomicU32,
+    pub buy_count: AtomicU32,
 
     /// Number of items sold by user.
-    sell_count: AtomicU32,
+    pub sell_count: AtomicU32,
 
     /// Number of item swaps (moves) by user.
-    swap_count: AtomicU32,
+    pub swap_count: AtomicU32,
 
     /// Number of codes scanned by user.
-    code_count: AtomicU32,
+    pub code_count: AtomicU32,
 
     /// Number of items dropped by factories.
-    // TODO:
-    drop_count: AtomicU32,
+    pub drop_count: AtomicU32,
 
     /// Money spent by user.
-    money_spent: AtomicU64,
+    pub money_spent: AtomicU64,
 
     /// Money earned by user from selling.
-    money_earned: AtomicU64,
+    pub money_earned: AtomicU64,
 
     /// Energy spent by user.
-    energy_spent: AtomicU64,
+    pub energy_spent: AtomicU64,
 
     /// Energy earned by user from scanning codes.
-    energy_earned: AtomicU64,
+    pub energy_earned: AtomicU64,
 }
 
 impl GameTeamStats {

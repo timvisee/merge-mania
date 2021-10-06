@@ -1,4 +1,5 @@
 use std::collections::HashSet;
+use std::sync::atomic::Ordering;
 
 use rand::prelude::*;
 use serde::Serialize;
@@ -136,5 +137,56 @@ impl ClientInventoryGrid {
         }
 
         Ok(Self { items })
+    }
+}
+
+/// Client team stats.
+#[derive(Serialize, Default, Debug)]
+pub struct ClientTeamStats {
+    /// Number of merges by user.
+    merge_count: u32,
+
+    /// Number of items bought by user.
+    buy_count: u32,
+
+    /// Number of items sold by user.
+    sell_count: u32,
+
+    /// Number of item swaps (moves) by user.
+    swap_count: u32,
+
+    /// Number of codes scanned by user.
+    code_count: u32,
+
+    /// Number of items dropped by factories.
+    drop_count: u32,
+
+    /// Money spent by user.
+    money_spent: u64,
+
+    /// Money earned by user from selling.
+    money_earned: u64,
+
+    /// Energy spent by user.
+    energy_spent: u64,
+
+    /// Energy earned by user from scanning codes.
+    energy_earned: u64,
+}
+
+impl ClientTeamStats {
+    pub fn from_game(game: &GameTeamStats) -> Self {
+        Self {
+            merge_count: game.merge_count.load(Ordering::Relaxed),
+            buy_count: game.buy_count.load(Ordering::Relaxed),
+            sell_count: game.sell_count.load(Ordering::Relaxed),
+            swap_count: game.swap_count.load(Ordering::Relaxed),
+            code_count: game.code_count.load(Ordering::Relaxed),
+            drop_count: game.drop_count.load(Ordering::Relaxed),
+            money_spent: game.money_spent.load(Ordering::Relaxed),
+            money_earned: game.money_earned.load(Ordering::Relaxed),
+            energy_spent: game.energy_spent.load(Ordering::Relaxed),
+            energy_earned: game.energy_earned.load(Ordering::Relaxed),
+        }
     }
 }

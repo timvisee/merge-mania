@@ -65,6 +65,9 @@ pub enum MsgSendKind {
     /// Inventory discovered list update.
     InventoryDiscovered(HashSet<ItemRef>),
 
+    /// Client stats.
+    Stats(ClientTeamStats),
+
     /// Toast notification.
     Toast(String),
 }
@@ -79,6 +82,9 @@ pub enum MsgRecvKind {
 
     /// Request inventory state update.
     GetInventory,
+
+    /// Request game stats.
+    GetStats,
 
     /// Action: swap two cells
     ActionSwap(ClientActionSwap),

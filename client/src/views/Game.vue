@@ -233,7 +233,6 @@
 </template>
 
 <script>
-import sessionManager from "../util/session.js";
 import utilFormat from "../util/format.js";
 
 export default {

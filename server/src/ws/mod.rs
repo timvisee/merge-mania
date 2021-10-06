@@ -194,6 +194,7 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
     match msg {
         MsgRecvKind::GetGame => get_game(state, client_id),
         MsgRecvKind::GetInventory => get_inventory(state, client_id),
+        MsgRecvKind::GetStats => get_stats(state, client_id),
         MsgRecvKind::ActionSwap(action) => action_swap(state, client_id, action),
         MsgRecvKind::ActionMerge(action) => action_merge(state, client_id, action),
         MsgRecvKind::ActionBuy(action) => action_buy(state, client_id, action),
@@ -222,9 +223,7 @@ fn get_inventory(state: &SharedState, client_id: usize) {
         None => return,
     };
 
-    // TODO: ensure we can merge
-
-    // Do merge, get inventory
+    // Get inventory
     let mut inventory = match state.game.team_client_inventory(&state.config, team_id) {
         Some(inv) => inv,
         None => return,
@@ -232,6 +231,26 @@ fn get_inventory(state: &SharedState, client_id: usize) {
 
     // Send inventory state
     let msg = MsgSendKind::Inventory(inventory);
+    send_to_client(&state, client_id, &msg.into());
+}
+
+fn get_stats(state: &SharedState, client_id: usize) {
+    debug!("Client {} invoked get stats", client_id);
+
+    // Find client team ID
+    let team_id = match state.clients.client_team_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // Get stats
+    let mut stats = match state.game.team_client_stats(&state.config, team_id) {
+        Some(stats) => stats,
+        None => return,
+    };
+
+    // Send stats
+    let msg = MsgSendKind::Stats(stats);
     send_to_client(&state, client_id, &msg.into());
 }
 
