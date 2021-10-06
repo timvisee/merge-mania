@@ -64,7 +64,12 @@ export default {
 
     logout() {
         this.$auth.logout();
-        this.redirectToLogin();
+        //this.redirectToLogin();
+
+        // Force refresh to reset client states
+        // TODO: this is a hack, improve this, reset states from JS instead
+        let loc = window.location;
+        window.location.href = loc.origin + '/' + loc.pathname;
     },
   },
 };
