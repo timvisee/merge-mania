@@ -72,8 +72,14 @@ pub enum MsgSendKind {
 /// Message kinds to receive from a client.
 #[derive(Deserialize, Debug)]
 #[serde(tag = "kind", content = "data", rename_all = "snake_case")]
+// TODO: kind for authentication token
 pub enum MsgRecvKind {
-    // TODO: kind for authentication token
+    /// Request game state update.
+    GetGame,
+
+    /// Request inventory state update.
+    GetInventory,
+
     /// Action: swap two cells
     ActionSwap(ClientActionSwap),
 
@@ -88,7 +94,4 @@ pub enum MsgRecvKind {
 
     /// Action: scan a code to gain energy.
     ActionScanCode,
-
-    /// Request inventory state update.
-    GetInventory,
 }

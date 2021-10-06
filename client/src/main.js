@@ -2,8 +2,8 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import Loader from "./components/Loader.vue";
+import appState from "./mod/app";
 import authState from "./mod/auth";
-import gameState from "./mod/game";
 
 
 
@@ -33,7 +33,7 @@ Vue.config.productionTip = false;
 Vue.component('loader', Loader);
 
 Vue.prototype.$auth = authState;
-Vue.prototype.$game = gameState;
+Vue.prototype.$app = appState;
 
 new Vue({
   router,

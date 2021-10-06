@@ -1,12 +1,8 @@
 <template>
   <div>
-    <loader v-if="!game || !game.ready" />
+    <loader v-if="!app.ready || !app.game || !app.game.ready" />
 
-    <div v-if="error" class="error">
-      {{ error }}
-    </div>
-
-    <div v-if="game && game.ready" class="text-center">
+    <div v-else class="text-center">
         <div class="game">
             <div class="header">
                 <h1 class="h3 fw-normal title">
@@ -16,11 +12,11 @@
 
                 <h5 class="h5 fw-normal left">
                     Money:
-                    {{ game.inventory.money }}
+                    {{ app.game.inventory.money }}
                 </h5>
                 <h5 class="h5 fw-normal right">
                     Energy:
-                    {{ game.inventory.energy }}
+                    {{ app.game.inventory.energy }}
                 </h5>
             </div>
 
@@ -57,7 +53,7 @@
 
             <!-- Inventory grid -->
             <div class="game-grid">
-                <div v-for="(cell, index) in game.inventory.items"
+                <div v-for="(cell, index) in app.game.inventory.items"
                     class="cell"
                     @click.stop="toggleSelect(index)"
                     v-bind:class="{ select: selected == index, item: cell, factory: cell && cell.drop_interval, subtle: isSubtle(index), plus: !cell && mode == 'buy' && buyItem }"
@@ -104,7 +100,7 @@
         >
             <div class="buy-list">
                 <div
-                    v-for="item in game.getBuyableItems()"
+                    v-for="item in app.game.getBuyableItems()"
                     class="entry"
                     @click.stop.prevent="selectBuyItem(item)"
                 >
@@ -126,13 +122,13 @@
                                 <span v-if="amount.energy">{{ amount.energy }} energy</span>
                                 <span v-if="amount.item">
                                     <span v-if="amount.quantity > 1">{{ amount.quantity }}×</span>
-                                    <img :src="'/sprites/' + game.items[amount.item].sprite"
-                                        :title="game.items[amount.item].name"
-                                        :alt="game.items[amount.item].name"
+                                    <img :src="'/sprites/' + app.game.items[amount.item].sprite"
+                                        :title="app.game.items[amount.item].name"
+                                        :alt="app.game.items[amount.item].name"
                                         draggable="false"
                                         class="item tiny"
                                     />
-                                    {{ game.items[amount.item].name }}
+                                    {{ app.game.items[amount.item].name }}
                                 </span>
                             </li>
                         </ul>
@@ -159,11 +155,11 @@
             <div v-if="selectedCell" class="text-center">
                 <div class="tier-list">
                     <div
-                        v-for="(item, index) in game.getDownUpgradeItems(selectedCell.ref)"
+                        v-for="(item, index) in app.game.getDownUpgradeItems(selectedCell.ref)"
                         class="item"
                         v-bind:class="{ highlight: item.ref == selectedCell.ref }"
                     >
-                        <img v-if="selectedCell.ref == item.ref || game.isDiscovered(item.ref)"
+                        <img v-if="selectedCell.ref == item.ref || app.game.isDiscovered(item.ref)"
                             :src="'/sprites/' + item.sprite"
                             :title="item.name"
                             :alt="item.name"
@@ -183,8 +179,8 @@
                     </div>
                 </div>
 
-                <p v-if="game.items[selectedCell.ref].description" class="font-italic">
-                    {{ game.items[selectedCell.ref].description }}
+                <p v-if="app.game.items[selectedCell.ref].description" class="font-italic">
+                    {{ app.game.items[selectedCell.ref].description }}
                 </p>
 
                 <table class="simple-table">
@@ -197,15 +193,15 @@
                         <td>Drops:</td>
                         <td>
                             <ul class="drops-list">
-                                <li v-for="drop in game.items[selectedCell.ref].drops">
-                                    <span v-if="selectedCell.ref == drop.item || game.isDiscovered(drop.item)">
-                                        <img :src="'/sprites/' + game.items[drop.item].sprite"
-                                            :title="game.items[drop.item].name"
-                                            :alt="game.items[drop.item].name"
+                                <li v-for="drop in app.game.items[selectedCell.ref].drops">
+                                    <span v-if="selectedCell.ref == drop.item || app.game.isDiscovered(drop.item)">
+                                        <img :src="'/sprites/' + app.game.items[drop.item].sprite"
+                                            :title="app.game.items[drop.item].name"
+                                            :alt="app.game.items[drop.item].name"
                                             draggable="false"
                                             class="item tiny"
                                         />
-                                        {{ game.items[drop.item].name }}
+                                        {{ app.game.items[drop.item].name }}
                                     </span>
                                     <span v-else>
                                         <img src="/sprites/white-question-mark.png"
@@ -244,7 +240,7 @@ export default {
   name: "Game",
   data() {
     return {
-      game: this.$game,
+      app: this.$app,
       mode: null,
       selected: null,
       selectedCell: null,
@@ -252,23 +248,20 @@ export default {
     };
   },
   created() {
-    this.onRouteChange();
-
     // Check auth, initialize game or redirect to login
     this.$auth
         .isAuth()
         .then((auth) => {
-            if(auth)
-                this.$game.init(this);
-            else
+            // TODO: ensure we have a team assigned!
+
+            if(auth) {
+                this.$app.init(this);
+                this.$app.initGame();
+            } else
                 this.redirectToLogin();
         });
   },
-  watch: {
-    $route: "onRouteChange"
-  },
   methods: {
-    onRouteChange() {},
     redirectToLogin() {
         this.$router.push({name: "login"});
     },
@@ -331,14 +324,16 @@ export default {
         if(!this.hasItem(index))
             return;
 
+        console.debug("[game] Swapping items");
+
         // Send merge action
-        this.$game.socket.send('action_swap', {
+        this.app.socket.send('action_swap', {
             cell: index,
             other: otherIndex,
         });
 
         // Premove swap on client, clear selection
-        this.$game.premoveSwap(index, otherIndex);
+        this.app.game.premoveSwap(index, otherIndex);
         this.selected = null;
     },
 
@@ -348,14 +343,16 @@ export default {
         if(!this.hasItem(index) || !this.hasItem(otherIndex))
             return;
 
+        console.debug("[game] Merging items");
+
         // Send merge action
-        this.$game.socket.send('action_merge', {
+        this.app.socket.send('action_merge', {
             cell: otherIndex,
             other: index,
         });
 
         // Premove remove and merge on client, clear selection
-        this.$game.premoveMerge(otherIndex, index);
+        this.app.game.premoveMerge(otherIndex, index);
         this.selected = null;
     },
 
@@ -382,15 +379,17 @@ export default {
         if(this.hasItem(index))
             return;
 
+        console.debug("[game] Buying item");
+
         // Send buy action
         let ref = this.buyItem.ref;
-        this.$game.socket.send('action_buy', {
+        this.app.socket.send('action_buy', {
             cell: index,
             item: ref,
         });
 
         // Reset selection, premove placement for instant feedback
-        this.$game.premovePlace(index, ref);
+        this.app.game.premovePlace(index, ref);
         this.selected = null;
     },
 
@@ -399,13 +398,15 @@ export default {
         if(!this.hasItem(index))
             return;
 
+        console.debug("[game] Selling item");
+
         // Send sell action
-        this.$game.socket.send('action_sell', {
+        this.app.socket.send('action_sell', {
             cell: index,
         });
 
         // Reset selection, clear cell for instant feedback
-        this.$game.premoveRemove(index);
+        this.app.game.premoveRemove(index);
         this.selected = null;
     },
 
@@ -414,14 +415,18 @@ export default {
         if(!this.hasItem(index))
             return;
 
+        console.debug("[game] Showing item details");
+
         // Show details modal
-        this.selectedCell = this.$game.inventory.items[index];
+        this.selectedCell = this.app.game.inventory.items[index];
         this.$bvModal.show('game-details-modal');
     },
 
     actionScanCode() {
+        console.debug("[game] Scanning code");
+
         // Send scan code action
-        this.$game.socket.send('action_scan_code', null);
+        this.app.socket.send('action_scan_code', null);
     },
 
     /**
@@ -435,7 +440,7 @@ export default {
                     return true;
 
                 // Must have mergeable state
-                if(!this.game.inventory.items[index].mergeable)
+                if(!this.app.game.inventory.items[index].mergeable)
                     return true;
 
                 // A cell with an item must be selected
@@ -458,7 +463,7 @@ export default {
      * Check whether a cell by index has an item.
      */
     hasItem(index) {
-        return index !== null && !!this.game.inventory.items[index];
+        return index !== null && !!this.app.game.inventory.items[index];
     },
 
     /**
@@ -472,8 +477,8 @@ export default {
         if(!this.hasItem(index) || !this.hasItem(other))
             return false;
 
-        let a = this.game.inventory.items[other];
-        let b = this.game.inventory.items[index];
+        let a = this.app.game.inventory.items[other];
+        let b = this.app.game.inventory.items[index];
 
         // Must be mergeable, must have same ID
         return a.mergeable && a.ref == b.ref;

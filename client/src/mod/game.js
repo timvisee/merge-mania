@@ -9,6 +9,9 @@ export default {
     // Changes to true when game state is received from server.
     ready: false,
 
+    // App state.
+    app: null,
+
     // Current inventory.
     inventory: null,
 
@@ -18,17 +21,22 @@ export default {
     // Game configuration items.
     items: null,
 
-    // Game socket manager.
-    socket: null,
-
     // Initialize.
-    init(vueContext) {
+    init(app) {
+        console.log('[game] Initializing...');
+
+        this.app = app;
         this.ready = false;
 
-        // TODO: construct fresh socket!
-        this.socket = ws;
-        this.socket.vueContext = vueContext;
-        this.socket.connect(this);
+        // Register message listeners
+        this.app.socket.addListener('inventory', (data) => this.onMsgInventory(data));
+        this.app.socket.addListener('inventory_balances', (data) => this.onMsgInventoryBalances(data));
+        this.app.socket.addListener('inventory_cell', (data) => this.onMsgInventoryCell(data));
+        this.app.socket.addListener('inventory_discovered', (data) => this.onMsgInventoryDiscovered(data));
+        this.app.socket.addListener('config_items', (data) => this.onMsgConfigItems(data));
+
+        // Ask server for game state
+        this.pollGameState();
 
         // Set up new timer to periodically poll full inventory state
         if(this.inventory_poll_timer !== null)
@@ -108,9 +116,14 @@ export default {
         return after;
     },
 
+    // Poll latest game state from server.
+    pollGameState() {
+        this.app.socket.send('get_game', null);
+    },
+
     // Poll latest inventory state from server.
     pollInventoryState() {
-        this.socket.send('get_inventory', null);
+        this.app.socket.send('get_inventory', null);
     },
 
     // Premove the item at the given index, remove it.
@@ -178,5 +191,42 @@ export default {
         let tmp = this.inventory.items[index];
         this.inventory.items[index] = this.inventory.items[otherIndex];
         this.inventory.items[otherIndex] = tmp;
+    },
+
+    /**
+     * Handle inventory message from server.
+     */
+    onMsgInventory(inventory) {
+        this.inventory = inventory;
+        this.ready = true;
+    },
+
+    /**
+     * Handle inventory balances message from server.
+     */
+    onMsgInventoryBalances(data) {
+        this.inventory.money = data.money;
+        this.inventory.energy = data.energy;
+    },
+
+    /**
+     * Handle inventory cell message from server.
+     */
+    onMsgInventoryCell(data) {
+        this.setCell(data.index, data.item);
+    },
+
+    /**
+     * Handle inventory discovered message from server.
+     */
+    onMsgInventoryDiscovered(discovered) {
+        this.inventory.discovered = discovered;
+    },
+
+    /**
+     * Handle config items message from server.
+     */
+    onMsgConfigItems(items) {
+        this.items = items;
     },
 };

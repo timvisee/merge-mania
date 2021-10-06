@@ -4,22 +4,29 @@ export default {
     // Socket.
     socket: null,
 
-    // Game state.
-    // TODO: we also have vueContext.$game
-    game: null,
+    // App state.
+    app: null,
 
-    // Vue context.
-    vueContext: null,
+    // Map of message listener callbacks by kind.
+    listeners: {},
+
+    // Messages queued to be sent as soon as possible.
+    sendQueue: [],
 
     /**
      * Start new connection.
      */
-    connect(gameState) {
+    connect(app) {
         // Clean up any existing socket
         if(this.socket !== null)
             this.socket.close();
 
-        this.game = gameState;
+        this.app = app;
+        this.app.ready = false;
+
+        // Register internal message listeners
+        this.addListener('session', (data) => this.onSession(data));
+        this.addListener('toast', (data) => this.onToast(data));
 
         // Set up websocket connection and handlers
         this.socket = new WebSocket(socketAddress());
@@ -34,8 +41,16 @@ export default {
      */
     reconnect() {
         console.log("[ws] Reconnecting...");
-        this.game.ready = false;
-        this.connect(this.game)
+        this.connect(this.app)
+    },
+
+    /**
+     * Register a new message listener.
+     */
+    addListener(kind, callback) {
+        // TODO: remove after debugging
+        console.debug("[ws] Registered '" + kind + "' listener");
+        this.listeners[kind] = callback;
     },
 
     /**
@@ -43,17 +58,27 @@ export default {
      */
     send(kind, data) {
         // Socket must be active
-        if(this.socket === null) {
+        if(this.socket == null) {
             console.log('[ws] Failed to send message, socket is null');
             return;
         }
 
-        // Send message
-        this.socket.send(JSON.stringify({
+        // Build message to send
+        let msg = {
             status: 'ok',
             kind,
             data,
-        }));
+        };
+
+        // Queue message if socket is not yet open
+        if(this.socket.readyState != 1) {
+            console.log("[ws] Socket not yet open, queueing message...");
+            this.sendQueue.push(msg);
+            return;
+        }
+
+        // Send message
+        this.socket.send(JSON.stringify(msg));
     },
 
     /**
@@ -66,6 +91,10 @@ export default {
         this.socket.send(JSON.stringify({
             token: sessionManager.getToken(),
         }));
+
+        // Process send queue
+        this.sendQueue.forEach((msg) => this.socket.send(JSON.stringify(msg)));
+        this.sendQueue = [];
     },
 
     /**
@@ -74,50 +103,15 @@ export default {
     onMessage(event) {
         // console.log(`[ws] Received msg: ${event.data.substring(0, 32)}...`);
 
-        // TODO: handle all incoming messages here
         let data = JSON.parse(event.data);
 
-        switch(data.kind) {
-            case 'session':
-                this.vueContext.$auth.session = data.data;
-                break;
+        let listener = this.listeners[data.kind];
+        if(listener != undefined)
+            listener(data.data);
 
-            case 'inventory':
-                this.game.inventory = data.data;
-                this.game.ready = true;
-                break;
-
-            case 'inventory_balances':
-                this.game.inventory.money = data.data.money;
-                this.game.inventory.energy = data.data.energy;
-                break;
-
-            case 'inventory_cell':
-                let index = data.data.index;
-                this.game.setCell(index, data.data.item);
-                break;
-
-            case 'inventory_discovered':
-                this.game.inventory.discovered = data.data;
-                break;
-
-            case 'config_items':
-                this.game.items = data.data;
-                break;
-
-            case 'toast':
-                this.vueContext.$bvToast.toast(data.data, {
-                    title: 'Notification',
-                    autoHideDelay: 3000,
-                    variant: 'warning',
-                    solid: true,
-                    appendToast: false,
-                })
-                break;
-
-            default:
-                console.log("[ws] Unhandled message kind: " + data.kind);
-        }
+        // Warning for unhandled messages
+        else
+            console.warn("[ws] Unhandled server message: " + data.kind);
     },
 
     /**
@@ -141,11 +135,27 @@ export default {
 
         // Reset socket and game ready state
         this.socket = null;
-        this.game.ready = false;
+        this.app.ready = false;
 
         // Auto reconnect after some time
         console.log("[ws] Reconnecting after 2 seconds...");
         setTimeout(() => this.reconnect(), 2000);
+    },
+
+    /**
+     * Handle session message.
+     */
+    onSession(session) {
+        // TODO: using vueContext here is a hack, improve
+        this.app.vueContext.$auth.session = session;
+        this.app.ready = true;
+    },
+
+    /**
+     * Handle toast message.
+     */
+    onToast(msg) {
+        this.app.toast(msg);
     },
 };
 

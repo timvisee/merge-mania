@@ -135,26 +135,6 @@ async fn send_initial(state: SharedState, client_id: usize, session: &Session) {
     // Send session state
     let msg = MsgSendKind::Session(ClientSession::from_session(&state.config, session));
     send_to_client(&state, client_id, &msg.into());
-
-    // Send item configuration
-    let msg = MsgSendKind::ConfigItems(state.config.items.clone());
-    send_to_client(&state, client_id, &msg.into());
-
-    // Find client team ID
-    let team_id = match state.clients.client_team_id(client_id) {
-        Some(id) => id,
-        None => return,
-    };
-
-    // Get team client inventory
-    let inventory = match state.game.team_client_inventory(&state.config, team_id) {
-        Some(inv) => inv,
-        None => return,
-    };
-
-    // Send full inventory state
-    let msg = MsgSendKind::Inventory(inventory);
-    send_to_client(&state, client_id, &msg.into());
 }
 
 /// Handle client messages.
@@ -212,13 +192,47 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
 
     // Handle specific message
     match msg {
+        MsgRecvKind::GetGame => get_game(state, client_id),
+        MsgRecvKind::GetInventory => get_inventory(state, client_id),
         MsgRecvKind::ActionSwap(action) => action_swap(state, client_id, action),
         MsgRecvKind::ActionMerge(action) => action_merge(state, client_id, action),
         MsgRecvKind::ActionBuy(action) => action_buy(state, client_id, action),
         MsgRecvKind::ActionSell(action) => action_sell(state, client_id, action),
         MsgRecvKind::ActionScanCode => action_scan_code(state, client_id),
-        MsgRecvKind::GetInventory => get_inventory(state, client_id),
     }
+}
+
+fn get_game(state: &SharedState, client_id: usize) {
+    debug!("Client {} invoked get game", client_id);
+
+    // Send item configuration
+    let msg = MsgSendKind::ConfigItems(state.config.items.clone());
+    send_to_client(&state, client_id, &msg.into());
+
+    // Also send inventory state
+    get_inventory(state, client_id);
+}
+
+fn get_inventory(state: &SharedState, client_id: usize) {
+    debug!("Client {} invoked get inventory", client_id);
+
+    // Find client team ID
+    let team_id = match state.clients.client_team_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // TODO: ensure we can merge
+
+    // Do merge, get inventory
+    let mut inventory = match state.game.team_client_inventory(&state.config, team_id) {
+        Some(inv) => inv,
+        None => return,
+    };
+
+    // Send inventory state
+    let msg = MsgSendKind::Inventory(inventory);
+    send_to_client(&state, client_id, &msg.into());
 }
 
 fn action_swap(state: &SharedState, client_id: usize, action: ClientActionSwap) {
@@ -399,28 +413,6 @@ fn action_scan_code(state: &SharedState, client_id: usize) {
 
     // Send not yet implemented toast
     let msg = MsgSendKind::Toast(crate::lang::NO_CODE_FREE_ENERGY.into());
-    send_to_client(&state, client_id, &msg.into());
-}
-
-fn get_inventory(state: &SharedState, client_id: usize) {
-    debug!("Client {} invoked get inventory", client_id);
-
-    // Find client team ID
-    let team_id = match state.clients.client_team_id(client_id) {
-        Some(id) => id,
-        None => return,
-    };
-
-    // TODO: ensure we can merge
-
-    // Do merge, get inventory
-    let mut inventory = match state.game.team_client_inventory(&state.config, team_id) {
-        Some(inv) => inv,
-        None => return,
-    };
-
-    // Send inventory state
-    let msg = MsgSendKind::Inventory(inventory);
     send_to_client(&state, client_id, &msg.into());
 }
 
