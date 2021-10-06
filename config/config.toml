@@ -43,7 +43,7 @@ password = "tim"
 
 [[teams]]
 id = 3
-name = "Mauri maxed"
+name = "Mauri 1"
 password = "mauri"
 
 [[teams]]
@@ -98,7 +98,12 @@ password = "thomas"
 
 [[teams]]
 id = 14
-name = "Mauri"
+name = "Mauri 2"
+password = "mauri"
+
+[[teams]]
+id = 15
+name = "Mauri 3"
 password = "mauri"
 
 
@@ -1745,6 +1750,7 @@ sprite_path = "axe.png"
 [[items]]
 ref = "81.8"
 name = "Crowbar"
+description = "λ"
 tier = "Tools"
 sell = 1034352
 sprite_path = "crowbar.png"
