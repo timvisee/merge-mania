@@ -103,16 +103,6 @@
                     variant="outline-dark"
                     @click.stop.prevent="actionScanCode"
                     squared>Scan code</b-button>
-                <b-button
-                    type="button"
-                    class="w-100"
-                    variant="outline-dark"
-                    @click.stop.prevent="actionPlayPause"
-                    squared
-                >
-                    <span v-if="app.running">Pause game</span>
-                    <span v-else>Play game</span>
-                </b-button>
             </b-button-group>
         </div>
 
@@ -450,13 +440,6 @@ export default {
 
         // Send scan code action
         this.app.socket.send('action_scan_code', null);
-    },
-
-    actionPlayPause() {
-        console.debug("[game] Play/pause game");
-
-        // Send play/pause command
-        this.app.socket.send('set_game_running', !this.app.running);
     },
 
     /**
