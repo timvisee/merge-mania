@@ -213,6 +213,7 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
         MsgRecvKind::ActionBuy(action) => action_buy(state, client_id, action),
         MsgRecvKind::ActionSell(action) => action_sell(state, client_id, action),
         MsgRecvKind::ActionScanCode => action_scan_code(state, client_id),
+        MsgRecvKind::GetLeaderboard => get_leaderboard(state, client_id),
     }
 }
 
@@ -610,6 +611,35 @@ fn action_scan_code(state: &SharedState, client_id: usize) {
 
     // Send not yet implemented toast
     let msg = MsgSendKind::Toast(crate::lang::NO_CODE_FREE_ENERGY.into());
+    send_to_client(&state, client_id, &msg.into());
+}
+
+fn get_leaderboard(state: &SharedState, client_id: usize) {
+    debug!("Client {} invoked get leaderboard", client_id);
+
+    // Send game state
+    let msg = MsgSendKind::GameState(state.game.running());
+    send_to_client(&state, client_id, &msg.into());
+
+    // Find client user ID
+    let user_id = match state.clients.client_user_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // User must have admin role
+    let role_admin = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_admin)
+        .unwrap_or(false);
+    if !role_admin {
+        warn!("Non-game user tried to get leaderboard");
+        return;
+    }
+
+    // Get leaderboard, send to client
+    let msg = MsgSendKind::Leaderboard(state.game.leaderboard());
     send_to_client(&state, client_id, &msg.into());
 }
 

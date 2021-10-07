@@ -71,6 +71,9 @@ pub enum MsgSendKind {
     /// Client stats.
     Stats(ClientUserStats),
 
+    /// Leaderboard stats.
+    Leaderboard(Vec<ClientLeaderboardUser>),
+
     /// Toast notification.
     Toast(String),
 }
@@ -109,4 +112,7 @@ pub enum MsgRecvKind {
 
     /// Action: scan a code to gain energy.
     ActionScanCode,
+
+    /// Get leaderboard scores.
+    GetLeaderboard,
 }

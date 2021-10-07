@@ -10,7 +10,7 @@ use rand::Rng;
 use serde::{Deserialize, Serialize};
 use tokio::time::{self, Duration};
 
-use crate::client::{ClientInventory, ClientUserStats, MsgSendKind};
+use crate::client::{ClientInventory, ClientLeaderboardUser, ClientUserStats, MsgSendKind};
 use crate::config::{Config, ConfigItem};
 use crate::state::SharedState;
 use crate::types::Amount;
@@ -350,6 +350,20 @@ impl Game {
         let inventory = ClientInventory::from_game(&user.inventory)
             .expect("failed to transpose game to client inventory");
         Some(inventory)
+    }
+
+    /// Get leaderboard entries.
+    pub fn leaderboard(&self) -> Vec<ClientLeaderboardUser> {
+        let mut items: Vec<_> = self
+            .users
+            .read()
+            .unwrap()
+            .values()
+            .filter_map(|user| ClientLeaderboardUser::from_game(&user.read().unwrap()).ok())
+            .collect();
+        items.sort_unstable_by_key(|u| u.money);
+        items.reverse();
+        items
     }
 
     /// Load game state from file.

@@ -201,3 +201,22 @@ impl ClientUserStats {
         }
     }
 }
+
+/// Client leaderboard user.
+#[derive(Serialize, Debug)]
+pub struct ClientLeaderboardUser {
+    /// Account display name.
+    pub name: String,
+
+    /// User money.
+    pub money: u64,
+}
+
+impl ClientLeaderboardUser {
+    pub fn from_game(game: &GameUser) -> Result<Self, ()> {
+        Ok(Self {
+            name: game.config.as_ref().ok_or(())?.name.clone(),
+            money: game.inventory.money,
+        })
+    }
+}

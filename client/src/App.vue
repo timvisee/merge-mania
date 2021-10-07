@@ -26,6 +26,9 @@
                     <router-link v-if="auth.auth && auth.hasRoleGame()" :to="{name: 'stats'}" class="nav-link">
                         Stats
                     </router-link>
+                    <router-link v-if="auth.auth && auth.hasRoleAdmin()" :to="{name: 'leaderboard'}" class="nav-link">
+                        Leaderboard
+                    </router-link>
                     <router-link v-if="auth.auth && auth.hasRoleAdmin()" :to="{name: 'admin'}" class="nav-link">
                         Admin
                     </router-link>
