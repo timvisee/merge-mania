@@ -86,7 +86,7 @@ fn state() -> SharedState {
 
     // Start new games if configured
     if start && state.game.tick() == 0 {
-        state.game.running = true;
+        state.game.set_running(true);
     }
 
     state.shared()

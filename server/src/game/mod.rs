@@ -3,7 +3,7 @@ pub mod types;
 use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::path::PathBuf;
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Mutex, RwLock};
 
 use rand::Rng;
@@ -39,7 +39,7 @@ pub(crate) async fn game_loop(state: SharedState) {
 
         // Process ticks
         // TODO: catch up to missed ticks here
-        if state.game.running {
+        if state.game.running() {
             state.game.process_ticks(&state, 1);
         }
     }
@@ -65,7 +65,7 @@ pub(crate) async fn save_loop(state: SharedState) {
 #[derive(Serialize, Deserialize, Default)]
 pub struct Game {
     /// Whether the game is running.
-    pub running: bool,
+    running: AtomicBool,
 
     /// Current game tick.
     tick: AtomicU64,
@@ -90,6 +90,16 @@ impl Game {
             .write()
             .unwrap()
             .insert(team_id, RwLock::new(team));
+    }
+
+    /// Check if game is running.
+    pub fn running(&self) -> bool {
+        self.running.load(Ordering::Relaxed)
+    }
+
+    /// Set whether the game is running.
+    pub fn set_running(&self, running: bool) {
+        self.running.store(running, Ordering::Relaxed)
     }
 
     /// Get current game tick.

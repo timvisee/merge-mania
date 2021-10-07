@@ -133,7 +133,7 @@ async fn handle_auth(
 /// Send current state to client.
 async fn send_initial(state: SharedState, client_id: usize, session: &Session) {
     // Send game state
-    let msg = MsgSendKind::GameState(state.game.running);
+    let msg = MsgSendKind::GameState(state.game.running());
     send_to_client(&state, client_id, &msg.into());
 
     // Send session state
@@ -197,6 +197,7 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
     // Handle specific message
     match msg {
         MsgRecvKind::GetGame => get_game(state, client_id),
+        MsgRecvKind::SetGameRunning(running) => set_game_running(state, client_id, running),
         MsgRecvKind::GetInventory => get_inventory(state, client_id),
         MsgRecvKind::GetStats => get_stats(state, client_id),
         MsgRecvKind::ActionSwap(action) => action_swap(state, client_id, action),
@@ -211,7 +212,7 @@ fn get_game(state: &SharedState, client_id: usize) {
     debug!("Client {} invoked get game", client_id);
 
     // Send game state
-    let msg = MsgSendKind::GameState(state.game.running);
+    let msg = MsgSendKind::GameState(state.game.running());
     send_to_client(&state, client_id, &msg.into());
 
     // Send item configuration
@@ -220,6 +221,19 @@ fn get_game(state: &SharedState, client_id: usize) {
 
     // Also send inventory state
     get_inventory(state, client_id);
+}
+
+fn set_game_running(state: &SharedState, client_id: usize, running: bool) {
+    debug!("Client {} invoked set game running: {}", client_id, running);
+
+    // TODO: user must be admin!
+
+    // Set running state
+    state.game.set_running(running);
+
+    // Send game state to all clients
+    let msg = MsgSendKind::GameState(running);
+    send_to_all(&state, Some(client_id), &msg.into());
 }
 
 fn get_inventory(state: &SharedState, client_id: usize) {
@@ -441,6 +455,36 @@ fn action_scan_code(state: &SharedState, client_id: usize) {
     // Send not yet implemented toast
     let msg = MsgSendKind::Toast(crate::lang::NO_CODE_FREE_ENERGY.into());
     send_to_client(&state, client_id, &msg.into());
+}
+
+/// Send message to all clients.
+///
+/// Notes:
+/// - also sends to the current client as identified by `client_id`.
+/// - returns `Ok` even if the message reaches no client.
+pub fn send_to_all(
+    state: &SharedState,
+    client_id: Option<usize>,
+    msg: &MsgSend,
+) -> serde_json::Result<()> {
+    trace!("WS({}): send msg to all clients", client_id.unwrap_or(0),);
+
+    // Serialize
+    let msg = serde_json::to_string(msg)?;
+
+    for client in state.clients.clients.read().unwrap().iter() {
+        // Send message, errors happen on disconnect, in which case disconnect logic will be
+        // handled in other task
+        let _ = client.tx.send(Message::text(&msg));
+
+        trace!(
+            "WS({}): - msg queued for client {}",
+            client_id.unwrap_or(0),
+            client.client_id,
+        );
+    }
+
+    Ok(())
 }
 
 /// Send message to client.
