@@ -276,9 +276,8 @@ export default {
     this.$auth
         .isAuth()
         .then((auth) => {
-            // TODO: ensure we have a team assigned!
-
-            if(auth) {
+            // User must have game role
+            if(this.$auth.hasRoleGame()) {
                 this.$app.init(this);
                 this.$app.initGame();
             } else

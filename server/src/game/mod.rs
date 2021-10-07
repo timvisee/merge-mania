@@ -10,7 +10,7 @@ use rand::Rng;
 use serde::{Deserialize, Serialize};
 use tokio::time::{self, Duration};
 
-use crate::client::{ClientInventory, ClientTeamStats, MsgSendKind};
+use crate::client::{ClientInventory, ClientUserStats, MsgSendKind};
 use crate::config::{Config, ConfigItem};
 use crate::state::SharedState;
 use crate::types::Amount;
@@ -70,26 +70,26 @@ pub struct Game {
     /// Current game tick.
     tick: AtomicU64,
 
-    /// Team state.
-    // TODO: use better structure here, add team getter
-    pub teams: RwLock<HashMap<u32, RwLock<GameTeam>>>,
+    /// User state.
+    // TODO: use better structure here, add user getter
+    pub users: RwLock<HashMap<u32, RwLock<GameUser>>>,
 }
 
 impl Game {
-    /// Make sure a given team is loaded, load it otherwise.
-    pub fn ensure_team(&self, config: &Config, team_id: u32) {
-        if !self.teams.read().unwrap().contains_key(&team_id) {
-            self.add_team(config, team_id);
+    /// Make sure a given user is loaded, load it otherwise.
+    pub fn ensure_user(&self, config: &Config, user_id: u32) {
+        if !self.users.read().unwrap().contains_key(&user_id) {
+            self.add_user(config, user_id);
         }
     }
 
-    /// Add a new team.
-    fn add_team(&self, config: &Config, team_id: u32) {
-        let team = GameTeam::new(self.tick(), config, team_id);
-        self.teams
+    /// Add a new user.
+    fn add_user(&self, config: &Config, user_id: u32) {
+        let user = GameUser::new(self.tick(), config, user_id);
+        self.users
             .write()
             .unwrap()
-            .insert(team_id, RwLock::new(team));
+            .insert(user_id, RwLock::new(user));
     }
 
     /// Check if game is running.
@@ -117,94 +117,94 @@ impl Game {
         // Increase tick by 1
         let tick = self.tick.fetch_add(1, Ordering::Relaxed) + 1;
 
-        // Update each team
-        for team in self.teams.read().unwrap().values() {
-            let mut team = team.write().unwrap();
-            let (changed, discovered, drop_count) = team.update(&state.config, tick);
+        // Update each user
+        for user in self.users.read().unwrap().values() {
+            let mut user = user.write().unwrap();
+            let (changed, discovered, drop_count) = user.update(&state.config, tick);
 
             // Broadcast cell changes
-            broadcast_team_cell_changes(state, &team, changed);
+            broadcast_user_cell_changes(state, &user, changed);
 
             // Send new inventory state if user discovered new items
             if discovered {
-                debug!("Team discovered new drop, notifying client");
-                let inventory = ClientInventory::from_game(&team.inventory)
+                debug!("User discovered new drop, notifying client");
+                let inventory = ClientInventory::from_game(&user.inventory)
                     .expect("failed to transpose game to client inventory");
                 let msg = MsgSendKind::InventoryDiscovered(inventory.discovered);
-                ws::send_to_team(&state, None, team.id, &msg.into());
+                ws::send_to_user(&state, None, user.id, &msg.into());
             }
 
             // Increase stats
-            team.stats.inc_drop(drop_count);
+            user.stats.inc_drop(drop_count);
         }
     }
 
-    /// Get the team client inventory.
-    pub fn team_client_inventory(&self, config: &Config, team_id: u32) -> Option<ClientInventory> {
-        self.ensure_team(config, team_id);
-        let teams = self.teams.read().unwrap();
-        let team = teams.get(&team_id)?.read().unwrap();
-        let inventory = ClientInventory::from_game(&team.inventory)
+    /// Get the user client inventory.
+    pub fn user_client_inventory(&self, config: &Config, user_id: u32) -> Option<ClientInventory> {
+        self.ensure_user(config, user_id);
+        let users = self.users.read().unwrap();
+        let user = users.get(&user_id)?.read().unwrap();
+        let inventory = ClientInventory::from_game(&user.inventory)
             .expect("failed to transpose game to client inventory");
         Some(inventory)
     }
 
-    /// Get the team client stats.
-    pub fn team_client_stats(&self, config: &Config, team_id: u32) -> Option<ClientTeamStats> {
-        self.ensure_team(config, team_id);
-        let teams = self.teams.read().unwrap();
-        let team = teams.get(&team_id)?.read().unwrap();
-        let stats = ClientTeamStats::from_game(&team.stats);
+    /// Get the user client stats.
+    pub fn user_client_stats(&self, config: &Config, user_id: u32) -> Option<ClientUserStats> {
+        self.ensure_user(config, user_id);
+        let users = self.users.read().unwrap();
+        let user = users.get(&user_id)?.read().unwrap();
+        let stats = ClientUserStats::from_game(&user.stats);
         Some(stats)
     }
 
-    /// Swap two items for a team.
-    pub fn team_swap(
+    /// Swap two items for a user.
+    pub fn user_swap(
         &self,
-        team_id: u32,
+        user_id: u32,
         config: &Config,
         cell: u8,
         other: u8,
     ) -> Option<ClientInventory> {
-        self.ensure_team(config, team_id);
-        let teams = self.teams.read().unwrap();
-        let mut team = teams.get(&team_id).unwrap().write().unwrap();
+        self.ensure_user(config, user_id);
+        let users = self.users.read().unwrap();
+        let mut user = users.get(&user_id).unwrap().write().unwrap();
 
         // TODO: validate indices
         // TODO: ensure first cell contains item
 
         // Swap cells
-        let tmp = team.inventory.grid.items[cell as usize].take();
-        team.inventory.grid.items[cell as usize] = team.inventory.grid.items[other as usize].take();
-        team.inventory.grid.items[other as usize] = tmp;
+        let tmp = user.inventory.grid.items[cell as usize].take();
+        user.inventory.grid.items[cell as usize] = user.inventory.grid.items[other as usize].take();
+        user.inventory.grid.items[other as usize] = tmp;
 
         // Increase stats
-        team.stats.inc_swap();
+        user.stats.inc_swap();
 
-        let inventory = ClientInventory::from_game(&team.inventory)
+        let inventory = ClientInventory::from_game(&user.inventory)
             .expect("failed to transpose game to client inventory");
         Some(inventory)
     }
 
-    /// Merge two items for a team.
+    /// Merge two items for a user.
     ///
     /// Returns the new inventory state on success and `true` if a new item was discovered.
-    pub fn team_merge(
+    pub fn user_merge(
         &self,
-        team_id: u32,
+        user_id: u32,
         config: &Config,
         cell: u8,
         other: u8,
     ) -> Option<(ClientInventory, bool)> {
-        self.ensure_team(config, team_id);
-        let teams = self.teams.read().unwrap();
-        let mut team = teams.get(&team_id).unwrap().write().unwrap();
+        self.ensure_user(config, user_id);
+        let users = self.users.read().unwrap();
+        let mut user = users.get(&user_id).unwrap().write().unwrap();
 
         // TODO: validate indices
         // TODO: ensure items are same type
         // TODO: ensure item can be upgraded
 
-        let upgraded = match team.inventory.grid.items[cell as usize].as_mut() {
+        let upgraded = match user.inventory.grid.items[cell as usize].as_mut() {
             Some(cell) => cell.upgrade(config),
             None => {
                 warn!("Failed to upgrade item, cell is empty. Possible data race?");
@@ -212,62 +212,62 @@ impl Game {
             }
         };
         if upgraded {
-            team.inventory.grid.items[other as usize] = None;
+            user.inventory.grid.items[other as usize] = None;
         }
 
         // Check for new item discovery
         let mut discovered = false;
-        if let Some(item) = &team.inventory.grid.items[cell as usize] {
+        if let Some(item) = &user.inventory.grid.items[cell as usize] {
             let item_ref = item.id.clone();
-            discovered = team.inventory.discover_item(item_ref);
+            discovered = user.inventory.discover_item(item_ref);
         }
 
         // Increase stats
-        team.stats.inc_merge();
+        user.stats.inc_merge();
 
-        let inventory = ClientInventory::from_game(&team.inventory)
+        let inventory = ClientInventory::from_game(&user.inventory)
             .expect("failed to transpose game to client inventory");
         Some((inventory, discovered))
     }
 
     /// Pay the given amounts.
-    pub fn team_pay(
+    pub fn user_pay(
         &self,
-        team_id: u32,
+        user_id: u32,
         config: &Config,
         amounts: &[Amount],
     ) -> Result<HashSet<u8>, ()> {
-        self.ensure_team(config, team_id);
-        let teams = self.teams.read().unwrap();
-        let mut team = teams.get(&team_id).unwrap().write().unwrap();
+        self.ensure_user(config, user_id);
+        let users = self.users.read().unwrap();
+        let mut user = users.get(&user_id).unwrap().write().unwrap();
 
         // Increase stats
-        team.stats.inc_money_spent(amounts_money(&amounts));
-        team.stats.inc_energy_spent(amounts_energy(&amounts));
+        user.stats.inc_money_spent(amounts_money(&amounts));
+        user.stats.inc_energy_spent(amounts_energy(&amounts));
 
         // Remove inventory amounts
-        team.inventory.remove_amounts(amounts)
+        user.inventory.remove_amounts(amounts)
     }
 
-    /// Buy an item for a team.
+    /// Buy an item for a user.
     ///
     /// Returns updated inventory on success and `true` if a new item was discovered.
-    pub fn team_buy(
+    pub fn user_buy(
         &self,
-        team_id: u32,
+        user_id: u32,
         config: &Config,
         cell: u8,
         item: ConfigItem,
     ) -> Option<(ClientInventory, bool)> {
-        self.ensure_team(config, team_id);
-        let teams = self.teams.read().unwrap();
-        let mut team = teams.get(&team_id).unwrap().write().unwrap();
+        self.ensure_user(config, user_id);
+        let users = self.users.read().unwrap();
+        let mut user = users.get(&user_id).unwrap().write().unwrap();
 
         // TODO: validate indices
         // TODO: ensure user has costs, pay costs
 
         let item_id = item.id.clone();
-        let mut cell = &mut team.inventory.grid.items[cell as usize];
+        let mut cell = &mut user.inventory.grid.items[cell as usize];
 
         // Cell must be empty, put game item in it
         if cell.is_some() {
@@ -276,48 +276,48 @@ impl Game {
         *cell = Some(GameItem::from_config(self.tick(), item));
 
         // Check for new item discovery
-        let discovered = team.inventory.discover_item(item_id);
+        let discovered = user.inventory.discover_item(item_id);
 
         // Increase stats
-        team.stats.inc_buy();
+        user.stats.inc_buy();
 
-        let inventory = ClientInventory::from_game(&team.inventory)
+        let inventory = ClientInventory::from_game(&user.inventory)
             .expect("failed to transpose game to client inventory");
         Some((inventory, discovered))
     }
 
-    /// Sell an item for a team.
-    pub fn team_sell(&self, team_id: u32, config: &Config, cell: u8) -> Option<ClientInventory> {
-        self.ensure_team(config, team_id);
-        let teams = self.teams.read().unwrap();
-        let mut team = teams.get(&team_id).unwrap().write().unwrap();
+    /// Sell an item for a user.
+    pub fn user_sell(&self, user_id: u32, config: &Config, cell: u8) -> Option<ClientInventory> {
+        self.ensure_user(config, user_id);
+        let users = self.users.read().unwrap();
+        let mut user = users.get(&user_id).unwrap().write().unwrap();
 
         // TODO: validate indices
 
         // Get sell, must contain item
-        let mut cell = &mut team.inventory.grid.items[cell as usize];
+        let mut cell = &mut user.inventory.grid.items[cell as usize];
 
         // Clear cell, get sell amount to earn
         let amount = match cell.take() {
             Some(item) => item.config.as_ref().unwrap().sell,
             None => return None,
         };
-        team.inventory.money += amount;
+        user.inventory.money += amount;
 
         // Increase stats
-        team.stats.inc_sell();
-        team.stats.inc_money_earned(amount);
+        user.stats.inc_sell();
+        user.stats.inc_money_earned(amount);
 
-        let inventory = ClientInventory::from_game(&team.inventory)
+        let inventory = ClientInventory::from_game(&user.inventory)
             .expect("failed to transpose game to client inventory");
         Some(inventory)
     }
 
-    /// Scan a code for a team.
-    pub fn team_scan_code(&self, team_id: u32, config: &Config) -> Option<ClientInventory> {
-        self.ensure_team(config, team_id);
-        let teams = self.teams.read().unwrap();
-        let mut team = teams.get(&team_id).unwrap().write().unwrap();
+    /// Scan a code for a user.
+    pub fn user_scan_code(&self, user_id: u32, config: &Config) -> Option<ClientInventory> {
+        self.ensure_user(config, user_id);
+        let users = self.users.read().unwrap();
+        let mut user = users.get(&user_id).unwrap().write().unwrap();
 
         // TODO: implement this!
         warn!("Code scanning not yet implemented");
@@ -326,14 +326,14 @@ impl Game {
         // TODO: grab these values from configuration
         const MONEY_INC: u64 = 10;
         const ENERGY_INC: u64 = 5;
-        // team.inventory.money += MONEY_INC;
-        team.inventory.energy += ENERGY_INC;
+        // user.inventory.money += MONEY_INC;
+        user.inventory.energy += ENERGY_INC;
 
         // Increase stats
-        team.stats.inc_scan_code();
-        team.stats.inc_energy_earned(ENERGY_INC);
+        user.stats.inc_scan_code();
+        user.stats.inc_energy_earned(ENERGY_INC);
 
-        let inventory = ClientInventory::from_game(&team.inventory)
+        let inventory = ClientInventory::from_game(&user.inventory)
             .expect("failed to transpose game to client inventory");
         Some(inventory)
     }
@@ -406,26 +406,26 @@ impl Game {
 
     /// Attach configuration.
     pub fn attach_config(&mut self, config: &Config) -> Result<(), ()> {
-        for team in self.teams.read().unwrap().values() {
-            let mut team = team.write().unwrap();
-            team.attach_config(config)?;
+        for user in self.users.read().unwrap().values() {
+            let mut user = user.write().unwrap();
+            user.attach_config(config)?;
         }
         Ok(())
     }
 }
 
-/// Broadcast cell changes to team.
+/// Broadcast cell changes to user.
 ///
 /// This does some smart checks to figure out the best way of sending these changes.
-fn broadcast_team_cell_changes(state: &SharedState, team: &GameTeam, changed: HashSet<u8>) {
+fn broadcast_user_cell_changes(state: &SharedState, user: &GameUser, changed: HashSet<u8>) {
     // Send full inventory state when a lot of cells have changed
     if changed.len() >= INV_CHANGE_PARTIAL_THRESHOLD {
-        broadcast_team_inventory(state, team);
+        broadcast_user_inventory(state, user);
         return;
     }
 
     // Obtain user inventory
-    let inventory = ClientInventory::from_game(&team.inventory)
+    let inventory = ClientInventory::from_game(&user.inventory)
         .expect("failed to transpose game to client inventory");
 
     // Send each change
@@ -434,16 +434,16 @@ fn broadcast_team_cell_changes(state: &SharedState, team: &GameTeam, changed: Ha
             index: cell,
             item: inventory.grid.items[cell as usize].clone(),
         };
-        ws::send_to_team(&state, None, team.id, &msg.into());
+        ws::send_to_user(&state, None, user.id, &msg.into());
     }
 }
 
-/// Broadcast current inventory state to team clients.
-fn broadcast_team_inventory(state: &SharedState, team: &GameTeam) {
-    let inventory = ClientInventory::from_game(&team.inventory)
+/// Broadcast current inventory state to user clients.
+fn broadcast_user_inventory(state: &SharedState, user: &GameUser) {
+    let inventory = ClientInventory::from_game(&user.inventory)
         .expect("failed to transpose game to client inventory");
     let msg = MsgSendKind::Inventory(inventory);
-    ws::send_to_team(&state, None, team.id, &msg.into());
+    ws::send_to_user(&state, None, user.id, &msg.into());
 }
 
 /// Get money amount for given list of amounts.

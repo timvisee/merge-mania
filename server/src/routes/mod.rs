@@ -19,9 +19,9 @@ pub fn routes(
 
     let heartbeat = warp::path("__heartbeat__").map(magic::heartbeat);
 
-    let api_auth_teams = warp::path("teams")
+    let api_auth_users = warp::path("users")
         .and(s(state.clone()))
-        .map(|state: SharedState| api::auth::teams(state));
+        .map(|state: SharedState| api::auth::users(state));
 
     let api_auth_login = warp::path("login").and(
         warp::post()
@@ -45,7 +45,7 @@ pub fn routes(
     );
 
     let api_auth = warp::path("auth").and(
-        api_auth_teams
+        api_auth_users
             .or(api_auth_login)
             .or(api_auth_logout)
             .or(api_auth_validate),

@@ -4,48 +4,56 @@ use std::sync::atomic::{AtomicU32, AtomicU64, Ordering};
 use rand::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::config::{Config, ConfigItem, ConfigTeam};
+use crate::config::{Config, ConfigItem, ConfigUser};
 use crate::types::{Amount, ItemRef};
 use crate::util::{i_to_xy, xy_to_i};
 
 /// Maximum number of items in factory drop queue.
 const FACTORY_QUEUE_SIZE: usize = 2;
 
-/// Represents a team.
+/// Represents a game user.
 #[derive(Serialize, Deserialize, Debug)]
-pub struct GameTeam {
-    /// Team ID.
+pub struct GameUser {
+    /// User ID.
     pub id: u32,
 
-    /// Team inventory.
+    /// User inventory.
     pub inventory: GameInventory,
 
     #[serde(skip)]
-    pub config: Option<ConfigTeam>,
+    pub config: Option<ConfigUser>,
 
     #[serde(default)]
-    pub stats: GameTeamStats,
+    pub stats: GameUserStats,
 }
 
-impl GameTeam {
-    /// Construct a new team.
+impl GameUser {
+    /// Construct a new user.
     pub fn new(tick: u64, config: &Config, id: u32) -> Self {
         Self {
             id,
             inventory: GameInventory::from_config(tick, config)
                 .unwrap_or_else(|| GameInventory::default()),
-            config: config.team(id).cloned(),
-            stats: GameTeamStats::default(),
+            config: config.user(id).cloned(),
+            stats: GameUserStats::default(),
         }
     }
 
     /// Prepare configuration.
     pub fn attach_config(&mut self, config: &Config) -> Result<(), ()> {
-        self.config = Some(config.team(self.id).cloned().ok_or(())?);
+        let user = config.user(self.id).cloned().ok_or(())?;
+
+        // // User must have game permission
+        // if !user.role_game {
+        //     error!("Could not attach config to game user, because user has no game permission");
+        //     return Err(());
+        // }
+
+        self.config = Some(user);
         self.inventory.grid.attach_config(config)
     }
 
-    /// Update game team.
+    /// Update game user.
     ///
     /// Returns list of changed inventory cells and `true` if a new item is discovered.
     pub fn update(&mut self, config: &Config, tick: u64) -> (HashSet<u8>, bool, u32) {
@@ -246,7 +254,7 @@ impl GameInventory {
         // TODO: remove debug here
         let discovered = self.discovered.insert(item.clone());
         if discovered {
-            trace!("Team discovered new item: {:?}", item);
+            trace!("User discovered new item: {:?}", item);
         }
         discovered
     }
@@ -549,9 +557,9 @@ impl Default for GameInventoryGrid {
     }
 }
 
-/// Game team stats.
+/// Game user stats.
 #[derive(Serialize, Deserialize, Default, Debug)]
-pub struct GameTeamStats {
+pub struct GameUserStats {
     /// Number of merges by user.
     pub merge_count: AtomicU32,
 
@@ -583,7 +591,7 @@ pub struct GameTeamStats {
     pub energy_earned: AtomicU64,
 }
 
-impl GameTeamStats {
+impl GameUserStats {
     /// Increase merge counter by one.
     pub fn inc_merge(&self) {
         self.merge_count.fetch_add(1, Ordering::Relaxed);

@@ -31,11 +31,11 @@ impl SessionManager {
         }
     }
 
-    /// Add session for a given team.
+    /// Add session for a given user.
     ///
     /// Returns session with corresponding token.
-    pub fn add(&self, team_id: u32) -> Session {
-        let session = Session::new_random_token(team_id);
+    pub fn add(&self, user_id: u32) -> Session {
+        let session = Session::new_random_token(user_id);
         self.sessions.write().unwrap().push(session.clone());
 
         // TODO: properly save, handle errors
@@ -143,13 +143,13 @@ impl SessionManager {
     }
 }
 
-/// A team session.
+/// A user session.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 // TODO: add admin property
 pub struct Session {
-    // Team this session is for.
+    // User this session is for.
     // TODO: make option
-    pub team_id: u32,
+    pub user_id: u32,
 
     // Session token.
     token: String,
@@ -157,9 +157,9 @@ pub struct Session {
 
 impl Session {
     /// Construct a new session with a random token.
-    fn new_random_token(team_id: u32) -> Self {
+    fn new_random_token(user_id: u32) -> Self {
         Self {
-            team_id,
+            user_id,
             token: generate_token(),
         }
     }
@@ -212,10 +212,10 @@ impl ClientManager {
         }
     }
 
-    /// Find the team ID for a given client.
-    pub fn client_team_id(&self, client_id: usize) -> Option<u32> {
+    /// Find the user ID for a given client.
+    pub fn client_user_id(&self, client_id: usize) -> Option<u32> {
         let clients = self.clients.read().unwrap();
-        Some(clients.iter().find(|c| c.client_id == client_id)?.team_id)
+        Some(clients.iter().find(|c| c.client_id == client_id)?.user_id)
     }
 }
 
@@ -224,8 +224,8 @@ pub struct Client {
     /// Unique websocket client ID.
     pub client_id: usize,
 
-    /// Authenticated team ID.
-    pub team_id: u32,
+    /// Authenticated user ID.
+    pub user_id: u32,
 
     /// Message send queue.
     // TODO: make this private, send through JSON serialize function instead
@@ -234,10 +234,10 @@ pub struct Client {
 
 impl Client {
     /// Construct a new client.
-    pub fn new(client_id: usize, team_id: u32, tx: mpsc::UnboundedSender<Message>) -> Self {
+    pub fn new(client_id: usize, user_id: u32, tx: mpsc::UnboundedSender<Message>) -> Self {
         Self {
             client_id,
-            team_id,
+            user_id,
             tx,
         }
     }

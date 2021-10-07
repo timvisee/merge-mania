@@ -29,22 +29,26 @@ inventory = [
 
 
 
-# Teams
+# Users
 
-[[teams]]
+[[users]]
 id = 1
+name = "Admin"
+password = "admin"
+role_game = true
+role_admin = true
+
+[[users]]
+id = 2
 name = "Team 1"
 password = "team1"
+role_game = true
 
-[[teams]]
-id = 2
+[[users]]
+id = 3
 name = "Team 2"
 password = "team2"
-
-[[teams]]
-id = 3
-name = "Team 3"
-password = "team3"
+role_game = true
 
 
 

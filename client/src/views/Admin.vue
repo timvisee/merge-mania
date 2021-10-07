@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loader v-if="!app.ready || !app.game || !app.game.ready" />
+    <loader v-if="!app.ready" />
 
     <div v-else class="page-small-card text-center mt-5">
 
@@ -56,11 +56,9 @@ export default {
     this.$auth
         .isAuth()
         .then((auth) => {
-            // TODO: require admin!
-
-            if(auth) {
+            // User must have admin role
+            if(this.$auth.hasRoleAdmin()) {
                 this.$app.init(this);
-                this.$app.initGame();
             } else {
                 this.redirectToLogin();
                 return;

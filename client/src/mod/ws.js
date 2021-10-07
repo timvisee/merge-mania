@@ -25,6 +25,7 @@ export default {
         this.app.ready = false;
 
         // Register internal message listeners
+        // TODO: already receiving session over API endpoint, remove this?
         this.addListener('session', (data) => this.onSession(data));
         this.addListener('toast', (data) => this.onToast(data));
 
@@ -100,6 +101,10 @@ export default {
         // TODO: this is a hack, listen for reconnects in game.js itself
         if(this.app.game != null)
             this.app.game.pollGameState();
+
+        // Check auth state again
+        // TODO: this is a hack, listen for reconnects in auth.js itself
+        this.app.vueContext.$auth.checkAuth();
     },
 
     /**

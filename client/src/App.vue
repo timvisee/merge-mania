@@ -20,16 +20,13 @@
                     <router-link v-if="!auth.auth" :to="{name: 'login'}" class="nav-link">
                         Login
                     </router-link>
-                    <!-- TODO: only show if session has game -->
-                    <router-link v-if="auth.auth" :to="{name: 'game'}" class="nav-link">
+                    <router-link v-if="auth.auth && auth.hasRoleGame()" :to="{name: 'game'}" class="nav-link">
                         Game
                     </router-link>
-                    <!-- TODO: only show if session has game -->
-                    <router-link v-if="auth.auth" :to="{name: 'stats'}" class="nav-link">
+                    <router-link v-if="auth.auth && auth.hasRoleGame()" :to="{name: 'stats'}" class="nav-link">
                         Stats
                     </router-link>
-                    <!-- TODO: only show if admin -->
-                    <router-link v-if="auth.auth" :to="{name: 'admin'}" class="nav-link">
+                    <router-link v-if="auth.auth && auth.hasRoleAdmin()" :to="{name: 'admin'}" class="nav-link">
                         Admin
                     </router-link>
                     <router-link :to="{name: 'about'}" class="nav-link">

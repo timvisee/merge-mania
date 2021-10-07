@@ -54,10 +54,10 @@ pub async fn connected(state: SharedState, ws: WebSocket) {
         }
     });
 
-    // Register client for a team
+    // Register client for a user
     state
         .clients
-        .register(Client::new(client_id, session.team_id, tx));
+        .register(Client::new(client_id, session.user_id, tx));
 
     // Send game state to client
     send_initial(state.clone(), client_id, &session).await;
@@ -112,9 +112,9 @@ async fn handle_auth(
         let session = state.sessions.get_valid(token);
         if let Some(session) = &session {
             info!(
-                "WS({}): auth success (team: {}, token: {}...)",
+                "WS({}): auth success (user: {}, token: {}...)",
                 client_id,
-                session.team_id,
+                session.user_id,
                 &token[0..16]
             );
             // TODO: reply with success message
@@ -137,8 +137,15 @@ async fn send_initial(state: SharedState, client_id: usize, session: &Session) {
     send_to_client(&state, client_id, &msg.into());
 
     // Send session state
-    let msg = MsgSendKind::Session(ClientSession::from_session(&state.config, session));
-    send_to_client(&state, client_id, &msg.into());
+    let session = match ClientSession::from_session(&state.config, session) {
+        Some(session) => {
+            let msg = MsgSendKind::Session(session);
+            send_to_client(&state, client_id, &msg.into());
+        }
+        None => {
+            error!("Failed to send session state to user.");
+        }
+    };
 }
 
 /// Handle client messages.
@@ -239,14 +246,14 @@ fn set_game_running(state: &SharedState, client_id: usize, running: bool) {
 fn get_inventory(state: &SharedState, client_id: usize) {
     debug!("Client {} invoked get inventory", client_id);
 
-    // Find client team ID
-    let team_id = match state.clients.client_team_id(client_id) {
+    // Find client user ID
+    let user_id = match state.clients.client_user_id(client_id) {
         Some(id) => id,
         None => return,
     };
 
     // Get inventory
-    let mut inventory = match state.game.team_client_inventory(&state.config, team_id) {
+    let mut inventory = match state.game.user_client_inventory(&state.config, user_id) {
         Some(inv) => inv,
         None => return,
     };
@@ -259,14 +266,14 @@ fn get_inventory(state: &SharedState, client_id: usize) {
 fn get_stats(state: &SharedState, client_id: usize) {
     debug!("Client {} invoked get stats", client_id);
 
-    // Find client team ID
-    let team_id = match state.clients.client_team_id(client_id) {
+    // Find client user ID
+    let user_id = match state.clients.client_user_id(client_id) {
         Some(id) => id,
         None => return,
     };
 
     // Get stats
-    let mut stats = match state.game.team_client_stats(&state.config, team_id) {
+    let mut stats = match state.game.user_client_stats(&state.config, user_id) {
         Some(stats) => stats,
         None => return,
     };
@@ -279,8 +286,8 @@ fn get_stats(state: &SharedState, client_id: usize) {
 fn action_swap(state: &SharedState, client_id: usize, action: ClientActionSwap) {
     debug!("Client {} invoked swap action", client_id);
 
-    // Find client team ID
-    let team_id = match state.clients.client_team_id(client_id) {
+    // Find client user ID
+    let user_id = match state.clients.client_user_id(client_id) {
         Some(id) => id,
         None => return,
     };
@@ -289,22 +296,22 @@ fn action_swap(state: &SharedState, client_id: usize, action: ClientActionSwap) 
     let mut inventory =
         match state
             .game
-            .team_swap(team_id, &state.config, action.cell, action.other)
+            .user_swap(user_id, &state.config, action.cell, action.other)
         {
             Some(inv) => inv,
             None => return,
         };
 
     // Send cell updates
-    send_to_team_cell(&state, client_id, team_id, &inventory, action.cell);
-    send_to_team_cell(&state, client_id, team_id, &inventory, action.other);
+    send_to_user_cell(&state, client_id, user_id, &inventory, action.cell);
+    send_to_user_cell(&state, client_id, user_id, &inventory, action.other);
 }
 
 fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge) {
     debug!("Client {} invoked merge action", client_id);
 
-    // Find client team ID
-    let team_id = match state.clients.client_team_id(client_id) {
+    // Find client user ID
+    let user_id = match state.clients.client_user_id(client_id) {
         Some(id) => id,
         None => return,
     };
@@ -315,19 +322,19 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
     let (mut inventory, discovered) =
         match state
             .game
-            .team_merge(team_id, &state.config, action.cell, action.other)
+            .user_merge(user_id, &state.config, action.cell, action.other)
         {
             Some(inv) => inv,
             None => return,
         };
 
     // Send cell updates
-    send_to_team_cell(&state, client_id, team_id, &inventory, action.cell);
-    send_to_team_cell(&state, client_id, team_id, &inventory, action.other);
+    send_to_user_cell(&state, client_id, user_id, &inventory, action.cell);
+    send_to_user_cell(&state, client_id, user_id, &inventory, action.other);
 
     // When a new item is discovered, notify the client
     if discovered {
-        debug!("Team discovered new item by merging, notifying client");
+        debug!("User discovered new item by merging, notifying client");
         let msg = MsgSendKind::InventoryDiscovered(inventory.discovered);
         send_to_client(&state, client_id, &msg.into());
     }
@@ -336,8 +343,8 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
 fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
     debug!("Client {} invoked buy action", client_id);
 
-    // Find client team ID
-    let team_id = match state.clients.client_team_id(client_id) {
+    // Find client user ID
+    let user_id = match state.clients.client_user_id(client_id) {
         Some(id) => id,
         None => return,
     };
@@ -355,18 +362,18 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
     };
 
     // Pay amounts, send notification if not enough resources
-    let mut changed = match state.game.team_pay(team_id, &state.config, costs) {
+    let mut changed = match state.game.user_pay(user_id, &state.config, costs) {
         Ok(changed) => changed,
         Err(_) => {
             let msg = MsgSendKind::Toast(crate::lang::INSUFFICIENT_RESOURCES_TO_BUY.into());
             send_to_client(&state, client_id, &msg.into());
 
             // Broadcast inventory state to reset client state
-            let inventory = state.game.team_client_inventory(&state.config, team_id);
+            let inventory = state.game.user_client_inventory(&state.config, user_id);
             if let Some(inventory) = inventory {
                 // TODO: only broadcast changed values (money, energy)
                 let msg = MsgSendKind::Inventory(inventory);
-                send_to_team(&state, Some(client_id), team_id, &msg.into());
+                send_to_user(&state, Some(client_id), user_id, &msg.into());
             }
 
             return;
@@ -377,7 +384,7 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
     let (mut inventory, discovered) =
         match state
             .game
-            .team_buy(team_id, &state.config, action.cell, item.clone())
+            .user_buy(user_id, &state.config, action.cell, item.clone())
         {
             Some(inv) => inv,
             None => return,
@@ -386,19 +393,19 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
 
     // Send cell updates
     for cell in changed {
-        send_to_team_cell(&state, client_id, team_id, &inventory, cell);
+        send_to_user_cell(&state, client_id, user_id, &inventory, cell);
     }
 
-    // Send team balances update
+    // Send user balances update
     let msg = MsgSendKind::InventoryBalances {
         money: inventory.money,
         energy: inventory.energy,
     };
-    send_to_team(&state, Some(client_id), team_id, &msg.into());
+    send_to_user(&state, Some(client_id), user_id, &msg.into());
 
     // When a new item is discovered, notify the client
     if discovered {
-        debug!("Team discovered new item by buying, notifying client");
+        debug!("User discovered new item by buying, notifying client");
         let msg = MsgSendKind::InventoryDiscovered(inventory.discovered);
         send_to_client(&state, client_id, &msg.into());
     }
@@ -407,50 +414,50 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
 fn action_sell(state: &SharedState, client_id: usize, action: ClientActionSell) {
     debug!("Client {} invoked sell action", client_id);
 
-    // Find client team ID
-    let team_id = match state.clients.client_team_id(client_id) {
+    // Find client user ID
+    let user_id = match state.clients.client_user_id(client_id) {
         Some(id) => id,
         None => return,
     };
 
     // Do sell, get inventory
-    let mut inventory = match state.game.team_sell(team_id, &state.config, action.cell) {
+    let mut inventory = match state.game.user_sell(user_id, &state.config, action.cell) {
         Some(inv) => inv,
         None => return,
     };
 
     // Send cell update
-    send_to_team_cell(&state, client_id, team_id, &inventory, action.cell);
+    send_to_user_cell(&state, client_id, user_id, &inventory, action.cell);
 
-    // Send team balances update
+    // Send user balances update
     let msg = MsgSendKind::InventoryBalances {
         money: inventory.money,
         energy: inventory.energy,
     };
-    send_to_team(&state, Some(client_id), team_id, &msg.into());
+    send_to_user(&state, Some(client_id), user_id, &msg.into());
 }
 
 fn action_scan_code(state: &SharedState, client_id: usize) {
     debug!("Client {} invoked scan code action", client_id);
 
-    // Find client team ID
-    let team_id = match state.clients.client_team_id(client_id) {
+    // Find client user ID
+    let user_id = match state.clients.client_user_id(client_id) {
         Some(id) => id,
         None => return,
     };
 
     // Run scan code action
-    let inventory = match state.game.team_scan_code(team_id, &state.config) {
+    let inventory = match state.game.user_scan_code(user_id, &state.config) {
         Some(inventory) => inventory,
         None => return,
     };
 
-    // Send team balances update
+    // Send user balances update
     let msg = MsgSendKind::InventoryBalances {
         money: inventory.money,
         energy: inventory.energy,
     };
-    send_to_team(&state, Some(client_id), team_id, &msg.into());
+    send_to_user(&state, Some(client_id), user_id, &msg.into());
 
     // Send not yet implemented toast
     let msg = MsgSendKind::Toast(crate::lang::NO_CODE_FREE_ENERGY.into());
@@ -515,28 +522,28 @@ pub fn send_to_client(
     Ok(())
 }
 
-/// Send message to a team.
+/// Send message to a user.
 ///
 /// Notes:
 /// - also sends to the current client as identified by `client_id`.
-/// - returns `Ok` even if the message reaches no team.
-pub fn send_to_team(
+/// - returns `Ok` even if the message reaches no user.
+pub fn send_to_user(
     state: &SharedState,
     client_id: Option<usize>,
-    team_id: u32,
+    user_id: u32,
     msg: &MsgSend,
 ) -> serde_json::Result<()> {
     trace!(
-        "WS({}): send msg to team {}",
+        "WS({}): send msg to user {}",
         client_id.unwrap_or(0),
-        team_id,
+        user_id,
     );
 
     // Serialize
     let msg = serde_json::to_string(msg)?;
 
     let clients = state.clients.clients.read().unwrap();
-    let client_iter = clients.iter().filter(|c| c.team_id == team_id);
+    let client_iter = clients.iter().filter(|c| c.user_id == user_id);
     for client in client_iter {
         // Send message, errors happen on disconnect, in which case disconnect logic will be
         // handled in other task
@@ -552,15 +559,15 @@ pub fn send_to_team(
     Ok(())
 }
 
-/// Send state of single inventory cell to team.
+/// Send state of single inventory cell to user.
 ///
 /// Notes:
 /// - also sends to the current client as identified by `client_id`.
-/// - returns `Ok` even if the message reaches no team.
-fn send_to_team_cell(
+/// - returns `Ok` even if the message reaches no user.
+fn send_to_user_cell(
     state: &SharedState,
     client_id: usize,
-    team_id: u32,
+    user_id: u32,
     inventory: &ClientInventory,
     cell: u8,
 ) {
@@ -568,7 +575,7 @@ fn send_to_team_cell(
         index: cell,
         item: inventory.grid.items[cell as usize].clone(),
     };
-    send_to_team(&state, Some(client_id), team_id, &msg.into());
+    send_to_user(&state, Some(client_id), user_id, &msg.into());
 }
 
 /// Client disconnected.

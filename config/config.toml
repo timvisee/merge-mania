@@ -11,7 +11,7 @@ reset = false
 start = true
 
 
-# Team defaults
+# User defaults
 
 [defaults]
 money = 50
@@ -29,82 +29,119 @@ inventory = [
 
 
 
-# Teams
+# Users
 
-[[teams]]
+[[users]]
 id = 1
 name = "Team 1"
 password = "team1"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 2
 name = "Tim"
 password = "tim"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 3
 name = "Mauri 1"
 password = "mauri"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 4
 name = "Team 4"
 password = "team4"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 5
 name = "Team 5"
 password = "team5"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 6
 name = "Team 6"
 password = "team6"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 7
 name = "team 7"
 password = "team7"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 8
 name = "team 8"
 password = "team8"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 9
 name = "team 9"
 password = "team9"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 10
 name = "team 10"
 password = "team10"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 11
 name = "team 11"
 password = "team11"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 12
 name = "Bob"
 password = "bob"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 13
 name = "Thomas"
 password = "thomas"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 14
 name = "Mauri 2"
 password = "mauri"
+role_game = true
+role_admin = true
 
-[[teams]]
+[[users]]
 id = 15
 name = "Mauri 3"
 password = "mauri"
+role_game = true
+role_admin = true
+
+[[users]]
+id = 100
+name = "Admin"
+password = "admin"
+role_game = true
+role_admin = true
 
 
 

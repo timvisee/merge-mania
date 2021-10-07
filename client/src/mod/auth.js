@@ -14,9 +14,13 @@ export default {
             // Attempt to login
             axios.post("/api/auth/login", formdata)
                 .then((response) => {
+
                     let token = response.data.token;
-                    sessionManager.setToken(token);
-                    this.auth = true;
+                    let session = response.data.session;
+
+                    sessionManager.setToken(token.token);
+                    this._setSession(session);
+
                     resolve();
                 })
                 .catch((error) => {
@@ -61,9 +65,9 @@ export default {
     checkAuth() {
         return new Promise((_resolve, reject) => {
             // Rewrite resolve to set auth state in here
-            let resolve = (auth) => {
-                this.auth = auth;
-                _resolve(auth);
+            let resolve = (session) => {
+                this._setSession(session);
+                _resolve(session);
             };
 
             // Session token must be set
@@ -74,9 +78,39 @@ export default {
 
             // Validate session token
             axios.post("/api/auth/validate", {token: sessionManager.getToken()})
-                .then((response) => resolve(!!response.data))
+                .then((response) => resolve(response.data))
                 .catch((err) => reject(err));
         });
+    },
+
+    /**
+     * Check whether the user has the game role.
+     */
+    hasRoleGame() {
+        return this.session != null && this.session.role_game;
+    },
+
+    /**
+     * Check whether the user has the admin role.
+     */
+    hasRoleAdmin() {
+        return this.session != null && this.session.role_admin;
+    },
+
+    /**
+     * Set session.
+     */
+    _setSession(session) {
+        // Clear session state if invalid
+        if(session == null) {
+            this.auth = null;
+            this.session = null;
+            return;
+        }
+
+        // Set session
+        this.session = session;
+        this.auth = session != null && session.user_id;
     },
 };
 

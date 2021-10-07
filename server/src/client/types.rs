@@ -16,29 +16,40 @@ pub struct ClientSession {
     /// Account display name.
     pub name: String,
 
-    /// Team ID if part of a game team.
-    pub team_id: Option<u32>,
+    /// User ID.
+    pub user_id: u32,
+
+    /// Whether user has permission to play the game.
+    pub role_game: bool,
+
+    /// Whether user has permission to administer the game.
+    pub role_admin: bool,
 }
 
 impl ClientSession {
-    pub fn from_session(config: &Config, session: &Session) -> Self {
-        Self {
-            name: config.team(session.team_id).unwrap().name.clone(),
-            team_id: Some(session.team_id),
-        }
+    pub fn from_session(config: &Config, session: &Session) -> Option<Self> {
+        // Get config user
+        let user = config.user(session.user_id)?;
+
+        Some(Self {
+            name: config.user(session.user_id).unwrap().name.clone(),
+            user_id: session.user_id,
+            role_game: user.role_game,
+            role_admin: user.role_admin,
+        })
     }
 }
 
-/// Represents a team.
+/// Represents a user.
 #[derive(Serialize, Debug)]
-pub struct ClientTeam {
+pub struct ClientUser {
     id: u32,
     name: String,
     inventory: ClientInventory,
 }
 
-impl ClientTeam {
-    pub fn from_game(game: &GameTeam) -> Result<Self, ()> {
+impl ClientUser {
+    pub fn from_game(game: &GameUser) -> Result<Self, ()> {
         Ok(Self {
             id: game.id,
             name: game.config.as_ref().ok_or(())?.name.clone(),
@@ -140,9 +151,9 @@ impl ClientInventoryGrid {
     }
 }
 
-/// Client team stats.
+/// Client user stats.
 #[derive(Serialize, Default, Debug)]
-pub struct ClientTeamStats {
+pub struct ClientUserStats {
     /// Number of merges by user.
     merge_count: u32,
 
@@ -174,8 +185,8 @@ pub struct ClientTeamStats {
     energy_earned: u64,
 }
 
-impl ClientTeamStats {
-    pub fn from_game(game: &GameTeamStats) -> Self {
+impl ClientUserStats {
+    pub fn from_game(game: &GameUserStats) -> Self {
         Self {
             merge_count: game.merge_count.load(Ordering::Relaxed),
             buy_count: game.buy_count.load(Ordering::Relaxed),

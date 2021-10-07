@@ -18,24 +18,33 @@ pub struct ConfigGame {
     pub start: bool,
 }
 
-/// Represents a configured team.
+/// Represents a configured user.
+///
+/// May be a game user or admin.
 #[derive(Deserialize, Debug, Clone)]
-pub struct ConfigTeam {
+pub struct ConfigUser {
     pub id: u32,
+
+    /// Whether user has permission to play the game.
+    pub role_game: bool,
+
+    /// Whether user has permission to administer the game.
+    #[serde(default)]
+    pub role_admin: bool,
     pub name: String,
     pub password: String,
 }
 
-/// Team defaults.
+/// User defaults.
 #[derive(Deserialize, Debug, Clone)]
 pub struct ConfigDefaults {
-    /// Default team money.
+    /// Default user money.
     pub money: u64,
 
-    /// Default team energy.
+    /// Default user energy.
     pub energy: u64,
 
-    /// Default team inventory items.
+    /// Default user inventory items.
     pub inventory: Vec<ItemRef>,
 }
 

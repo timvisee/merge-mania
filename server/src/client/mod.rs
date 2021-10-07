@@ -56,20 +56,20 @@ pub enum MsgSendKind {
     /// Game item configuration.
     ConfigItems(HashMap<ItemRef, ConfigItem>),
 
-    /// Inventory state for current client team.
+    /// Inventory state for current client user.
     Inventory(ClientInventory),
 
     /// Inventory balances.
     InventoryBalances { money: u64, energy: u64 },
 
-    /// Inventory cell state for current client team.
+    /// Inventory cell state for current client user.
     InventoryCell { index: u8, item: Option<ClientItem> },
 
     /// Inventory discovered list update.
     InventoryDiscovered(HashSet<ItemRef>),
 
     /// Client stats.
-    Stats(ClientTeamStats),
+    Stats(ClientUserStats),
 
     /// Toast notification.
     Toast(String),

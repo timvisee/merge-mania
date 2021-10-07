@@ -13,21 +13,21 @@
             <h1 class="h3 mb-3 fw-normal">Login</h1>
 
             <b-form-select
-                v-model="form.team"
-                id="team"
-                :options="teams"
-                placeholder="Team"
+                v-model="form.user"
+                id="user"
+                :options="users"
+                placeholder="User"
                 class="mt-3"
                 size="lg"
             >
-                <b-form-select-option :value="null" disabled="disabled">Selecteer team</b-form-select-option>
+                <b-form-select-option :value="null" disabled="disabled">Select user</b-form-select-option>
             </b-form-select>
 
             <b-form-input
                 v-model="form.password"
                 id="password"
                 type="password"
-                placeholder="Wachtwoord"
+                placeholder="Password"
                 class="mt-2"
                 size="lg"
             ></b-form-input>
@@ -59,11 +59,11 @@ export default {
   data() {
     return {
       form: {
-        team: null,
+        user: null,
         password: null,
       },
       loading: true,
-      teams: [],
+      users: [],
     };
   },
   created() {
@@ -81,10 +81,10 @@ export default {
         this.$auth
             .checkAuth()
             .then((auth) => {
-                if(auth)
-                    this.showGame();
+                if(this.$auth.auth)
+                    this.afterLogin();
                 else
-                    this.loadTeams();
+                    this.loadUsers();
             })
             .catch((err) => {
                 // TODO: remove this line below!
@@ -95,16 +95,16 @@ export default {
             });
     },
 
-    // Load teams to show in form
-    loadTeams() {
-        // Request teams
-        axios.get("/api/auth/teams")
+    // Load users to show in form
+    loadUsers() {
+        // Request users
+        axios.get("/api/auth/users")
             .then(response => {
-                // Transform list of teams into form select model
-                this.teams = response.data.map((team) => {
+                // Transform list of users into form select model
+                this.users = response.data.map((user) => {
                     return {
-                        value: team.id,
-                        text: team.name,
+                        value: user.id,
+                        text: user.name,
                     };
                 });
             })
@@ -125,7 +125,7 @@ export default {
 
     // Reset form
     onReset() {
-        this.form.team = null;
+        this.form.user = null;
         this.form.password = null;
     },
 
@@ -133,7 +133,7 @@ export default {
     doAuth() {
         this.loading = true;
         this.$auth.login(this.form)
-            .then(() => this.showGame())
+            .then(() => this.afterLogin())
             .catch((msg) => {
                 // TODO: improve error message
                 alert("Error: " + msg);
@@ -141,9 +141,19 @@ export default {
             .finally(() => this.loading = false);
     },
 
-    // Navigate to game page
-    showGame() {
-        this.$router.push({name: "game"});
+    // Route user to correct page after login.
+    afterLogin() {
+        if(this.$auth.hasRoleGame())
+            this.showPage("game");
+        else if(this.$auth.hasRoleAdmin())
+            this.showPage("admin");
+        else if(this.$auth.auth)
+            this.showPage("index");
+    },
+
+    // Navigate to the given page.
+    showPage(page) {
+        this.$router.push({name: page});
     }
   }
 };

@@ -22,10 +22,10 @@ pub struct Config {
     /// Game settings.
     pub game: ConfigGame,
 
-    /// Teams.
-    pub teams: Vec<ConfigTeam>,
+    /// Users.
+    pub users: Vec<ConfigUser>,
 
-    /// Team defaults.
+    /// User defaults.
     pub defaults: ConfigDefaults,
 
     /// Game items.
@@ -34,9 +34,9 @@ pub struct Config {
 }
 
 impl Config {
-    /// Get a team by ID.
-    pub fn team(&self, team_id: u32) -> Option<&ConfigTeam> {
-        self.teams.iter().find(|t| t.id == team_id)
+    /// Get a user by ID.
+    pub fn user(&self, user_id: u32) -> Option<&ConfigUser> {
+        self.users.iter().find(|t| t.id == user_id)
     }
 
     /// Get item by reference.

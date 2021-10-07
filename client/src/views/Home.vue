@@ -6,10 +6,41 @@
 
     <div class="page-small-card text-center mt-5">
 
-        <h1 class="h3 mb-3 fw-normal">Home</h1>
-        <p>
-            TODO: home page
-        </p>
+        <h1 class="h3 mb-3 fw-normal">Merge Mania</h1>
+
+        <b-button
+            v-if="!auth.auth"
+            type="button"
+            size="lg"
+            variant="primary"
+            class="w-100 mt-4"
+            @click.prevent.stop="$router.push({name: 'login'})"
+        >Login</b-button>
+
+        <b-button
+            v-if="auth.auth && auth.hasRoleGame()"
+            type="button"
+            size="lg"
+            variant="primary"
+            class="w-100 mt-4"
+            @click.prevent.stop="$router.push({name: 'game'})"
+        >Game</b-button>
+
+        <b-button
+            v-if="auth.auth && auth.hasRoleAdmin()"
+            type="button"
+            size="lg"
+            variant="dark"
+            class="w-100 mt-4"
+            @click.prevent.stop="$router.push({name: 'admin'})"
+        >Admin</b-button>
+
+        <b-button
+            type="button"
+            variant="link"
+            class="w-100 mt-4"
+            @click.prevent.stop="$router.push({name: 'about'})"
+        >About</b-button>
 
     </div>
 
@@ -19,23 +50,11 @@
 <script>
 export default {
   name: "Home",
-  created() {
-    this.onShow();
+  data() {
+    return {
+      auth: this.$auth,
+    };
   },
-  watch: {
-    $route: "onShow"
-  },
-  methods: {
-    onShow() {
-        // Redirect to game if authenticated
-        this.$auth
-            .isAuth()
-            .then((auth) => {
-                if(auth)
-                    this.$router.push({name: "game"});
-            });
-    }
-  }
 };
 </script>
 
