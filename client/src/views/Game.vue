@@ -102,14 +102,18 @@
                     class="w-100"
                     variant="outline-dark"
                     @click.stop.prevent="actionScanCode"
-                    squared>Scan code</b-button>
+                    squared
+                    :disabled="!app.running"
+                >Scan code</b-button>
                 <b-button
                     v-if="$auth.auth && $auth.hasRoleAdmin()"
                     type="button"
                     class="w-100"
                     variant="outline-danger"
                     @click.stop.prevent="actionMockScanCode"
-                    squared>Mock scan code</b-button>
+                    squared
+                    :disabled="!app.running"
+                >Mock scan code</b-button>
             </b-button-group>
         </div>
 

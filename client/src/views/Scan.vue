@@ -9,6 +9,17 @@
             {{ error }}
         </b-alert>
 
+        <!-- Pause indicator -->
+        <b-alert v-if="!app.running" show variant="dark">
+            <img src="/sprites/pause-button.png"
+                class="pause-icon blink"
+                title="Paused"
+                alt="Paused"
+                draggable="false"
+            />
+            Game paused
+        </b-alert>
+
         <h1 class="h3 mb-3 fw-normal">Scanner</h1>
 
         <qrcode-stream class="viewer" :camera="camera" :track="paintOutline" @decode="onDecode" @init="onInit">
@@ -188,6 +199,14 @@ export default {
 </script>
 
 <style scoped>
+.pause-icon {
+    width: 1em;
+    height: 1em;
+    margin: 0 0.2em 0 0;
+    position: relative;
+    top: -1px;
+}
+
 .viewer {
     border: 1px solid #343a40;
 }
