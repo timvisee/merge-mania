@@ -102,6 +102,20 @@ impl Game {
         self.running.store(running, Ordering::Relaxed)
     }
 
+    /// Reset the game.
+    pub fn reset(&self) {
+        // Grab users lock
+        let mut users = self.users.write().unwrap();
+
+        // Drop all user states
+        users.clear();
+
+        // Reset game tick
+        self.tick.store(0, Ordering::Relaxed);
+
+        drop(users);
+    }
+
     /// Get current game tick.
     pub fn tick(&self) -> u64 {
         self.tick.load(Ordering::Relaxed)

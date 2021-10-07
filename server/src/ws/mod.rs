@@ -205,6 +205,7 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
     match msg {
         MsgRecvKind::GetGame => get_game(state, client_id),
         MsgRecvKind::SetGameRunning(running) => set_game_running(state, client_id, running),
+        MsgRecvKind::ResetGame => reset_game(state, client_id),
         MsgRecvKind::GetInventory => get_inventory(state, client_id),
         MsgRecvKind::GetStats => get_stats(state, client_id),
         MsgRecvKind::ActionSwap(action) => action_swap(state, client_id, action),
@@ -261,6 +262,7 @@ fn set_game_running(state: &SharedState, client_id: usize, running: bool) {
         .map(|u| u.role_admin)
         .unwrap_or(false);
     if !role_admin {
+        warn!("Non-admin user tried to change game state");
         return;
     }
 
@@ -270,6 +272,48 @@ fn set_game_running(state: &SharedState, client_id: usize, running: bool) {
     // Send game state to all clients
     let msg = MsgSendKind::GameState(running);
     send_to_all(&state, Some(client_id), &msg.into());
+}
+
+fn reset_game(state: &SharedState, client_id: usize) {
+    debug!("Client {} invoked game reset", client_id);
+
+    // Find client user ID
+    let user_id = match state.clients.client_user_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // User must be admin
+    let role_admin = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_admin)
+        .unwrap_or(false);
+    if !role_admin {
+        warn!("Non-admin user tried to reset game");
+        return;
+    }
+
+    // Reset game
+    state.game.reset();
+
+    info!("Game is reset by admin");
+
+    // Update each client
+    for client_id in state.clients.client_ids() {
+        // Get user ID
+        let user_id = match state.clients.client_user_id(client_id) {
+            Some(id) => id,
+            None => continue,
+        };
+
+        // Get and broadcast inventory to client
+        let inventory = state.game.user_client_inventory(&state.config, user_id);
+        if let Some(inventory) = inventory {
+            let msg = MsgSendKind::Inventory(inventory);
+            send_to_client(&state, client_id, &msg.into());
+        }
+    }
 }
 
 fn get_inventory(state: &SharedState, client_id: usize) {
@@ -288,6 +332,7 @@ fn get_inventory(state: &SharedState, client_id: usize) {
         .map(|u| u.role_game)
         .unwrap_or(false);
     if !role_game {
+        warn!("Non-game user tried to get inventory");
         return;
     }
 
@@ -318,6 +363,7 @@ fn get_stats(state: &SharedState, client_id: usize) {
         .map(|u| u.role_game)
         .unwrap_or(false);
     if !role_game {
+        warn!("Non-game user tried to get stats");
         return;
     }
 
@@ -348,6 +394,7 @@ fn action_swap(state: &SharedState, client_id: usize, action: ClientActionSwap) 
         .map(|u| u.role_game)
         .unwrap_or(false);
     if !role_game {
+        warn!("Non-game user tried to swap items");
         return;
     }
 
@@ -382,6 +429,7 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
         .map(|u| u.role_game)
         .unwrap_or(false);
     if !role_game {
+        warn!("Non-game user tried to merge items");
         return;
     }
 
@@ -425,6 +473,7 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
         .map(|u| u.role_game)
         .unwrap_or(false);
     if !role_game {
+        warn!("Non-game user tried to buy item");
         return;
     }
 
@@ -450,7 +499,6 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
             // Broadcast inventory state to reset client state
             let inventory = state.game.user_client_inventory(&state.config, user_id);
             if let Some(inventory) = inventory {
-                // TODO: only broadcast changed values (money, energy)
                 let msg = MsgSendKind::Inventory(inventory);
                 send_to_user(&state, Some(client_id), user_id, &msg.into());
             }
@@ -506,6 +554,7 @@ fn action_sell(state: &SharedState, client_id: usize, action: ClientActionSell) 
         .map(|u| u.role_game)
         .unwrap_or(false);
     if !role_game {
+        warn!("Non-game user tried to sell item");
         return;
     }
 
@@ -542,6 +591,7 @@ fn action_scan_code(state: &SharedState, client_id: usize) {
         .map(|u| u.role_game)
         .unwrap_or(false);
     if !role_game {
+        warn!("Non-game user tried to scan code");
         return;
     }
 

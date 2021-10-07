@@ -86,6 +86,9 @@ pub enum MsgRecvKind {
     /// Set whether the game is running.
     SetGameRunning(bool),
 
+    /// Reset game.
+    ResetGame,
+
     /// Request inventory state update.
     GetInventory,
 

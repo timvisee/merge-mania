@@ -78,11 +78,24 @@ export default {
     },
 
     reset() {
-        console.debug("[admin] Reset game");
+        // Show confirmation dialog
+        this.$bvModal.msgBoxConfirm('This will reset the game and all user inventories. Are you sure you want to continue?', {
+            title: 'Reset game?',
+            okVariant: 'danger',
+            okTitle: 'Reset',
+            cancelTitle: 'Cancel',
+            footerClass: 'p-2',
+            hideHeaderClose: false,
+            centered: true
+        })
+        .then(confirmed => {
+            if(!confirmed)
+                return;
 
-        // TODO: implement this
-
-        alert('not yet implemented');
+            // Send reset command
+            console.debug("[admin] Reset game");
+            this.app.socket.send('reset_game');
+        });
     },
   },
 };

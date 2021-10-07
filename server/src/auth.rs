@@ -212,6 +212,16 @@ impl ClientManager {
         }
     }
 
+    /// Get a list of connected client IDs.
+    pub fn client_ids(&self) -> Vec<usize> {
+        self.clients
+            .read()
+            .unwrap()
+            .iter()
+            .map(|c| c.client_id)
+            .collect()
+    }
+
     /// Find the user ID for a given client.
     pub fn client_user_id(&self, client_id: usize) -> Option<u32> {
         let clients = self.clients.read().unwrap();
