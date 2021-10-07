@@ -222,18 +222,47 @@ fn get_game(state: &SharedState, client_id: usize) {
     let msg = MsgSendKind::GameState(state.game.running());
     send_to_client(&state, client_id, &msg.into());
 
-    // Send item configuration
-    let msg = MsgSendKind::ConfigItems(state.config.items.clone());
-    send_to_client(&state, client_id, &msg.into());
+    // Find client user ID
+    let user_id = match state.clients.client_user_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
 
-    // Also send inventory state
-    get_inventory(state, client_id);
+    // Check if user has user role
+    let role_game = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_game)
+        .unwrap_or(false);
+
+    if role_game {
+        // Send item configuration
+        let msg = MsgSendKind::ConfigItems(state.config.items.clone());
+        send_to_client(&state, client_id, &msg.into());
+
+        // Also send inventory state
+        get_inventory(state, client_id);
+    }
 }
 
 fn set_game_running(state: &SharedState, client_id: usize, running: bool) {
     debug!("Client {} invoked set game running: {}", client_id, running);
 
-    // TODO: user must be admin!
+    // Find client user ID
+    let user_id = match state.clients.client_user_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // User must be admin
+    let role_admin = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_admin)
+        .unwrap_or(false);
+    if !role_admin {
+        return;
+    }
 
     // Set running state
     state.game.set_running(running);
@@ -251,6 +280,16 @@ fn get_inventory(state: &SharedState, client_id: usize) {
         Some(id) => id,
         None => return,
     };
+
+    // User must have game role
+    let role_game = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_game)
+        .unwrap_or(false);
+    if !role_game {
+        return;
+    }
 
     // Get inventory
     let mut inventory = match state.game.user_client_inventory(&state.config, user_id) {
@@ -272,6 +311,16 @@ fn get_stats(state: &SharedState, client_id: usize) {
         None => return,
     };
 
+    // User must have game role
+    let role_game = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_game)
+        .unwrap_or(false);
+    if !role_game {
+        return;
+    }
+
     // Get stats
     let mut stats = match state.game.user_client_stats(&state.config, user_id) {
         Some(stats) => stats,
@@ -291,6 +340,16 @@ fn action_swap(state: &SharedState, client_id: usize, action: ClientActionSwap) 
         Some(id) => id,
         None => return,
     };
+
+    // User must have game role
+    let role_game = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_game)
+        .unwrap_or(false);
+    if !role_game {
+        return;
+    }
 
     // Do swap, get inventory
     let mut inventory =
@@ -315,6 +374,16 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
         Some(id) => id,
         None => return,
     };
+
+    // User must have game role
+    let role_game = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_game)
+        .unwrap_or(false);
+    if !role_game {
+        return;
+    }
 
     // TODO: ensure we can merge
 
@@ -348,6 +417,16 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
         Some(id) => id,
         None => return,
     };
+
+    // User must have game role
+    let role_game = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_game)
+        .unwrap_or(false);
+    if !role_game {
+        return;
+    }
 
     // Resolve item from config
     let item = match state.config.item(&action.item) {
@@ -420,6 +499,16 @@ fn action_sell(state: &SharedState, client_id: usize, action: ClientActionSell) 
         None => return,
     };
 
+    // User must have game role
+    let role_game = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_game)
+        .unwrap_or(false);
+    if !role_game {
+        return;
+    }
+
     // Do sell, get inventory
     let mut inventory = match state.game.user_sell(user_id, &state.config, action.cell) {
         Some(inv) => inv,
@@ -445,6 +534,16 @@ fn action_scan_code(state: &SharedState, client_id: usize) {
         Some(id) => id,
         None => return,
     };
+
+    // User must have game role
+    let role_game = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_game)
+        .unwrap_or(false);
+    if !role_game {
+        return;
+    }
 
     // Run scan code action
     let inventory = match state.game.user_scan_code(user_id, &state.config) {
