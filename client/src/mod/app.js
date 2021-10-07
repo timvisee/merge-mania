@@ -17,6 +17,9 @@ export default {
     // Socket manager.
     socket: null,
 
+    // Game running state.
+    running: null,
+
     // Game state, if available.
     game: null,
 
@@ -35,6 +38,9 @@ export default {
         // Init socket
         this.socket = ws;
         this.socket.connect(this);
+
+        // Register message listeners
+        this.socket.addListener('game_state', (running) => this.running = running);
     },
 
     // Initialize game.

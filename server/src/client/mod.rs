@@ -50,6 +50,9 @@ pub enum MsgSendKind {
     /// Authentication session state.
     Session(ClientSession),
 
+    /// Game state, whether it's running.
+    GameState(bool),
+
     /// Game item configuration.
     ConfigItems(HashMap<ItemRef, ConfigItem>),
 

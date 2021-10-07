@@ -4,6 +4,18 @@
 
     <div v-else class="text-center">
         <div class="game">
+
+            <!-- Pause indicator -->
+            <b-alert v-if="!app.running" show variant="warning">
+                <img src="/sprites/pause-button.png"
+                    class="pause-icon"
+                    title="Paused"
+                    alt="Paused"
+                    draggable="false"
+                />
+                Game paused
+            </b-alert>
+
             <div class="header">
                 <h1 class="h3 fw-normal title">
                     <span v-if="$auth.session">{{ $auth.session.name }}</span>
@@ -497,6 +509,14 @@ span.subtle {
 
 .tabs {
     overflow-x: auto;
+}
+
+.pause-icon {
+    width: 1em;
+    height: 1em;
+    margin: 0 0.2em 0 0;
+    position: relative;
+    top: -1px;
 }
 
 .game {

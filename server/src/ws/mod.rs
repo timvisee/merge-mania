@@ -132,6 +132,10 @@ async fn handle_auth(
 
 /// Send current state to client.
 async fn send_initial(state: SharedState, client_id: usize, session: &Session) {
+    // Send game state
+    let msg = MsgSendKind::GameState(state.game.running);
+    send_to_client(&state, client_id, &msg.into());
+
     // Send session state
     let msg = MsgSendKind::Session(ClientSession::from_session(&state.config, session));
     send_to_client(&state, client_id, &msg.into());
@@ -205,6 +209,10 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
 
 fn get_game(state: &SharedState, client_id: usize) {
     debug!("Client {} invoked get game", client_id);
+
+    // Send game state
+    let msg = MsgSendKind::GameState(state.game.running);
+    send_to_client(&state, client_id, &msg.into());
 
     // Send item configuration
     let msg = MsgSendKind::ConfigItems(state.config.items.clone());
