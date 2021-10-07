@@ -16,6 +16,7 @@
                 Game paused
             </b-alert>
 
+            <!-- Stats header -->
             <div class="header">
                 <h1 class="h3 fw-normal title">
                     <span v-if="$auth.session">{{ $auth.session.name }}</span>
@@ -32,6 +33,7 @@
                 </h5>
             </div>
 
+            <!-- Toolbar -->
             <b-button-group class="toolbar tabs w-100" size="lg">
                 <b-button
                     type="button"
@@ -93,6 +95,7 @@
                 </div>
             </div>
 
+            <!-- Action buttons -->
             <b-button-group class="toolbar w-100" size="lg">
                 <b-button
                     type="button"

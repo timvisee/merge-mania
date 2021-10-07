@@ -34,10 +34,10 @@ export default {
         // Register message listeners
         this.app.socket.addListener('inventory', (data) => this.onMsgInventory(data));
         this.app.socket.addListener('inventory_balances', (data) => this.onMsgInventoryBalances(data));
-        this.app.socket.addListener('inventory_cell', (data) => this.onMsgInventoryCell(data));
-        this.app.socket.addListener('inventory_discovered', (data) => this.onMsgInventoryDiscovered(data));
-        this.app.socket.addListener('config_items', (data) => this.onMsgConfigItems(data));
-        this.app.socket.addListener('stats', (data) => this.onMsgStats(data));
+        this.app.socket.addListener('inventory_cell', (data) => this.setCell(data.index, data.item));
+        this.app.socket.addListener('inventory_discovered', (discovered) => this.inventory.discovered = discovered);
+        this.app.socket.addListener('config_items', (items) => this.items = items);
+        this.app.socket.addListener('stats', (stats) => this.stats = stats);
 
         // Ask server for game state
         this.pollGameState();
@@ -211,33 +211,5 @@ export default {
     onMsgInventoryBalances(data) {
         this.inventory.money = data.money;
         this.inventory.energy = data.energy;
-    },
-
-    /**
-     * Handle inventory cell message from server.
-     */
-    onMsgInventoryCell(data) {
-        this.setCell(data.index, data.item);
-    },
-
-    /**
-     * Handle inventory discovered message from server.
-     */
-    onMsgInventoryDiscovered(discovered) {
-        this.inventory.discovered = discovered;
-    },
-
-    /**
-     * Handle config items message from server.
-     */
-    onMsgConfigItems(items) {
-        this.items = items;
-    },
-
-    /**
-     * Handle stats message from server.
-     */
-    onMsgStats(stats) {
-        this.stats = stats;
     },
 };
