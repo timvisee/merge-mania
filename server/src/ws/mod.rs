@@ -212,7 +212,8 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
         MsgRecvKind::ActionMerge(action) => action_merge(state, client_id, action),
         MsgRecvKind::ActionBuy(action) => action_buy(state, client_id, action),
         MsgRecvKind::ActionSell(action) => action_sell(state, client_id, action),
-        MsgRecvKind::ActionScanCode => action_scan_code(state, client_id),
+        MsgRecvKind::ActionScanCode(token) => action_scan_code(state, client_id, Some(token)),
+        MsgRecvKind::MockScanCode => action_scan_code(state, client_id, None),
         MsgRecvKind::GetLeaderboard => get_leaderboard(state, client_id),
     }
 }
@@ -576,7 +577,10 @@ fn action_sell(state: &SharedState, client_id: usize, action: ClientActionSell) 
     send_to_user(&state, Some(client_id), user_id, &msg.into());
 }
 
-fn action_scan_code(state: &SharedState, client_id: usize) {
+/// Invoke action to scan a QR code.
+///
+/// When the token is `None` it is always accepted if the user is admin.
+fn action_scan_code(state: &SharedState, client_id: usize, token: Option<String>) {
     debug!("Client {} invoked scan code action", client_id);
 
     // Find client user ID
@@ -585,8 +589,13 @@ fn action_scan_code(state: &SharedState, client_id: usize) {
         None => return,
     };
 
-    // User must have game role
+    // User must have correct roles
     let role_game = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_game)
+        .unwrap_or(false);
+    let role_admin = state
         .config
         .user(user_id)
         .map(|u| u.role_game)
@@ -595,6 +604,16 @@ fn action_scan_code(state: &SharedState, client_id: usize) {
         warn!("Non-game user tried to scan code");
         return;
     }
+    if token.is_none() && !role_admin {
+        warn!("Non-admin user tried to mock a code scan");
+        return;
+    }
+
+    // TODO: validate code!
+
+    // Send QR code result
+    let msg = MsgSendKind::CodeResult(true);
+    send_to_client(&state, client_id, &msg.into());
 
     // Run scan code action
     let inventory = match state.game.user_scan_code(user_id, &state.config) {
@@ -608,10 +627,6 @@ fn action_scan_code(state: &SharedState, client_id: usize) {
         energy: inventory.energy,
     };
     send_to_user(&state, Some(client_id), user_id, &msg.into());
-
-    // Send not yet implemented toast
-    let msg = MsgSendKind::Toast(crate::lang::NO_CODE_FREE_ENERGY.into());
-    send_to_client(&state, client_id, &msg.into());
 }
 
 fn get_leaderboard(state: &SharedState, client_id: usize) {

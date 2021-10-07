@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Home from "./views/Home.vue";
 import Login from "./views/Login.vue";
 import Game from "./views/Game.vue";
+import Scan from "./views/Scan.vue";
 import Stats from "./views/Stats.vue";
 import Leaderboard from "./views/Leaderboard.vue";
 import Admin from "./views/Admin.vue";
@@ -30,6 +31,11 @@ export default new Router({
       path: "/game",
       name: "game",
       component: Game,
+    },
+    {
+      path: "/scan",
+      name: "scan",
+      component: Scan,
     },
     {
       path: "/stats",

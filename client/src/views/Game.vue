@@ -6,7 +6,7 @@
         <div class="game">
 
             <!-- Pause indicator -->
-            <b-alert v-if="!app.running" show variant="warning">
+            <b-alert v-if="!app.running" show variant="dark">
                 <img src="/sprites/pause-button.png"
                     class="pause-icon blink"
                     title="Paused"
@@ -103,6 +103,13 @@
                     variant="outline-dark"
                     @click.stop.prevent="actionScanCode"
                     squared>Scan code</b-button>
+                <b-button
+                    v-if="$auth.auth && $auth.hasRoleAdmin()"
+                    type="button"
+                    class="w-100"
+                    variant="outline-danger"
+                    @click.stop.prevent="actionMockScanCode"
+                    squared>Mock scan code</b-button>
             </b-button-group>
         </div>
 
@@ -279,6 +286,10 @@ export default {
         this.$router.push({name: "login"});
     },
 
+    showScanner() {
+        this.$router.push({name: "scan"});
+    },
+
     /**
      * Toggle the current mode.
      */
@@ -437,9 +448,14 @@ export default {
 
     actionScanCode() {
         console.debug("[game] Scanning code");
+        this.showScanner();
+    },
+
+    actionMockScanCode() {
+        console.debug("[game] Mock scan code");
 
         // Send scan code action
-        this.app.socket.send('action_scan_code', null);
+        this.app.socket.send('mock_scan_code', null);
     },
 
     /**

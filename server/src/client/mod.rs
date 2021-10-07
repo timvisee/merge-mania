@@ -76,6 +76,9 @@ pub enum MsgSendKind {
 
     /// Toast notification.
     Toast(String),
+
+    /// Whether the last scanned QR code was valid.
+    CodeResult(bool),
 }
 
 /// Message kinds to receive from a client.
@@ -111,7 +114,10 @@ pub enum MsgRecvKind {
     ActionSell(ClientActionSell),
 
     /// Action: scan a code to gain energy.
-    ActionScanCode,
+    ActionScanCode(String),
+
+    /// Mock the action to scan a code.
+    MockScanCode,
 
     /// Get leaderboard scores.
     GetLeaderboard,
