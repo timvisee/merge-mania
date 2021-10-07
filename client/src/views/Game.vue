@@ -8,7 +8,7 @@
             <!-- Pause indicator -->
             <b-alert v-if="!app.running" show variant="warning">
                 <img src="/sprites/pause-button.png"
-                    class="pause-icon"
+                    class="pause-icon blink"
                     title="Paused"
                     alt="Paused"
                     draggable="false"
@@ -517,6 +517,16 @@ span.subtle {
     margin: 0 0.2em 0 0;
     position: relative;
     top: -1px;
+}
+
+.blink {
+    animation: blink-animation 1s steps(2, start) infinite;
+}
+
+@keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
 }
 
 .game {
