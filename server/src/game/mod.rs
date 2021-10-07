@@ -194,11 +194,13 @@ impl Game {
         // TODO: ensure items are same type
         // TODO: ensure item can be upgraded
 
-        let upgraded = team.inventory.grid.items[cell as usize]
-            .as_mut()
-            // TODO: this unwrap sometimes fails
-            .unwrap()
-            .upgrade(config);
+        let upgraded = match team.inventory.grid.items[cell as usize].as_mut() {
+            Some(cell) => cell.upgrade(config),
+            None => {
+                warn!("Failed to upgrade item, cell is empty. Possible data race?");
+                return None;
+            }
+        };
         if upgraded {
             team.inventory.grid.items[other as usize] = None;
         }
