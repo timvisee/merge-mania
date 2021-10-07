@@ -95,6 +95,11 @@ export default {
         // Process send queue
         this.sendQueue.forEach((msg) => this.socket.send(JSON.stringify(msg)));
         this.sendQueue = [];
+
+        // Force refresh game/config/inventory state for any missed events
+        // TODO: this is a hack, listen for reconnects in game.js itself
+        if(this.app.game != null)
+            this.app.game.pollGameState();
     },
 
     /**
