@@ -4,6 +4,7 @@ import Home from "./views/Home.vue";
 import Login from "./views/Login.vue";
 import Game from "./views/Game.vue";
 import Stats from "./views/Stats.vue";
+import Admin from "./views/Admin.vue";
 import About from "./views/About.vue";
 
 Vue.use(Router);
@@ -33,6 +34,11 @@ export default new Router({
       path: "/stats",
       name: "stats",
       component: Stats,
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      component: Admin,
     },
     {
       path: "/about",

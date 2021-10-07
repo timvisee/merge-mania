@@ -28,6 +28,10 @@
                     <router-link v-if="auth.auth" :to="{name: 'stats'}" class="nav-link">
                         Stats
                     </router-link>
+                    <!-- TODO: only show if admin -->
+                    <router-link v-if="auth.auth" :to="{name: 'admin'}" class="nav-link">
+                        Admin
+                    </router-link>
                     <router-link :to="{name: 'about'}" class="nav-link">
                         About
                     </router-link>
