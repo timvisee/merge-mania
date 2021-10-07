@@ -1,7 +1,6 @@
 'use strict';
 
 import axios from "axios";
-import cookies from "./cookies";
 
 /**
  * Stores the session token.
@@ -11,28 +10,28 @@ export default {
      * Get current session token.
      */
     getToken() {
-        return cookies.getCookie("session") || null;
+        return localStorage.getItem('session') || null;
     },
 
     /**
      * Check whether a session token is set.
      */
     hasToken() {
-        return (cookies.getCookie("session") || null) != null;
+        return this.getToken() != null;
     },
 
     /**
      * Set current session token.
      */
     setToken(token) {
-        cookies.setCookie("session", token, 365);
+        localStorage.setItem('session', token);
     },
 
     /**
      * Reset current session token.
      */
     resetToken() {
-        cookies.setCookie("session", "", 0);
+        localStorage.removeItem('session');
     },
 };
 
