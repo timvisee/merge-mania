@@ -6,17 +6,17 @@
 
         <h1 class="h3 mb-3 fw-normal">Stats</h1>
 
-        <table v-if="app.game.stats" class="simple-table">
-            <tr><td>Merges:</td><td>{{ app.game.stats.merge_count }}</td></tr>
-            <tr><td>Buys:</td><td>{{ app.game.stats.buy_count }}</td></tr>
-            <tr><td>Sells:</td><td>{{ app.game.stats.sell_count }}</td></tr>
-            <tr><td>Swaps:</td><td>{{ app.game.stats.swap_count }}</td></tr>
-            <tr><td>Codes:</td><td>{{ app.game.stats.code_count }}</td></tr>
-            <tr><td>Drops:</td><td>{{ app.game.stats.drop_count }}</td></tr>
-            <tr><td>Money spent:</td><td>{{ app.game.stats.money_spent }}</td></tr>
-            <tr><td>Money earned:</td><td>{{ app.game.stats.money_earned }}</td></tr>
-            <tr><td>Energy spent:</td><td>{{ app.game.stats.energy_spent }}</td></tr>
-            <tr><td>Energy earned:</td><td>{{ app.game.stats.energy_earned }}</td></tr>
+        <table v-if="stats" class="simple-table">
+            <tr><td>Merges:</td><td>{{ stats.merge_count }}</td></tr>
+            <tr><td>Buys:</td><td>{{ stats.buy_count }}</td></tr>
+            <tr><td>Sells:</td><td>{{ stats.sell_count }}</td></tr>
+            <tr><td>Swaps:</td><td>{{ stats.swap_count }}</td></tr>
+            <tr><td>Codes:</td><td>{{ stats.code_count }}</td></tr>
+            <tr><td>Drops:</td><td>{{ stats.drop_count }}</td></tr>
+            <tr><td>Money spent:</td><td>{{ stats.money_spent }}</td></tr>
+            <tr><td>Money earned:</td><td>{{ stats.money_earned }}</td></tr>
+            <tr><td>Energy spent:</td><td>{{ stats.energy_spent }}</td></tr>
+            <tr><td>Energy earned:</td><td>{{ stats.energy_earned }}</td></tr>
         </table>
 
         <b-button
@@ -43,13 +43,9 @@ export default {
   data() {
     return {
       app: this.$app,
+      stats: null,
       refreshing: false,
     };
-  },
-  watch: {
-    'app.game.stats': function() {
-        this.refreshing = false
-    },
   },
   created() {
     // Check auth, initialize game or redirect to login
@@ -65,8 +61,11 @@ export default {
                 return;
             }
 
+            // Attach stats message listener
+            this.$app.socket.addListener('stats', (data) => this.onStats(data));
+
             // Refresh stats if not yet fetched
-            if(this.app.game.stats == null)
+            if(this.stats == null)
                 this.refresh();
         });
   },
@@ -79,6 +78,11 @@ export default {
         // Fetch stats
         this.refreshing = true;
         this.app.socket.send('get_stats', null);
+    },
+
+    onStats(data) {
+        this.stats = data;
+        this.refreshing = false;
     },
   },
 };

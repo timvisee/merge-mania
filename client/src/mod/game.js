@@ -21,9 +21,6 @@ export default {
     // Game configuration items.
     items: null,
 
-    // User stats.
-    stats: null,
-
     // Initialize.
     init(app) {
         console.log('[game] Initializing...');
@@ -37,7 +34,6 @@ export default {
         this.app.socket.addListener('inventory_cell', (data) => this.setCell(data.index, data.item));
         this.app.socket.addListener('inventory_discovered', (discovered) => this.inventory.discovered = discovered);
         this.app.socket.addListener('config_items', (items) => this.items = items);
-        this.app.socket.addListener('stats', (stats) => this.stats = stats);
 
         // Ask server for game state
         this.pollGameState();
