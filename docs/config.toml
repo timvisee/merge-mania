@@ -11,6 +11,29 @@ reset = false
 start = true
 
 
+
+# Outpost configuration
+
+[outposts]
+# Secret value used as salt for QR-code validation, should be kept secret
+secret = "PUT_SECRET_HERE"
+
+# Minimum/maximum money to get for each scan
+money_min = 10
+money_max = 20
+
+# Money multiplier, when scanning different outposts (example: 0n)
+money_multiplier = 5
+
+# Minimum/maximum energy to get for each scan
+energy_min = 8
+energy_max = 32
+
+# Energy multiplier, when scanning different outposts (example: 5n)
+energy_multiplier = 8
+
+
+
 # Team defaults
 
 [defaults]

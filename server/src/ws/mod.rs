@@ -623,22 +623,31 @@ fn action_scan_code(state: &SharedState, client_id: usize, token: Option<String>
     let outpost_id = if let Some(token) = token {
         crate::game::code::validate_outpost_token(&state.config, &token)
     } else {
-        Some(rand::thread_rng().gen())
+        Some(rand::thread_rng().gen_range(1..=10))
     };
-
-    // Send QR code result
-    let msg = MsgSendKind::CodeResult(outpost_id.is_some());
-    send_to_client(&state, client_id, &msg.into());
     if outpost_id.is_none() {
         warn!("User scanned invalid code");
+        let msg = MsgSendKind::CodeResult(false);
+        send_to_client(&state, client_id, &msg.into());
         return;
     }
 
     // Run scan code action
-    let inventory = match state.game.user_scan_code(user_id, &state.config) {
+    let inventory = match state
+        .game
+        .user_scan_code(user_id, &state.config, outpost_id.unwrap())
+    {
         Some(inventory) => inventory,
-        None => return,
+        None => {
+            warn!("User scanned same post as last time");
+            let msg = MsgSendKind::CodeResult(false);
+            send_to_client(&state, client_id, &msg.into());
+            return;
+        }
     };
+
+    let msg = MsgSendKind::CodeResult(true);
+    send_to_client(&state, client_id, &msg.into());
 
     // Send user balances update
     let msg = MsgSendKind::InventoryBalances {
@@ -746,7 +755,7 @@ pub fn send_to_client(
     client_id: usize,
     msg: &MsgSend,
 ) -> serde_json::Result<()> {
-    debug!("WS({0}): send msg to client {0}", client_id);
+    trace!("WS({0}): send msg to client {0}", client_id);
 
     // Serialize
     let msg = serde_json::to_string(msg)?;

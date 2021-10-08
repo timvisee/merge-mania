@@ -8,8 +8,8 @@ use crate::config::Config;
 /// How often to change hash.
 const INTERVAL_SECS: u64 = 30;
 
-/// Number of hashes valid before and after the current hash.
-const VALID_AROUND: i64 = 2;
+/// Number of extra hashes valid before the current hash.
+const VALID_BEFORE: i64 = 2;
 
 /// Get current outpost token.
 pub fn get_outpost_token(config: &Config, id: u32) -> String {
@@ -26,9 +26,10 @@ pub fn validate_outpost_token(config: &Config, token: &str) -> Option<u32> {
     let (id, hash) = token.split_once(":")?;
     let id: u32 = id.parse().ok()?;
 
-    // Validate, including offset times around it
-    let valid =
-        (-VALID_AROUND..=VALID_AROUND).any(|offset| get_hash_at(config, id, offset) == hash);
+    // Validate, including offset times before it
+    let valid = (-VALID_BEFORE..=0)
+        .rev()
+        .any(|offset| get_hash_at(config, id, offset) == hash);
     if valid {
         Some(id)
     } else {

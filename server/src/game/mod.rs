@@ -329,24 +329,39 @@ impl Game {
     }
 
     /// Scan a code for a user.
-    pub fn user_scan_code(&self, user_id: u32, config: &Config) -> Option<ClientInventory> {
+    pub fn user_scan_code(
+        &self,
+        user_id: u32,
+        config: &Config,
+        outpost_id: u32,
+    ) -> Option<ClientInventory> {
         self.ensure_user(config, user_id);
         let users = self.users.read().unwrap();
         let mut user = users.get(&user_id).unwrap().write().unwrap();
 
-        // TODO: implement this!
-        warn!("Code scanning not yet implemented");
+        // Register the outpost, invalid if None is returned
+        let unique_count = match user.register_outpost(outpost_id) {
+            Some(unique) => unique,
+            None => return None,
+        };
 
-        // Gain some money and energy for now
-        // TODO: grab these values from configuration
-        const MONEY_INC: u64 = 10;
-        const ENERGY_INC: u64 = 5;
-        // user.inventory.money += MONEY_INC;
-        user.inventory.energy += ENERGY_INC;
+        // Calculate money and energy to earn
+        let config = &config.outposts;
+        let money = (config.money_multiplier * unique_count as u64)
+            .max(config.money_min)
+            .min(config.money_max);
+        let energy = (config.energy_multiplier * unique_count as u64)
+            .max(config.energy_min)
+            .min(config.energy_max);
+
+        // Add earned money and energy to inventory
+        user.inventory.money += money;
+        user.inventory.energy += energy;
 
         // Increase stats
         user.stats.inc_scan_code();
-        user.stats.inc_energy_earned(ENERGY_INC);
+        user.stats.inc_money_earned(money);
+        user.stats.inc_energy_earned(energy);
 
         let inventory = ClientInventory::from_game(&user.inventory)
             .expect("failed to transpose game to client inventory");

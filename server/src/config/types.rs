@@ -18,6 +18,31 @@ pub struct ConfigGame {
     pub start: bool,
 }
 
+/// Outposts configuration.
+#[derive(Deserialize, Debug, Clone)]
+pub struct ConfigOutposts {
+    /// Secret value.
+    pub secret: String,
+
+    /// Minimum money to earn.
+    pub money_min: u64,
+
+    /// Maximum money to earn.
+    pub money_max: u64,
+
+    /// Money multiplier.
+    pub money_multiplier: u64,
+
+    /// Minimum energy to earn.
+    pub energy_min: u64,
+
+    /// Maximum energy to earn.
+    pub energy_max: u64,
+
+    /// Energy multiplier.
+    pub energy_multiplier: u64,
+}
+
 /// Represents a configured user.
 ///
 /// May be a game user or admin.

@@ -25,6 +25,11 @@ pub struct GameUser {
 
     #[serde(default)]
     pub stats: GameUserStats,
+
+    /// List of scanned outposts in order.
+    /// Last item is scanned most recently.
+    #[serde(default)]
+    pub outposts: VecDeque<u32>,
 }
 
 impl GameUser {
@@ -36,6 +41,7 @@ impl GameUser {
                 .unwrap_or_else(|| GameInventory::default()),
             config: config.user(id).cloned(),
             stats: GameUserStats::default(),
+            outposts: VecDeque::new(),
         }
     }
 
@@ -58,6 +64,32 @@ impl GameUser {
     /// Returns list of changed inventory cells and `true` if a new item is discovered.
     pub fn update(&mut self, config: &Config, tick: u64) -> (HashSet<u8>, bool, u32) {
         self.inventory.update(config, tick)
+    }
+
+    /// Register a new outpost in the list.
+    ///
+    /// Returns number of unique outposts scanned in between.
+    /// Returns `None` if this was the most recently scanned outpost.
+    pub fn register_outpost(&mut self, outpost_id: u32) -> Option<usize> {
+        // Determine how many unique outposts are scanned in order
+        let unique_count = self
+            .outposts
+            .iter()
+            .rev()
+            .position(|id| *id == outpost_id)
+            .unwrap_or(self.outposts.len() + 1);
+        if unique_count == 0 {
+            return None;
+        }
+
+        // Remove any existing entry from the list, because we'll add it again
+        if let Some(index) = self.outposts.iter().position(|id| *id == outpost_id) {
+            self.outposts.remove(index);
+        }
+
+        // Add it to the list
+        self.outposts.push_back(outpost_id);
+        Some(unique_count)
     }
 }
 
