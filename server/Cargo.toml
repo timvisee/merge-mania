@@ -8,6 +8,7 @@ name = "mms"
 path = "src/main.rs"
 
 [dependencies]
+base64 = "0.13"
 dotenv = "0.15"
 futures = "0.3"
 log = "0.4"
@@ -15,6 +16,7 @@ pretty_env_logger = "0.4"
 rand = "0.8"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+sha-1 = "0.9"
 tokio = { version = "1", features = ["rt-multi-thread", "signal", "time"] }
 tokio-stream = "0.1"
 toml = "0.5"

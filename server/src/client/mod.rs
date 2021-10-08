@@ -79,6 +79,9 @@ pub enum MsgSendKind {
 
     /// Whether the last scanned QR code was valid.
     CodeResult(bool),
+
+    /// Send token to outpost to render.
+    OutpostToken(String),
 }
 
 /// Message kinds to receive from a client.
@@ -121,4 +124,7 @@ pub enum MsgRecvKind {
 
     /// Get leaderboard scores.
     GetLeaderboard,
+
+    /// Request new outpost token to render for given outpost ID.
+    GetOutpostToken(u32),
 }

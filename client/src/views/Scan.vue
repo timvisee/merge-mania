@@ -20,11 +20,10 @@
             Game paused
         </b-alert>
 
-        <h1 class="h3 mb-3 fw-normal">Scanner</h1>
-
         <qrcode-stream class="viewer" :camera="camera" :track="paintOutline" @decode="onDecode" @init="onInit">
 
             <div v-if="validating" class="viewer-overlay">
+                <!-- TODO: use light loader -->
                 <loader />
             </div>
 
@@ -55,11 +54,10 @@
 </template>
 
 <script>
-import axios from "axios";
 import { QrcodeStream } from 'vue-qrcode-reader'
 
 export default {
-  name: "Stats",
+  name: "Scan",
   data() {
     return {
       app: this.$app,

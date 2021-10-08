@@ -22,6 +22,9 @@ pub struct Config {
     /// Game settings.
     pub game: ConfigGame,
 
+    /// Outposts configuration.
+    pub outposts: ConfigOutposts,
+
     /// Users.
     pub users: Vec<ConfigUser>,
 

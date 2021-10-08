@@ -30,6 +30,16 @@
         <b-button
             type="button"
             size="lg"
+            variant="primary"
+            class="w-100 mt-4"
+            @click.prevent.stop="showOutpostDialog"
+        >
+            Create outpost
+        </b-button>
+
+        <b-button
+            type="button"
+            size="lg"
             variant="outline-danger"
             class="w-100 mt-4"
             @click.prevent.stop="reset"
@@ -37,22 +47,68 @@
             Reset game
         </b-button>
 
+        <!-- Outpost modal -->
+        <b-modal
+            id="admin-outpost-modal"
+            title="Create outpost"
+            centered
+            no-fade
+        >
+            <label for="outpost-name">Name:</label>
+            <b-form-input
+                v-model="outpost.name"
+                id="name"
+                type="text"
+                placeholder="My outpost"
+                class="mb-4"
+                size="lg"
+            ></b-form-input>
+
+            <label for="outpost-id">Unique ID:</label>
+            <b-form-spinbutton
+                id="outpost-id"
+                v-model="outpost.id"
+                min="1"
+                max="99999"
+                class="w-100 mb-4"
+                size="lg"
+            ></b-form-spinbutton>
+
+            <b-button
+                type="button"
+                size="lg"
+                variant="primary"
+                class="w-100"
+                @click.prevent.stop="createOutpost"
+            >
+                Create outpost
+            </b-button>
+
+            <template #modal-footer="{ cancel }">
+                <b-button variant="secondary" @click="cancel()">
+                    Close
+                </b-button>
+            </template>
+        </b-modal>
+
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: "Stats",
   data() {
     return {
       app: this.$app,
+      outpost: {
+        name: localStorage.getItem('outpost.name') || null,
+        id: parseInt(localStorage.getItem('outpost.id')) || 1,
+      },
     };
   },
   created() {
-    // Check auth, initialize game or redirect to login
+    // Check auth, must be admin or redirect to login
     this.$auth
         .isAuth()
         .then((auth) => {
@@ -75,6 +131,20 @@ export default {
 
         // Send play/pause command
         this.app.socket.send('set_game_running', !this.app.running);
+    },
+
+    showOutpostDialog() {
+        // Show outpost modal
+        this.$bvModal.show('admin-outpost-modal');
+    },
+
+    createOutpost() {
+        // Store outpost configuration
+        localStorage.setItem('outpost.id', this.outpost.id);
+        localStorage.setItem('outpost.name', this.outpost.name);
+
+        // Show outpost page
+        this.$router.push({name: "outpost"});
     },
 
     reset() {

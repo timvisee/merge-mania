@@ -455,6 +455,7 @@ checksum = "308cc39be01b73d0d18f82a0e7b2a3df85245f84af96fdddc5d202d27e47b86a"
 name = "merge-mania-server"
 version = "0.1.0"
 dependencies = [
+ "base64",
  "dotenv",
  "futures",
  "log",
@@ -462,6 +463,7 @@ dependencies = [
  "rand 0.8.4",
  "serde",
  "serde_json",
+ "sha-1",
  "tokio",
  "tokio-stream",
  "toml",

@@ -5,6 +5,7 @@ use std::sync::{
 
 use futures::stream::SplitStream;
 use futures::{SinkExt, StreamExt, TryFutureExt};
+use rand::Rng;
 use tokio::sync::{mpsc, RwLock};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use warp::ws::{Message, WebSocket};
@@ -215,6 +216,7 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
         MsgRecvKind::ActionScanCode(token) => action_scan_code(state, client_id, Some(token)),
         MsgRecvKind::MockScanCode => action_scan_code(state, client_id, None),
         MsgRecvKind::GetLeaderboard => get_leaderboard(state, client_id),
+        MsgRecvKind::GetOutpostToken(id) => get_outpost_token(state, client_id, id),
     }
 }
 
@@ -609,11 +611,28 @@ fn action_scan_code(state: &SharedState, client_id: usize, token: Option<String>
         return;
     }
 
-    // TODO: validate code!
+    // Game must be running
+    if !state.game.running() {
+        warn!("User scanned code while game isn't running");
+        let msg = MsgSendKind::CodeResult(false);
+        send_to_client(&state, client_id, &msg.into());
+        return;
+    }
+
+    // Validate token and get outpost ID
+    let outpost_id = if let Some(token) = token {
+        crate::game::code::validate_outpost_token(&state.config, &token)
+    } else {
+        Some(rand::thread_rng().gen())
+    };
 
     // Send QR code result
-    let msg = MsgSendKind::CodeResult(true);
+    let msg = MsgSendKind::CodeResult(outpost_id.is_some());
     send_to_client(&state, client_id, &msg.into());
+    if outpost_id.is_none() {
+        warn!("User scanned invalid code");
+        return;
+    }
 
     // Run scan code action
     let inventory = match state.game.user_scan_code(user_id, &state.config) {
@@ -655,6 +674,37 @@ fn get_leaderboard(state: &SharedState, client_id: usize) {
 
     // Get leaderboard, send to client
     let msg = MsgSendKind::Leaderboard(state.game.leaderboard());
+    send_to_client(&state, client_id, &msg.into());
+}
+
+fn get_outpost_token(state: &SharedState, client_id: usize, outpost_id: u32) {
+    debug!(
+        "Client {} invoked get outpost token for outpost {}",
+        client_id, outpost_id
+    );
+
+    // Find client user ID
+    let user_id = match state.clients.client_user_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // User must have admin role
+    let role_admin = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_admin)
+        .unwrap_or(false);
+    if !role_admin {
+        warn!("Non-game user tried to get outpost token");
+        return;
+    }
+
+    // Generate outpost token and send it back
+    let msg = MsgSendKind::OutpostToken(crate::game::code::get_outpost_token(
+        &state.config,
+        outpost_id,
+    ));
     send_to_client(&state, client_id, &msg.into());
 }
 

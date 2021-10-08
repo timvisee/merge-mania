@@ -7,6 +7,7 @@ import Scan from "./views/Scan.vue";
 import Stats from "./views/Stats.vue";
 import Leaderboard from "./views/Leaderboard.vue";
 import Admin from "./views/Admin.vue";
+import Outpost from "./views/Outpost.vue";
 import About from "./views/About.vue";
 
 Vue.use(Router);
@@ -51,6 +52,11 @@ export default new Router({
       path: "/admin",
       name: "admin",
       component: Admin,
+    },
+    {
+      path: "/outpost",
+      name: "outpost",
+      component: Outpost,
     },
     {
       path: "/about",

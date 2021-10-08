@@ -1,3 +1,4 @@
+pub mod code;
 pub mod types;
 
 use std::collections::{HashMap, HashSet};
