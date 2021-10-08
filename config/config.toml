@@ -98,35 +98,35 @@ role_admin = true
 
 [[users]]
 id = 7
-name = "team 7"
+name = "Team 7"
 password = "team7"
 role_game = true
 role_admin = true
 
 [[users]]
 id = 8
-name = "team 8"
+name = "Team 8"
 password = "team8"
 role_game = true
 role_admin = true
 
 [[users]]
 id = 9
-name = "team 9"
+name = "Team 9"
 password = "team9"
 role_game = true
 role_admin = true
 
 [[users]]
 id = 10
-name = "team 10"
+name = "Team 10"
 password = "team10"
 role_game = true
 role_admin = true
 
 [[users]]
 id = 11
-name = "team 11"
+name = "Team 11"
 password = "team11"
 role_game = true
 role_admin = true
@@ -136,7 +136,7 @@ id = 12
 name = "Bob"
 password = "bob"
 role_game = true
-role_admin = true
+role_admin = false
 
 [[users]]
 id = 13
@@ -163,6 +163,20 @@ role_admin = true
 id = 100
 name = "Admin"
 password = "admin"
+role_game = true
+role_admin = true
+
+[[users]]
+id = 101
+name = "Ruben"
+password = "ruben"
+role_game = true
+role_admin = true
+
+[[users]]
+id = 102
+name = "Gijs"
+password = "gijs"
 role_game = true
 role_admin = true
 
