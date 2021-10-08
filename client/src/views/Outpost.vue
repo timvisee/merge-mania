@@ -4,7 +4,7 @@
 
     <div v-else class="page-small-card text-center mt-5">
 
-        <h1 class="h3 mb-3 fw-normal">{{ outpost.name }}</h1>
+        <h1 class="h3 mb-5 fw-normal">{{ outpost.name }}</h1>
 
         <loader v-if="!token" />
 
@@ -13,6 +13,7 @@
             class="code"
             level="H"
             size="300"
+            render-as="svg"
             :value="token"
         ></qrcode-vue>
 
@@ -43,6 +44,11 @@ export default {
   },
   components: {
     QrcodeVue,
+  },
+  watch: {
+    token: function() {
+        setTimeout(() => this.fixQrSize(), 0);
+    },
   },
   created() {
     // Check auth, must be admin or redirect to login
@@ -90,6 +96,23 @@ export default {
     onToken(token) {
         this.token = token;
     },
+
+    /**
+     * Strip enforced QR code sizes to nicely scale it
+     */
+    fixQrSize() {
+        let code = document.querySelector('.code');
+        if(code === undefined)
+            return;
+
+        let qr = code.childNodes[0];
+        if(qr === undefined)
+            return;
+
+        qr.removeAttribute("width");
+        qr.removeAttribute("height");
+        qr.removeAttribute("style");
+    },
   },
 };
 </script>
@@ -101,11 +124,17 @@ export default {
     padding: 3em;
     background: white;
     aspect-ratio: 1.0;
+
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    align-content: stretch;
 }
 
-.code canvas {
-    width: auto !important;
-    height: auto !important;
+.code canvas,
+.code svg {
+    flex-grow: 1;
+    align-self: stretch;
     aspect-ratio: 1.0;
 }
 </style>
