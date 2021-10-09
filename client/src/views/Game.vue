@@ -70,7 +70,7 @@
                 <div v-for="(cell, index) in app.game.inventory.items"
                     class="cell"
                     @click.stop="toggleSelect(index)"
-                    v-bind:class="{ select: selected == index, item: cell, factory: cell && cell.drop_interval, subtle: isSubtle(index), plus: !cell && mode == 'buy' && buyItem, odd: isOdd(index) }"
+                    v-bind:class="{ select: selected == index, item: cell, factory: cell && cell.drop_interval, subtle: isSubtle(index), plus: !cell && mode == 'buy' && buyItem }"
                 >
                     <div v-if="cell">
                         <div class="overlay">
@@ -463,14 +463,6 @@ export default {
     },
 
     /**
-     * Whether a cell is odd.
-     */
-    isOdd(index) {
-        return ((index % 16) < 8 && (index % 2) == 0)
-            || ((index % 16) >= 8 && (index % 2) == 1);
-    },
-
-    /**
      * Whether a cell should be shown as subtle.
      */
     isSubtle(index) {
@@ -644,7 +636,7 @@ span.subtle {
 
     border: black solid 1px;
     box-sizing: border-box;
-    background: #9d9696;
+    background: #eee;
 
     /* Disable selecting cells. */
     -webkit-user-select: none;
@@ -663,27 +655,14 @@ span.subtle {
     padding: var(--grid-space);
     box-sizing: content-box;
 
+    border: gray dashed 1px;
     border-radius: 0.15em;
     text-align: center;
     cursor: pointer;
-
-    background-image: url("/sprites/tile-light.png");
-    background-clip: padding-box;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
-.game-grid .cell.odd {
-    background-image: url("/sprites/tile-dark.png");
 }
 
 .game-grid .cell.factory {
-    background-image: url("/sprites/tile-light-factory.png");
-}
-
-.game-grid .cell.factory.odd {
-    background-image: url("/sprites/tile-dark-factory.png");
+    background: lightblue;
 }
 
 .game-grid .cell.select {
