@@ -186,12 +186,11 @@ impl Game {
         let mut user = users.get(&user_id).unwrap().write().unwrap();
 
         // TODO: validate indices
-        // TODO: ensure first cell contains item
 
         // Swap cells
-        let tmp = user.inventory.grid.items[cell as usize].take();
+        let tmp = user.inventory.grid.items[cell as usize].take()?;
         user.inventory.grid.items[cell as usize] = user.inventory.grid.items[other as usize].take();
-        user.inventory.grid.items[other as usize] = tmp;
+        user.inventory.grid.items[other as usize] = Some(tmp);
 
         // Increase stats
         user.stats.inc_swap();
@@ -216,16 +215,19 @@ impl Game {
         let mut user = users.get(&user_id).unwrap().write().unwrap();
 
         // TODO: validate indices
-        // TODO: ensure items are same type
-        // TODO: ensure item can be upgraded
 
-        let upgraded = match user.inventory.grid.items[cell as usize].as_mut() {
-            Some(cell) => cell.upgrade(config),
-            None => {
-                warn!("Failed to upgrade item, cell is empty. Possible data race?");
-                return None;
-            }
-        };
+        // Ensure user can merge
+        let cell_item = user.inventory.grid.items[cell as usize].as_ref()?;
+        let other_item = user.inventory.grid.items[other as usize].as_ref()?;
+        if !cell_item.can_merge_with(&other_item) {
+            warn!("Failed to merge items, they're different, Possible data race?");
+            return None;
+        }
+
+        // Upgrade the item
+        let upgraded = user.inventory.grid.items[cell as usize]
+            .as_mut()?
+            .upgrade(config);
         if upgraded {
             user.inventory.grid.items[other as usize] = None;
         }
@@ -279,7 +281,6 @@ impl Game {
         let mut user = users.get(&user_id).unwrap().write().unwrap();
 
         // TODO: validate indices
-        // TODO: ensure user has costs, pay costs
 
         let item_id = item.id.clone();
         let mut cell = &mut user.inventory.grid.items[cell as usize];

@@ -437,8 +437,6 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
         return;
     }
 
-    // TODO: ensure we can merge
-
     // Do merge, get inventory
     let (mut inventory, discovered) =
         match state

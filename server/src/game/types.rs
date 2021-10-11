@@ -177,6 +177,13 @@ impl GameItem {
         true
     }
 
+    /// Check whether this item can be merged with another.
+    ///
+    /// Requires the item to be of the same type, and to be upgradable.
+    pub fn can_merge_with(&self, other: &GameItem) -> bool {
+        self.id == other.id && self.can_upgrade()
+    }
+
     /// Check whether this is upgradable (mergeable).
     pub fn can_upgrade(&self) -> bool {
         self.config.as_ref().unwrap().merge.is_some()
