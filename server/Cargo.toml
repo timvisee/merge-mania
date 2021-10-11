@@ -1,5 +1,6 @@
 [package]
 name = "merge-mania-server"
+description = "A real-time team based merging/trading game to play using your phone."
 version = "0.1.0"
 edition = "2018"
 
