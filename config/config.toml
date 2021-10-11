@@ -54,110 +54,45 @@ inventory = [
 
 # Users
 
+# Users configuration example:
+#
+# [[users]]
+#
+# # Unique user ID
+# id = 1
+#
+# # User display name, shown above game and in leaderboard
+# name = "Team 1"
+#
+# # User login password
+# password = "team1"
+#
+# # Whether this user can play the game
+# role_game = true
+#
+# # Optional: whether this user can manage the game
+# role_admin = false
+
 [[users]]
 id = 1
 name = "Team 1"
 password = "team1"
 role_game = true
-role_admin = true
+role_admin = false
 
 [[users]]
 id = 2
-name = "Tim"
-password = "tim"
-role_game = true
-role_admin = true
-
-[[users]]
-id = 3
-name = "Mauri 1"
-password = "mauri"
-role_game = true
-role_admin = true
-
-[[users]]
-id = 4
-name = "Team 4"
-password = "team4"
-role_game = true
-role_admin = true
-
-[[users]]
-id = 5
-name = "Team 5"
-password = "team5"
-role_game = true
-role_admin = true
-
-[[users]]
-id = 6
-name = "Team 6"
-password = "team6"
-role_game = true
-role_admin = true
-
-[[users]]
-id = 7
-name = "Team 7"
-password = "team7"
-role_game = true
-role_admin = true
-
-[[users]]
-id = 8
-name = "Team 8"
-password = "team8"
-role_game = true
-role_admin = true
-
-[[users]]
-id = 9
-name = "Team 9"
-password = "team9"
-role_game = true
-role_admin = true
-
-[[users]]
-id = 10
-name = "Team 10"
-password = "team10"
-role_game = true
-role_admin = true
-
-[[users]]
-id = 11
-name = "Team 11"
-password = "team11"
-role_game = true
-role_admin = true
-
-[[users]]
-id = 12
-name = "Bob"
-password = "bob"
+name = "Team 2"
+password = "team2"
 role_game = true
 role_admin = false
 
 [[users]]
-id = 13
-name = "Thomas"
-password = "thomas"
+id = 3
+name = "Team 3"
+password = "team3"
 role_game = true
-role_admin = true
-
-[[users]]
-id = 14
-name = "Mauri 2"
-password = "mauri"
-role_game = true
-role_admin = true
-
-[[users]]
-id = 15
-name = "Mauri 3"
-password = "mauri"
-role_game = true
-role_admin = true
+role_admin = false
 
 [[users]]
 id = 100
@@ -166,21 +101,9 @@ password = "admin"
 role_game = true
 role_admin = true
 
-[[users]]
-id = 101
-name = "Ruben"
-password = "ruben"
-role_game = true
-role_admin = true
-
-[[users]]
-id = 102
-name = "Gijs"
-password = "gijs"
-role_game = true
-role_admin = true
 
 
+# Items
 
 # Item configuration example:
 #
@@ -228,8 +151,6 @@ role_admin = true
 #     { item = "11.0", chance = 0.90 },
 #     { item = "11.1", chance = 0.10 },
 # ]
-
-
 
 # Fruit tree
 
@@ -353,8 +274,6 @@ drops = [
 ]
 sprite_path = "deciduous-tree-gold-apples.png"
 
-
-
 # Fruit
 
 [[items]]
@@ -466,8 +385,6 @@ tier = "Fruit"
 sell = 15397
 sprite_path = "blueberries.png"
 
-
-
 # Vegetables
 
 [[items]]
@@ -559,8 +476,6 @@ name = "Mushroom"
 tier = "Vegetable"
 sell = 18055
 sprite_path = "mushroom.png"
-
-
 
 # Farmer
 
@@ -669,8 +584,6 @@ drops = [
 ]
 sprite_path = "farmer-gold.png"
 
-
-
 # Farm animals
 
 [[items]]
@@ -753,8 +666,6 @@ description = "Must be a special farm"
 tier = "Farm animals"
 sell = 861463
 sprite_path = "unicorn.png"
-
-
 
 # Bakery
 
@@ -843,8 +754,6 @@ drops = [
 ]
 sprite_path = "cook-gold.png"
 
-
-
 # Bread
 
 [[items]]
@@ -918,8 +827,6 @@ description = "Try your luck"
 tier = "Bread"
 sell = 58055
 sprite_path = "fortune-cookie.png"
-
-
 
 # Chicken
 
@@ -1011,8 +918,6 @@ drops = [
 ]
 sprite_path = "chicken-gold.png"
 
-
-
 # Birds
 
 [[items]]
@@ -1070,8 +975,6 @@ name = "Eagle"
 tier = "Bird"
 sell = 216137
 sprite_path = "eagle.png"
-
-
 
 # Teacher
 
@@ -1144,8 +1047,6 @@ drops = [
     { item = "50.1", chance = 0.01 },
 ]
 sprite_path = "man-teacher.png"
-
-
 
 # Numbers
 
@@ -1228,8 +1129,6 @@ name = "Ten"
 tier = "Numbers"
 sell = 5185303
 sprite_path = "keycap-10.png"
-
-
 
 # Stadium
 
@@ -1331,8 +1230,6 @@ drops = [
 ]
 sprite_path = "stadium.png"
 
-
-
 # Ball sports
 
 [[items]]
@@ -1405,8 +1302,6 @@ name = "8-ball"
 tier = "Ball sports"
 sell = 756592
 sprite_path = "pool-8-ball.png"
-
-
 
 # Speaker
 
@@ -1503,8 +1398,6 @@ drops = [
 ]
 sprite_path = "radio.png"
 
-
-
 # Instruments
 
 [[items]]
@@ -1579,8 +1472,6 @@ tier = "Instruments"
 sell = 333527575
 sprite_path = "saxophone.png"
 
-
-
 # Music
 
 [[items]]
@@ -1622,8 +1513,6 @@ description = "One expensive piece of music"
 tier = "Music"
 sell = 3515918427
 sprite_path = "dvd.png"
-
-
 
 # Toolbox
 
@@ -1752,8 +1641,6 @@ drops = [
 ]
 sprite_path = "toolbox-gold.png"
 
-
-
 # Tools
 
 [[items]]
@@ -1829,8 +1716,6 @@ tier = "Tools"
 sell = 1034352
 sprite_path = "crowbar.png"
 
-
-
 # Helpers
 
 [[items]]
@@ -1863,8 +1748,6 @@ name = "Clamp"
 tier = "Helpers"
 sell = 1944235
 sprite_path = "clamp.png"
-
-
 
 # Helpers
 
@@ -1899,8 +1782,6 @@ name = "Crane"
 tier = "Construction"
 sell = 2243067
 sprite_path = "building-construction.png"
-
-
 
 # Water
 
@@ -1953,8 +1834,6 @@ drops = [
 ]
 sprite_path = "fountain.png"
 
-
-
 # Water
 
 [[items]]
@@ -1991,8 +1870,6 @@ description = "Enough is enough"
 tier = "Water"
 sell = 51
 sprite_path = "bathtub.png"
-
-
 
 # Coins
 
@@ -2045,8 +1922,6 @@ tier = "Coins"
 sell = 8062
 sprite_path = "bank.png"
 
-
-
 # Mining
 
 [[items]]
@@ -2068,8 +1943,6 @@ drops = [
 ]
 sprite_path = "pick.png"
 
-
-
 # Useless
 
 [[items]]
@@ -2079,8 +1952,6 @@ description = "A stone and a stone makes... a stone. -- Fred Flintstone"
 tier = "Useless"
 sell = 1
 sprite_path = "rock.png"
-
-
 
 # Gems
 
