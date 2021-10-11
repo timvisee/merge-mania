@@ -1,15 +1,18 @@
 # Merge Mania game
 
+_Note: this is a prototype. It is unfinished, things may change, and some bits
+are not implemented very well._
+
 A real-time team based merging/trading game to play using your phone.
 
 - Played in teams for a set time period
-- Players, in a team, use their phone to manage their game
-- Each team has _money_, _energy_ and an inventory grid
-- Factory items, on your grid, produce items at a set interval
-- **Merge** items of the same type into better items
+- Players, in a team, use their phone to play the game
+- Each team has _money_, _energy_ and an inventory grid with their _items_
+- Factory items, on your grid, produce items at a set interval, on your grid
+- **Merge** two items of the same type into a better item
 - Discover new items and tiers as you play
 - Players run between outposts to earn _energy_
-- _Energy_ is used to buy additional _factories_ on a grid, producing new items
+- _Energy_ is used to buy additional _factories_ on the grid, producing new items
 - Buy lots of factories to gain items as quickly as possible
 - Merge & sell smart to earn as much as possible
 - After playing, the team earning the most wins
