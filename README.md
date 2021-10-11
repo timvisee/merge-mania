@@ -14,6 +14,19 @@ A real-time team based merging/trading game to play using your phone.
 - Merge & sell smart to earn as much as possible
 - After playing, the team earning the most wins
 
+## Screenshots
+
+![Merge Mania screenshot](./res/screenshots/game-main.png)
+![Merge Mania screenshot](./res/screenshots/game-merge.png)
+![Merge Mania screenshot](./res/screenshots/game-buy.png)
+![Merge Mania screenshot](./res/screenshots/game-details.png)
+![Merge Mania screenshot](./res/screenshots/game-details-factory.png)
+![Merge Mania screenshot](./res/screenshots/game-scan-code.png)
+![Merge Mania screenshot](./res/screenshots/game-stats.png)
+![Merge Mania screenshot](./res/screenshots/game-leaderboard.png)
+![Merge Mania screenshot](./res/screenshots/admin.png)
+![Merge Mania screenshot](./res/screenshots/outpost.png)
+
 ## Player explanation
 
 This game is played using your mobile phone through a website.
