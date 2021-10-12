@@ -189,5 +189,5 @@ browser. Log in with an admin account (`role_admin = true`) and navigate to the
 game.
 
 ## License
-This project is released under the GNU GPL-3.0 license.
+This project is released under the GNU AGPL-3.0 license.
 Check out the [LICENSE](LICENSE) file for more information.
