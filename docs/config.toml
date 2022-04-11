@@ -50,6 +50,11 @@ inventory = [
     "11.0",
 ]
 
+# Default cost to merge two items
+merge_cost = [
+    { energy = 1 },
+]
+
 
 
 # Users

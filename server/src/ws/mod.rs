@@ -437,6 +437,27 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
         return;
     }
 
+    // Get merge costs
+    if let Some(costs) = &state.config.defaults.merge_cost {
+        // Pay amounts, send notification if not enough resources
+        let mut changed = match state.game.user_pay(user_id, &state.config, costs) {
+            Ok(changed) => changed,
+            Err(_) => {
+                let msg = MsgSendKind::Toast(crate::lang::INSUFFICIENT_RESOURCES_TO_BUY.into());
+                send_to_client(&state, client_id, &msg.into());
+
+                // Broadcast inventory state to reset client state
+                let inventory = state.game.user_client_inventory(&state.config, user_id);
+                if let Some(inventory) = inventory {
+                    let msg = MsgSendKind::Inventory(inventory);
+                    send_to_user(&state, Some(client_id), user_id, &msg.into());
+                }
+
+                return;
+            }
+        };
+    }
+
     // Do merge, get inventory
     let (mut inventory, discovered) =
         match state
@@ -450,6 +471,14 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
     // Send cell updates
     send_to_user_cell(&state, client_id, user_id, &inventory, action.cell);
     send_to_user_cell(&state, client_id, user_id, &inventory, action.other);
+
+    // Send user balances update
+    // TODO: should only have to do this if payed any balances
+    let msg = MsgSendKind::InventoryBalances {
+        money: inventory.money,
+        energy: inventory.energy,
+    };
+    send_to_user(&state, Some(client_id), user_id, &msg.into());
 
     // When a new item is discovered, notify the client
     if discovered {
@@ -526,6 +555,7 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
     }
 
     // Send user balances update
+    // TODO: should only have to do this if payed any balances
     let msg = MsgSendKind::InventoryBalances {
         money: inventory.money,
         energy: inventory.energy,

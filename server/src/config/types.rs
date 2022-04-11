@@ -71,6 +71,9 @@ pub struct ConfigDefaults {
 
     /// Default user inventory items.
     pub inventory: Vec<ItemRef>,
+
+    /// Optional: to merge, merge cost
+    pub merge_cost: Option<Vec<Amount>>,
 }
 
 /// Game item configuration.
