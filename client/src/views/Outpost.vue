@@ -43,16 +43,6 @@
                 size="lg"
             ></b-form-select>
 
-            <label for="outpost-id">Unique Post ID:</label>
-            <b-form-spinbutton
-                id="outpost-id"
-                v-model="outpost.id"
-                min="1"
-                max="99999"
-                class="w-100 mb-4"
-                size="lg"
-            ></b-form-spinbutton>
-
             <b-button
                 type="button"
                 size="lg"
