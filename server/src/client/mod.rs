@@ -127,4 +127,7 @@ pub enum MsgRecvKind {
 
     /// Request new outpost token to render for given outpost ID.
     GetOutpostToken(u32),
+
+    /// Reward the given user for the given outpost.
+    ActionRewardUser(ClientActionRewardUser),
 }

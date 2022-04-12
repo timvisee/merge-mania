@@ -13,8 +13,8 @@ use warp::Filter;
 
 use crate::auth::{generate_client_id, Client, Session};
 use crate::client::{
-    ClientActionBuy, ClientActionMerge, ClientActionSell, ClientActionSwap, ClientInventory,
-    ClientSession, MsgRecv, MsgRecvKind, MsgSend, MsgSendKind,
+    ClientActionBuy, ClientActionMerge, ClientActionRewardUser, ClientActionSell, ClientActionSwap,
+    ClientInventory, ClientSession, MsgRecv, MsgRecvKind, MsgSend, MsgSendKind,
 };
 use crate::state::SharedState;
 
@@ -217,6 +217,7 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
         MsgRecvKind::MockScanCode => action_scan_code(state, client_id, None),
         MsgRecvKind::GetLeaderboard => get_leaderboard(state, client_id),
         MsgRecvKind::GetOutpostToken(id) => get_outpost_token(state, client_id, id),
+        MsgRecvKind::ActionRewardUser(action) => action_reward_user(state, client_id, action),
     }
 }
 
@@ -743,6 +744,52 @@ fn get_outpost_token(state: &SharedState, client_id: usize, outpost_id: u32) {
         outpost_id,
     ));
     send_to_client(&state, client_id, &msg.into());
+}
+
+fn action_reward_user(state: &SharedState, client_id: usize, action: ClientActionRewardUser) {
+    debug!(
+        "Client {} invoked reward user {} for outpost {}",
+        client_id, action.user_id, action.outpost_id,
+    );
+
+    // Find client user ID
+    let user_id = match state.clients.client_user_id(client_id) {
+        Some(id) => id,
+        None => return,
+    };
+
+    // User must have admin role
+    let role_admin = state
+        .config
+        .user(user_id)
+        .map(|u| u.role_admin)
+        .unwrap_or(false);
+    if !role_admin {
+        warn!("Non-game user tried to manually reward user from outpost");
+        return;
+    }
+
+    // Run scan code action
+    let inventory =
+        match state
+            .game
+            .user_scan_code(action.user_id, &state.config, action.outpost_id)
+        {
+            Some(inventory) => inventory,
+            None => {
+                warn!("User scanned same post as last time");
+                let msg = MsgSendKind::Toast(crate::lang::SCANNED_SAME_POST_LAST_TIME.into());
+                send_to_client(&state, client_id, &msg.into());
+                return;
+            }
+        };
+
+    // Send user balances update
+    let msg = MsgSendKind::InventoryBalances {
+        money: inventory.money,
+        energy: inventory.energy,
+    };
+    send_to_user(&state, Some(client_id), action.user_id, &msg.into());
 }
 
 /// Send message to all clients.

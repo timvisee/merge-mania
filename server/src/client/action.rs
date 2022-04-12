@@ -28,3 +28,10 @@ pub struct ClientActionBuy {
 pub struct ClientActionSell {
     pub cell: u8,
 }
+
+/// Client action: reward the given user for an outpost.
+#[derive(Deserialize, Debug)]
+pub struct ClientActionRewardUser {
+    pub outpost_id: u32,
+    pub user_id: u32,
+}
