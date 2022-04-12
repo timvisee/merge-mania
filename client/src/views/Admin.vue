@@ -52,7 +52,6 @@
             id="admin-outpost-modal"
             title="Create outpost"
             centered
-            no-fade
         >
             <label for="outpost-name">Name:</label>
             <b-form-input
@@ -64,7 +63,7 @@
                 size="lg"
             ></b-form-input>
 
-            <label for="outpost-id">Unique ID:</label>
+            <label for="outpost-id">Unique Post ID:</label>
             <b-form-spinbutton
                 id="outpost-id"
                 v-model="outpost.id"

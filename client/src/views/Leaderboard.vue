@@ -31,7 +31,7 @@
             class="w-100 mt-4"
             switch
         >
-            Auto refresh
+            Auto Refresh
         </b-button>
 
     </div>
