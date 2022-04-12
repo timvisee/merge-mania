@@ -25,11 +25,22 @@
             <span v-else>Refresh</span>
         </b-button>
 
+        <b-form-checkbox
+            v-model="autoRefresh"
+            size="lg"
+            class="w-100 mt-4"
+            switch
+        >
+            Auto refresh
+        </b-button>
+
     </div>
   </div>
 </template>
 
 <script>
+const AUTO_REFRESH_INTERVAL = 10 * 1000;
+
 export default {
   name: "Leaderboard",
   data() {
@@ -37,7 +48,27 @@ export default {
       app: this.$app,
       leaderboard: null,
       refreshing: false,
+      autoRefresh: false,
+      autoRefreshTimer: false,
     };
+  },
+  watch: {
+    autoRefresh: function(auto) {
+        // Always clear any existing timer
+        clearInterval(this.autoRefreshTimer);
+
+        // If disabling, return
+        if(!auto)
+            return;
+
+        // Set-up new timer
+        this.autoRefreshTimer = setInterval(() => {
+            this.refresh();
+        }, AUTO_REFRESH_INTERVAL);
+
+        // Immediately refresh as well
+        this.refresh();
+    },
   },
   created() {
     // Check auth, initialize game or redirect to login
