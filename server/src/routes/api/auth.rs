@@ -7,7 +7,8 @@ use crate::state::SharedState;
 
 /// Get list of users.
 pub fn users(state: SharedState) -> Json {
-    let users: Vec<UserData> = state.config.users.iter().map(|t| t.into()).collect();
+    let mut users: Vec<UserData> = state.config.users.iter().map(|t| t.into()).collect();
+    users.sort_by(|a, b| a.name.cmp(&b.name));
     json(&users)
 }
 
