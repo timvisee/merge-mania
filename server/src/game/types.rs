@@ -38,7 +38,7 @@ impl GameUser {
         Self {
             id,
             inventory: GameInventory::from_config(tick, config)
-                .unwrap_or_else(|| GameInventory::default()),
+                .unwrap_or_else(GameInventory::default),
             config: config.user(id).cloned(),
             stats: GameUserStats::default(),
             outposts: VecDeque::new(),

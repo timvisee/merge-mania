@@ -226,7 +226,7 @@ fn get_game(state: &SharedState, client_id: usize) {
 
     // Send game state
     let msg = MsgSendKind::GameState(state.game.running());
-    send_to_client(&state, client_id, &msg.into());
+    send_to_client(state, client_id, &msg.into());
 
     // Find client user ID
     let user_id = match state.clients.client_user_id(client_id) {
@@ -244,7 +244,7 @@ fn get_game(state: &SharedState, client_id: usize) {
     if role_game {
         // Send item configuration
         let msg = MsgSendKind::ConfigItems(state.config.items.clone());
-        send_to_client(&state, client_id, &msg.into());
+        send_to_client(state, client_id, &msg.into());
 
         // Also send inventory state
         get_inventory(state, client_id);
@@ -276,7 +276,7 @@ fn set_game_running(state: &SharedState, client_id: usize, running: bool) {
 
     // Send game state to all clients
     let msg = MsgSendKind::GameState(running);
-    send_to_all(&state, Some(client_id), &msg.into());
+    send_to_all(state, Some(client_id), &msg.into());
 }
 
 fn reset_game(state: &SharedState, client_id: usize) {
@@ -316,7 +316,7 @@ fn reset_game(state: &SharedState, client_id: usize) {
         let inventory = state.game.user_client_inventory(&state.config, user_id);
         if let Some(inventory) = inventory {
             let msg = MsgSendKind::Inventory(inventory);
-            send_to_client(&state, client_id, &msg.into());
+            send_to_client(state, client_id, &msg.into());
         }
     }
 }
@@ -349,7 +349,7 @@ fn get_inventory(state: &SharedState, client_id: usize) {
 
     // Send inventory state
     let msg = MsgSendKind::Inventory(inventory);
-    send_to_client(&state, client_id, &msg.into());
+    send_to_client(state, client_id, &msg.into());
 }
 
 fn get_stats(state: &SharedState, client_id: usize) {
@@ -380,7 +380,7 @@ fn get_stats(state: &SharedState, client_id: usize) {
 
     // Send stats
     let msg = MsgSendKind::Stats(stats);
-    send_to_client(&state, client_id, &msg.into());
+    send_to_client(state, client_id, &msg.into());
 }
 
 fn action_swap(state: &SharedState, client_id: usize, action: ClientActionSwap) {
@@ -414,8 +414,8 @@ fn action_swap(state: &SharedState, client_id: usize, action: ClientActionSwap) 
         };
 
     // Send cell updates
-    send_to_user_cell(&state, client_id, user_id, &inventory, action.cell);
-    send_to_user_cell(&state, client_id, user_id, &inventory, action.other);
+    send_to_user_cell(state, client_id, user_id, &inventory, action.cell);
+    send_to_user_cell(state, client_id, user_id, &inventory, action.other);
 }
 
 fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge) {
@@ -445,13 +445,13 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
             Ok(changed) => changed,
             Err(_) => {
                 let msg = MsgSendKind::Toast(crate::lang::INSUFFICIENT_RESOURCES_TO_BUY.into());
-                send_to_client(&state, client_id, &msg.into());
+                send_to_client(state, client_id, &msg.into());
 
                 // Broadcast inventory state to reset client state
                 let inventory = state.game.user_client_inventory(&state.config, user_id);
                 if let Some(inventory) = inventory {
                     let msg = MsgSendKind::Inventory(inventory);
-                    send_to_user(&state, Some(client_id), user_id, &msg.into());
+                    send_to_user(state, Some(client_id), user_id, &msg.into());
                 }
 
                 return;
@@ -470,8 +470,8 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
         };
 
     // Send cell updates
-    send_to_user_cell(&state, client_id, user_id, &inventory, action.cell);
-    send_to_user_cell(&state, client_id, user_id, &inventory, action.other);
+    send_to_user_cell(state, client_id, user_id, &inventory, action.cell);
+    send_to_user_cell(state, client_id, user_id, &inventory, action.other);
 
     // Send user balances update
     // TODO: should only have to do this if payed any balances
@@ -479,13 +479,13 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
         money: inventory.money,
         energy: inventory.energy,
     };
-    send_to_user(&state, Some(client_id), user_id, &msg.into());
+    send_to_user(state, Some(client_id), user_id, &msg.into());
 
     // When a new item is discovered, notify the client
     if discovered {
         debug!("User discovered new item by merging, notifying client");
         let msg = MsgSendKind::InventoryDiscovered(inventory.discovered);
-        send_to_client(&state, client_id, &msg.into());
+        send_to_client(state, client_id, &msg.into());
     }
 }
 
@@ -526,13 +526,13 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
         Ok(changed) => changed,
         Err(_) => {
             let msg = MsgSendKind::Toast(crate::lang::INSUFFICIENT_RESOURCES_TO_BUY.into());
-            send_to_client(&state, client_id, &msg.into());
+            send_to_client(state, client_id, &msg.into());
 
             // Broadcast inventory state to reset client state
             let inventory = state.game.user_client_inventory(&state.config, user_id);
             if let Some(inventory) = inventory {
                 let msg = MsgSendKind::Inventory(inventory);
-                send_to_user(&state, Some(client_id), user_id, &msg.into());
+                send_to_user(state, Some(client_id), user_id, &msg.into());
             }
 
             return;
@@ -552,7 +552,7 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
 
     // Send cell updates
     for cell in changed {
-        send_to_user_cell(&state, client_id, user_id, &inventory, cell);
+        send_to_user_cell(state, client_id, user_id, &inventory, cell);
     }
 
     // Send user balances update
@@ -561,13 +561,13 @@ fn action_buy(state: &SharedState, client_id: usize, action: ClientActionBuy) {
         money: inventory.money,
         energy: inventory.energy,
     };
-    send_to_user(&state, Some(client_id), user_id, &msg.into());
+    send_to_user(state, Some(client_id), user_id, &msg.into());
 
     // When a new item is discovered, notify the client
     if discovered {
         debug!("User discovered new item by buying, notifying client");
         let msg = MsgSendKind::InventoryDiscovered(inventory.discovered);
-        send_to_client(&state, client_id, &msg.into());
+        send_to_client(state, client_id, &msg.into());
     }
 }
 
@@ -598,14 +598,14 @@ fn action_sell(state: &SharedState, client_id: usize, action: ClientActionSell) 
     };
 
     // Send cell update
-    send_to_user_cell(&state, client_id, user_id, &inventory, action.cell);
+    send_to_user_cell(state, client_id, user_id, &inventory, action.cell);
 
     // Send user balances update
     let msg = MsgSendKind::InventoryBalances {
         money: inventory.money,
         energy: inventory.energy,
     };
-    send_to_user(&state, Some(client_id), user_id, &msg.into());
+    send_to_user(state, Some(client_id), user_id, &msg.into());
 }
 
 /// Invoke action to scan a QR code.
@@ -644,7 +644,7 @@ fn action_scan_code(state: &SharedState, client_id: usize, token: Option<String>
     if !state.game.running() {
         warn!("User scanned code while game isn't running");
         let msg = MsgSendKind::CodeResult(false);
-        send_to_client(&state, client_id, &msg.into());
+        send_to_client(state, client_id, &msg.into());
         return;
     }
 
@@ -657,7 +657,7 @@ fn action_scan_code(state: &SharedState, client_id: usize, token: Option<String>
     if outpost_id.is_none() {
         warn!("User scanned invalid code");
         let msg = MsgSendKind::CodeResult(false);
-        send_to_client(&state, client_id, &msg.into());
+        send_to_client(state, client_id, &msg.into());
         return;
     }
 
@@ -670,20 +670,20 @@ fn action_scan_code(state: &SharedState, client_id: usize, token: Option<String>
         None => {
             warn!("User scanned same post as last time");
             let msg = MsgSendKind::CodeResult(false);
-            send_to_client(&state, client_id, &msg.into());
+            send_to_client(state, client_id, &msg.into());
             return;
         }
     };
 
     let msg = MsgSendKind::CodeResult(true);
-    send_to_client(&state, client_id, &msg.into());
+    send_to_client(state, client_id, &msg.into());
 
     // Send user balances update
     let msg = MsgSendKind::InventoryBalances {
         money: inventory.money,
         energy: inventory.energy,
     };
-    send_to_user(&state, Some(client_id), user_id, &msg.into());
+    send_to_user(state, Some(client_id), user_id, &msg.into());
 }
 
 fn get_leaderboard(state: &SharedState, client_id: usize) {
@@ -691,7 +691,7 @@ fn get_leaderboard(state: &SharedState, client_id: usize) {
 
     // Send game state
     let msg = MsgSendKind::GameState(state.game.running());
-    send_to_client(&state, client_id, &msg.into());
+    send_to_client(state, client_id, &msg.into());
 
     // Find client user ID
     let user_id = match state.clients.client_user_id(client_id) {
@@ -712,7 +712,7 @@ fn get_leaderboard(state: &SharedState, client_id: usize) {
 
     // Get leaderboard, send to client
     let msg = MsgSendKind::Leaderboard(state.game.leaderboard());
-    send_to_client(&state, client_id, &msg.into());
+    send_to_client(state, client_id, &msg.into());
 }
 
 fn get_outpost_token(state: &SharedState, client_id: usize, outpost_id: u32) {
@@ -743,7 +743,7 @@ fn get_outpost_token(state: &SharedState, client_id: usize, outpost_id: u32) {
         &state.config,
         outpost_id,
     ));
-    send_to_client(&state, client_id, &msg.into());
+    send_to_client(state, client_id, &msg.into());
 }
 
 fn action_reward_user(state: &SharedState, client_id: usize, action: ClientActionRewardUser) {
@@ -779,7 +779,7 @@ fn action_reward_user(state: &SharedState, client_id: usize, action: ClientActio
             None => {
                 warn!("User scanned same post as last time");
                 let msg = MsgSendKind::Toast(crate::lang::SCANNED_SAME_POST_LAST_TIME.into());
-                send_to_client(&state, client_id, &msg.into());
+                send_to_client(state, client_id, &msg.into());
                 return;
             }
         };
@@ -789,11 +789,11 @@ fn action_reward_user(state: &SharedState, client_id: usize, action: ClientActio
         money: inventory.money,
         energy: inventory.energy,
     };
-    send_to_user(&state, Some(client_id), action.user_id, &msg.into());
+    send_to_user(state, Some(client_id), action.user_id, &msg.into());
 
     // Send confirmation to admin
     let msg = MsgSendKind::Toast(crate::lang::USER_REWARDS_GIVEN.into());
-    send_to_client(&state, client_id, &msg.into());
+    send_to_client(state, client_id, &msg.into());
 }
 
 /// Send message to all clients.
@@ -907,7 +907,7 @@ fn send_to_user_cell(
         index: cell,
         item: inventory.grid.items[cell as usize].clone(),
     };
-    send_to_user(&state, Some(client_id), user_id, &msg.into());
+    send_to_user(state, Some(client_id), user_id, &msg.into());
 }
 
 /// Client disconnected.
