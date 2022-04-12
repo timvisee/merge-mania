@@ -18,7 +18,8 @@
         <p>
             Source:
             <br>
-            <a href="https://gitlab.com/timvisee/merge-mania" target="_blank">Merge Mania on GitLab</a>
+            <a href="https://github.com/timvisee/merge-mania" target="_blank">GitHub</a>,
+            <a href="https://gitlab.com/timvisee/merge-mania" target="_blank">GitLab</a>
         </p>
 
     </div>

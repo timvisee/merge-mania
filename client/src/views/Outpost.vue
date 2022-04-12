@@ -20,7 +20,7 @@
         <b-button
             type="button"
             size="lg"
-            variant="secondary"
+            variant="link"
             class="w-100 mt-4"
             @click.prevent.stop="showManualDialog"
         >
