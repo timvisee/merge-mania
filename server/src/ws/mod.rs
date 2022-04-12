@@ -438,8 +438,28 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
         return;
     }
 
+    // Fetch item config for item that we'll be merging
+    // TODO: do not unwrap
+    let inventory = state
+        .game
+        .user_client_inventory(&state.config, user_id)
+        .unwrap();
+    let cell_item = inventory.grid.items[action.cell as usize]
+        .as_ref()
+        .unwrap()
+        .id
+        .clone();
+    drop(inventory);
+    let config_item = state.config.item(&cell_item).expect("item not found");
+
+    // Determine merge costs
+    let merge_cost = config_item
+        .merge_cost
+        .as_ref()
+        .or(state.config.defaults.merge_cost.as_ref());
+
     // Get merge costs
-    if let Some(costs) = &state.config.defaults.merge_cost {
+    if let Some(costs) = merge_cost {
         // Pay amounts, send notification if not enough resources
         let mut changed = match state.game.user_pay(user_id, &state.config, costs) {
             Ok(changed) => changed,

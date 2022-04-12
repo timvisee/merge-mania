@@ -142,6 +142,11 @@ role_admin = true
 # # Sell price
 # sell = 1
 #
+# # Cost to merge the item, overrides the global default
+# merge_cost = [
+#     { energy = 1 },
+# ]
+#
 # # Path to sprite to show on client
 # sprite_path = "red-apple.png"
 #

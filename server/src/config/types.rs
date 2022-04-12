@@ -105,6 +105,9 @@ pub struct ConfigItem {
     /// Sell price.
     pub sell: u64,
 
+    /// Optional: to merge, merge cost, overrides global default
+    pub merge_cost: Option<Vec<Amount>>,
+
     /// Optional: drop item after number of ticks.
     pub drop_interval: Option<u64>,
 

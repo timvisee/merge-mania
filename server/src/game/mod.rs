@@ -259,8 +259,8 @@ impl Game {
         let mut user = users.get(&user_id).unwrap().write().unwrap();
 
         // Increase stats
-        user.stats.inc_money_spent(amounts_money(&amounts));
-        user.stats.inc_energy_spent(amounts_energy(&amounts));
+        user.stats.inc_money_spent(amounts_money(amounts));
+        user.stats.inc_energy_spent(amounts_energy(amounts));
 
         // Remove inventory amounts
         user.inventory.remove_amounts(amounts)

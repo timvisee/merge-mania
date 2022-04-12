@@ -5,7 +5,6 @@ use std::fs;
 use std::path::PathBuf;
 
 use serde::{Deserialize, Deserializer};
-use toml;
 
 use crate::types::ItemRef;
 pub use types::*;
