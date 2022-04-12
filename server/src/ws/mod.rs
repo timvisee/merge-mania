@@ -790,6 +790,10 @@ fn action_reward_user(state: &SharedState, client_id: usize, action: ClientActio
         energy: inventory.energy,
     };
     send_to_user(&state, Some(client_id), action.user_id, &msg.into());
+
+    // Send confirmation to admin
+    let msg = MsgSendKind::Toast(crate::lang::USER_REWARDS_GIVEN.into());
+    send_to_client(&state, client_id, &msg.into());
 }
 
 /// Send message to all clients.
