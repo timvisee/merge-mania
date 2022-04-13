@@ -143,6 +143,9 @@ Use `npm` to build the client software:
 # Change into ./client
 cd client
 
+# Install dependencies
+npm install
+
 # Build distributable client
 npm run build
 ```
