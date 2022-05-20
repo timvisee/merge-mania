@@ -32,7 +32,7 @@
             switch
         >
             Auto Refresh
-        </b-button>
+        </b-form-checkbox>
 
     </div>
   </div>
