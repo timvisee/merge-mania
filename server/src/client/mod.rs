@@ -102,7 +102,7 @@ pub enum MsgRecvKind {
     GetInventory,
 
     /// Request game stats.
-    GetStats,
+    GetStats(Option<u32>),
 
     /// Action: swap two cells
     ActionSwap(ClientActionSwap),

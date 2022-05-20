@@ -4,8 +4,19 @@
 
     <div v-else class="page-small-card text-center mt-5">
 
+        <b-form-select
+            v-if="auth.auth && auth.hasRoleAdmin() && users"
+            v-model="selectedUser"
+            :options="users"
+            placeholder="Select a team"
+            id="stats-team"
+            class="mb-4"
+            size="lg"
+        ></b-form-select>
+
         <h1 class="h3 mb-3 fw-normal">Stats</h1>
 
+        <loader v-if="refreshing" />
         <table v-if="stats" class="simple-table">
             <tr><td>Merges:</td><td>{{ stats.merge_count }}</td></tr>
             <tr><td>Buys:</td><td>{{ stats.buy_count }}</td></tr>
@@ -36,11 +47,17 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "Stats",
   data() {
     return {
       app: this.$app,
+      auth: this.$auth,
+      selectedUser: null,
+      loadingUsers: true,
+      users: [],
       stats: null,
       refreshing: false,
     };
@@ -62,10 +79,22 @@ export default {
             // Attach stats message listener
             this.$app.socket.addListener('stats', (data) => this.onStats(data));
 
+            // Load list of users if user is admin
+            if(this.$auth.hasRoleAdmin())
+                this.loadUsers();
+            else
+                this.loadingUsers = false;
+
             // Refresh stats if not yet fetched
             if(this.stats == null)
                 this.refresh();
         });
+  },
+  watch: {
+    selectedUser: function() {
+        this.stats = null;
+        this.refresh();
+    },
   },
   methods: {
     redirectToLogin() {
@@ -75,12 +104,38 @@ export default {
     refresh() {
         // Fetch stats
         this.refreshing = true;
-        this.app.socket.send('get_stats', null);
+        this.app.socket.send('get_stats', this.selectedUser);
     },
 
     onStats(data) {
         this.stats = data;
         this.refreshing = false;
+    },
+
+    // Load users to show in form
+    loadUsers() {
+        this.loadingUsers = true;
+
+        // Request users
+        axios.get("/api/auth/users")
+            .then(response => {
+                // Transform list of users into form select model
+                this.users = response.data.map((user) => {
+                    return {
+                        value: user.id,
+                        text: user.name,
+                    };
+                });
+                this.users.unshift({ value: null, text: '----------', disabled: true });
+                this.users.unshift({ value: null, text: 'My stats' });
+            })
+            .catch(err => {
+                // TODO: improve error handling
+                alert("Error: " + error.response.data.message);
+            })
+            .finally(() => {
+                this.loadingUsers = false;
+            });
     },
   },
 };

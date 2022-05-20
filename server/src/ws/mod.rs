@@ -208,7 +208,7 @@ async fn handle_msg(state: &SharedState, client_id: usize, msg: MsgRecv) {
         MsgRecvKind::SetGameRunning(running) => set_game_running(state, client_id, running),
         MsgRecvKind::ResetGame => reset_game(state, client_id),
         MsgRecvKind::GetInventory => get_inventory(state, client_id),
-        MsgRecvKind::GetStats => get_stats(state, client_id),
+        MsgRecvKind::GetStats(team_id) => get_stats(state, client_id, team_id),
         MsgRecvKind::ActionSwap(action) => action_swap(state, client_id, action),
         MsgRecvKind::ActionMerge(action) => action_merge(state, client_id, action),
         MsgRecvKind::ActionBuy(action) => action_buy(state, client_id, action),
@@ -352,19 +352,36 @@ fn get_inventory(state: &SharedState, client_id: usize) {
     send_to_client(state, client_id, &msg.into());
 }
 
-fn get_stats(state: &SharedState, client_id: usize) {
+fn get_stats(state: &SharedState, client_id: usize, team_id: Option<u32>) {
     debug!("Client {} invoked get stats", client_id);
 
-    // Find client user ID
-    let user_id = match state.clients.client_user_id(client_id) {
+    // Find client user ID to get stats for
+    let mut target_id = match state.clients.client_user_id(client_id) {
         Some(id) => id,
         None => return,
     };
 
+    // Handle custom team stats request
+    if let Some(other_id) = team_id {
+        // To get stats for another user, user must have admin role
+        if target_id != other_id {
+            let role_game = state
+                .config
+                .user(target_id)
+                .map(|u| u.role_admin)
+                .unwrap_or(false);
+            if !role_game {
+                warn!("Non-admin tried to get stats for other user");
+                return;
+            }
+        }
+        target_id = other_id;
+    }
+
     // User must have game role
     let role_game = state
         .config
-        .user(user_id)
+        .user(target_id)
         .map(|u| u.role_game)
         .unwrap_or(false);
     if !role_game {
@@ -373,7 +390,7 @@ fn get_stats(state: &SharedState, client_id: usize) {
     }
 
     // Get stats
-    let mut stats = match state.game.user_client_stats(&state.config, user_id) {
+    let mut stats = match state.game.user_client_stats(&state.config, target_id) {
         Some(stats) => stats,
         None => return,
     };
