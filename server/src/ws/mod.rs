@@ -386,6 +386,8 @@ fn get_stats(state: &SharedState, client_id: usize, team_id: Option<u32>) {
         .unwrap_or(false);
     if !role_game {
         warn!("Non-game user tried to get stats");
+        let msg = MsgSendKind::Stats(None);
+        send_to_client(state, client_id, &msg.into());
         return;
     }
 
@@ -396,7 +398,7 @@ fn get_stats(state: &SharedState, client_id: usize, team_id: Option<u32>) {
     };
 
     // Send stats
-    let msg = MsgSendKind::Stats(stats);
+    let msg = MsgSendKind::Stats(Some(stats));
     send_to_client(state, client_id, &msg.into());
 }
 

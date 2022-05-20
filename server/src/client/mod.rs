@@ -69,7 +69,7 @@ pub enum MsgSendKind {
     InventoryDiscovered(HashSet<ItemRef>),
 
     /// Client stats.
-    Stats(ClientUserStats),
+    Stats(Option<ClientUserStats>),
 
     /// Leaderboard stats.
     Leaderboard(Vec<ClientLeaderboardUser>),
