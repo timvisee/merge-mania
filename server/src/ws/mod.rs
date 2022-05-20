@@ -438,18 +438,18 @@ fn action_merge(state: &SharedState, client_id: usize, action: ClientActionMerge
         return;
     }
 
-    // Fetch item config for item that we'll be merging
-    // TODO: do not unwrap
-    let inventory = state
+    // Fetch cell item that we'll be merging, get config, return if null
+    let cell_item = match state
         .game
         .user_client_inventory(&state.config, user_id)
-        .unwrap();
-    let cell_item = inventory.grid.items[action.cell as usize]
-        .as_ref()
-        .unwrap()
-        .id
-        .clone();
-    drop(inventory);
+        .and_then(|inventory| {
+            inventory.grid.items[action.cell as usize]
+                .as_ref()
+                .map(|item| item.id.clone())
+        }) {
+        Some(item) => item,
+        None => return,
+    };
     let config_item = state.config.item(&cell_item).expect("item not found");
 
     // Determine merge costs
